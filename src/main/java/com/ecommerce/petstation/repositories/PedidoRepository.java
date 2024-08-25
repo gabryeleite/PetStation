@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import com.ecommerce.petstation.models.Pedido;
 import com.ecommerce.petstation.models.Produto;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
