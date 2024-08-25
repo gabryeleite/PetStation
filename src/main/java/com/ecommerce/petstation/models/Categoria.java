@@ -10,7 +10,8 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "categoria", schema = "petstation", uniqueConstraints = {@UniqueConstraint(columnNames = "nome")})
+@Table(name = "categoria", schema = "petstation", 
+    uniqueConstraints = {@UniqueConstraint(columnNames = "nome")})
 public class Categoria {
 
     @Id
