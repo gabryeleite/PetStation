@@ -29,7 +29,7 @@ public class Produto {
     @Column(name = "preco", nullable = false, precision = 10, scale = 2)
     private BigDecimal preco;
 
-    @Column(name = "descricao", length = 200)
+    @Column(name = "descricao", length = 1000)
     private String descricao;
 
     @Column(name = "estoque", nullable = false)
@@ -97,7 +97,7 @@ CREATE TABLE petstation.produto(
     num INT DEFAULT nextval('petstation.produto_num_seq'),
     nome VARCHAR(50) NOT NULL,
     preco NUMERIC(10,2) NOT NULL,
-	descricao VARCHAR(200),
+	descricao VARCHAR(1000),
     estoque INT NOT NULL,
 	id_subcategoria INT NOT NULL,
 	CONSTRAINT pk_produto PRIMARY KEY(num),
