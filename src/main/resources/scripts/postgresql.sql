@@ -16,8 +16,8 @@ CREATE SEQUENCE petstation.subcategoria_id_seq
 CREATE TABLE petstation.subcategoria(
 	id_subcategoria INT DEFAULT nextval('petstation.subcategoria_id_seq'),
 	nome VARCHAR(50) NOT NULL,
-	id_categoria,
-	CONSTRAINT pk_categoria PRIMARY KEY(id_subcategoria),
+	id_categoria INT,
+	CONSTRAINT pk_subcategoria PRIMARY KEY(id_subcategoria),
 	CONSTRAINT fk_categoria_id FOREIGN KEY(id_categoria)
 		REFERENCES petstation.categoria(id_categoria) ON DELETE CASCADE
 );
@@ -64,6 +64,7 @@ CREATE TABLE petstation.pedido(
     id_cliente INT NOT NULL,
     data_pedido DATE NOT NULL,
     hora_pedido TIME NOT NULL,
+	status_pedido VARCHAR(20),
     CONSTRAINT pk_pedido PRIMARY KEY(num),
     CONSTRAINT fk_cliente_id FOREIGN KEY(id_cliente)
         REFERENCES petstation.cliente(id_cliente) ON DELETE CASCADE
@@ -80,3 +81,44 @@ CREATE TABLE petstation.carrinho(
         REFERENCES petstation.produto(num) ON DELETE CASCADE,
     CONSTRAINT ck_qnt_produto CHECK (qnt_produto > 0)   
 );
+
+-- Carregar Dados --
+
+INSERT INTO petstation.categoria(nome, id_categoria) VALUES ('Cachorro', 1);
+INSERT INTO petstation.categoria(nome, id_categoria) VALUES ('Gato', 2);
+INSERT INTO petstation.categoria(nome, id_categoria) VALUES ('Pássaro', 3);
+INSERT INTO petstation.categoria(nome, id_categoria) VALUES ('Peixe', 4);
+
+SELECT * from petstation.categoria;
+
+INSERT INTO petstation.subcategoria(nome, id_categoria) VALUES ('Rações e petiscos', 1);
+INSERT INTO petstation.subcategoria(nome, id_categoria) VALUES ('Brinquedos', 1);
+INSERT INTO petstation.subcategoria(nome, id_categoria) VALUES ('Coleiras, guias e peitorais', 1);
+INSERT INTO petstation.subcategoria(nome, id_categoria) VALUES ('Beleza e limpeza', 1);
+INSERT INTO petstation.subcategoria(nome, id_categoria) VALUES ('Farmácia', 1);
+INSERT INTO petstation.subcategoria(nome, id_categoria) VALUES ('Casas e camas', 1);
+INSERT INTO petstation.subcategoria(nome, id_categoria) VALUES ('Roupas', 1);
+
+INSERT INTO petstation.subcategoria(nome, id_categoria) VALUES ('Rações e petiscos', 2);
+INSERT INTO petstation.subcategoria(nome, id_categoria) VALUES ('Brinquedos', 2);
+INSERT INTO petstation.subcategoria(nome, id_categoria) VALUES ('Coleiras e guias', 2);
+INSERT INTO petstation.subcategoria(nome, id_categoria) VALUES ('Beleza e limpeza', 2);
+INSERT INTO petstation.subcategoria(nome, id_categoria) VALUES ('Farmácia', 2);
+INSERT INTO petstation.subcategoria(nome, id_categoria) VALUES ('Casas e camas', 2);
+INSERT INTO petstation.subcategoria(nome, id_categoria) VALUES ('Roupas', 2);
+
+INSERT INTO petstation.subcategoria(nome, id_categoria) VALUES ('Alimentação', 3);
+INSERT INTO petstation.subcategoria(nome, id_categoria) VALUES ('Brinquedos', 3);
+INSERT INTO petstation.subcategoria(nome, id_categoria) VALUES ('Beleza e limpeza', 3);
+INSERT INTO petstation.subcategoria(nome, id_categoria) VALUES ('Farmácia', 3);
+INSERT INTO petstation.subcategoria(nome, id_categoria) VALUES ('Gaiolas e viveiros', 3);
+
+INSERT INTO petstation.subcategoria(nome, id_categoria) VALUES ('Alimentação', 4);
+INSERT INTO petstation.subcategoria(nome, id_categoria) VALUES ('Decoração', 4);
+INSERT INTO petstation.subcategoria(nome, id_categoria) VALUES ('Limpeza', 4);
+INSERT INTO petstation.subcategoria(nome, id_categoria) VALUES ('Farmácia', 4);
+INSERT INTO petstation.subcategoria(nome, id_categoria) VALUES ('Aquários e equipamentos', 4);
+
+SELECT * from petstation.subcategoria WHERE id_categoria IN (1, 2);
+
+UPDATE petstation.subcategoria SET nome = 'Roupas e acessórios' WHERE nome = 'Roupas';
