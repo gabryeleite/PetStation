@@ -30,6 +30,7 @@ public class ClienteService {
         clienteRepository.createCliente(nome, sobrenome, sexo, dataNascimento, telefone, email);
     }
 
+    //@Transactional
     public void deleteCliente(Integer id_cliente) {
         findById(id_cliente);
         try {
