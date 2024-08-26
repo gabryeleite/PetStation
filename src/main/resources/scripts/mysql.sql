@@ -98,4 +98,4 @@ SELECT * from subcategoria WHERE id_categoria = (2);
 UPDATE subcategoria SET nome = 'Roupas e acessórios' WHERE nome = 'Roupas';
 UPDATE subcategoria SET nome = 'Rações e petiscos' WHERE nome = 'Rações e Pestiscos';
 
-SET SQL_SAFE_UPDATES = 1;
+SET SQL_SAFE_UPDATES = 0;
