@@ -161,6 +161,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- Rações e petiscos (Cachorro)
+
 SELECT create_produto('Ração Golden para Cães Filhotes - 15Kg', 169.90, 
 'Ração tipo seca, sabor frango, para grande, médio e pequeno porte', 100, 
 'Rações e petiscos', 'Cachorro');
@@ -168,3 +170,83 @@ SELECT create_produto('Ração Golden para Cães Filhotes - 15Kg', 169.90,
 SELECT create_produto('Snack Bifinho Frango - 60g', 12.90, 
 'Snack Bifinho sabor frango para grande, médio e pequeno porte', 100, 
 'Rações e petiscos', 'Cachorro');
+
+-- Brinquedos (Cachorro)
+
+SELECT create_produto('Frisbee Vermelho', 49.90, 
+'Frisbee feito de EVA Foam, medidas: 24 x 24 x 3,4cm', 100, 
+'Brinquedos', 'Cachorro');
+
+SELECT create_produto('Mordedor Galinha', 7.90, 
+'Mordedor feito de PVC, medidas: 29 x 8 x 5cm', 100, 
+'Brinquedos', 'Cachorro');
+
+-- Coleiras, guias e peitorais (Cachorro)
+
+SELECT create_produto('Peitoral Anti Puxão', 149.90, 
+'Peitoral cor vermelha, para porte médio, feita poliéster com fibras naturais', 100, 
+'Coleiras, guias e peitorais', 'Cachorro');
+
+SELECT create_produto('Coleira Waterproof Tech Blue', 27.90, 
+'Coleira cor azul, feita de poliéster, zinco e borracha, medidas: 37 a 53cm', 100, 
+'Coleiras, guias e peitorais', 'Cachorro');
+
+SELECT create_produto('Guia Naked Golden ', 69.90, 
+'Guia cor bege, feita de poliéster e zinco, medidas: 120cm', 100, 
+'Coleiras, guias e peitorais', 'Cachorro');
+
+-- Beleza e limpeza (Cachorro)
+
+SELECT create_produto('Shampoo Neutro Pet - 500ml', 29.90, 
+'Shampoo demartológico para cães de todos os portes', 100, 
+'Beleza e limpeza', 'Cachorro');
+
+SELECT create_produto('Condicionador Hidratante - 500ml', 34.90, 
+'Condicionador para todos tipos de pelagem, para cães de todos os portes', 100, 
+'Beleza e limpeza', 'Cachorro');
+
+SELECT create_produto('Escova de Dentes para Pets', 15.90, 
+'Escova dupla para cães, com cerdas macias', 100, 
+'Beleza e limpeza', 'Cachorro');
+
+-- Farmácia (Cachorro)
+
+SELECT create_produto('Vermífugo Canex', 19.90, 
+'Vermífugo em comprimidos para cães', 100, 
+'Farmácia', 'Cachorro');
+
+SELECT create_produto('Antipulgas NexGard', 89.90, 
+'Comprimido mastigável para controle de pulgas e carrapatos', 100, 
+'Farmácia', 'Cachorro');
+
+SELECT create_produto('Pomada Cicatrizante - 30g', 24.90, 
+'Pomada para cicatrização de feridas e cortes', 100, 
+'Farmácia', 'Cachorro');
+
+-- Casas e Camas (Cachorro)
+
+SELECT create_produto('Cama Retangular Luxo', 199.90, 
+'Cama de tecido lavável, para cães de grande porte', 100, 
+'Casas e camas', 'Cachorro');
+
+SELECT create_produto('Casa de Plástico para Pets', 299.90, 
+'Casa plástica resistente para uso interno e externo, para médio porte', 100, 
+'Casas e camas', 'Cachorro');
+
+SELECT create_produto('Colchonete Impermeável', 89.90, 
+'Colchonete dobrável e impermeável, para cães de porte pequeno', 100, 
+'Casas e camas', 'Cachorro');
+
+-- Roupas (Cachorro)
+
+SELECT create_produto('Capa de Chuva para Pets', 79.90, 
+'Capa de chuva impermeável, cor amarela, para médio porte', 100, 
+'Roupas', 'Cachorro');
+
+SELECT create_produto('Suéter de Lã para Pets', 59.90, 
+'Suéter de lã, cor cinza, para pequeno porte', 100, 
+'Roupas', 'Cachorro');
+
+SELECT create_produto('Camiseta Florida', 39.90, 
+'Camiseta de algodão, com estampa florida, para grande porte', 100, 
+'Roupas', 'Cachorro');
