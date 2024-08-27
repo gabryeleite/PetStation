@@ -237,16 +237,115 @@ SELECT create_produto('Colchonete Impermeável', 89.90,
 'Colchonete dobrável e impermeável, para cães de porte pequeno', 100, 
 'Casas e camas', 'Cachorro');
 
--- Roupas (Cachorro)
+-- Roupas e acessórios (Cachorro)
 
 SELECT create_produto('Capa de Chuva para Pets', 79.90, 
 'Capa de chuva impermeável, cor amarela, para médio porte', 100, 
-'Roupas', 'Cachorro');
+'Roupas e acessórios', 'Cachorro');
 
 SELECT create_produto('Suéter de Lã para Pets', 59.90, 
 'Suéter de lã, cor cinza, para pequeno porte', 100, 
-'Roupas', 'Cachorro');
+'Roupas e acessórios', 'Cachorro');
 
 SELECT create_produto('Camiseta Florida', 39.90, 
 'Camiseta de algodão, com estampa florida, para grande porte', 100, 
-'Roupas', 'Cachorro');
+'Roupas e acessórios', 'Cachorro');
+
+-- Rações e petiscos (Gato)
+
+SELECT create_produto('Ração Whiskas para Gatos Adultos - 1,5Kg', 49.90, 
+'Ração tipo seca, sabor peixe, para gatos adultos', 100, 
+'Rações e petiscos', 'Gato');
+
+SELECT create_produto('Snack Dreamies Sabor Queijo - 60g', 12.90, 
+'Snack crocante por fora e cremoso por dentro, sabor queijo', 100, 
+'Rações e petiscos', 'Gato');
+
+SELECT create_produto('Sachê Cat Chow Castrados - 85g', 3.90, 
+'Ração úmida em sachê, sabor frango, para gatos castrados', 100, 
+'Rações e petiscos', 'Gato');
+
+-- Brinquedos (Gato)
+
+SELECT create_produto('Varinha com Penas Coloridas', 19.90, 
+'Brinquedo interativo com penas coloridas para gatos', 100, 
+'Brinquedos', 'Gato');
+
+SELECT create_produto('Bola de Pelúcia com Guizo', 9.90, 
+'Bola de pelúcia macia com guizo interno, para gatos', 100, 
+'Brinquedos', 'Gato');
+
+SELECT create_produto('Rato de Pelúcia com Catnip', 24.90, 
+'Rato de pelúcia recheado com catnip para estimular brincadeiras', 100, 
+'Brinquedos', 'Gato');
+
+-- Coleiras e guias (Gato)
+
+SELECT create_produto('Coleira com Plaquinha de Identificação', 29.90, 
+'Coleira ajustável com plaquinha para gravação de nome', 100, 
+'Coleiras e guias', 'Gato');
+
+SELECT create_produto('Guia Retrátil para Gatos', 49.90, 
+'Guia retrátil leve e resistente, comprimento de 3 metros', 100, 
+'Coleiras e guias', 'Gato');
+
+SELECT create_produto('Coleira de Nylon com Sino', 19.90, 
+'Coleira de nylon ajustável com sino para gatos', 100, 
+'Coleiras e guias', 'Gato');
+
+
+-- Beleza e limpeza (Gato)
+
+SELECT create_produto('Shampoo Seco para Gatos - 300ml', 34.90, 
+'Shampoo seco, indicado para limpeza rápida e prática', 100, 
+'Beleza e limpeza', 'Gato');
+
+SELECT create_produto('Lenços Umedecidos para Gatos', 19.90, 
+'Lenços umedecidos para higienização rápida, pacote com 50 unidades', 100, 
+'Beleza e limpeza', 'Gato');
+
+SELECT create_produto('Escova Removedora de Pelos', 24.90, 
+'Escova para remoção de pelos soltos, com cerdas de silicone', 100, 
+'Beleza e limpeza', 'Gato');
+
+-- Farmácia (Gato)
+
+SELECT create_produto('Vermífugo Milbemax', 29.90, 
+'Vermífugo em comprimidos para gatos', 100, 
+'Farmácia', 'Gato');
+
+SELECT create_produto('Antipulgas Revolution', 89.90, 
+'Solução tópica para controle de pulgas e vermes', 100, 
+'Farmácia', 'Gato');
+
+SELECT create_produto('Pomada Otológica para Gatos', 34.90, 
+'Pomada para tratamento de otites e inflamações', 100, 
+'Farmácia', 'Gato');
+
+-- Casas e camas (Gato)
+
+SELECT create_produto('Cama Igloo para Gatos', 149.90, 
+'Cama estilo igloo, acolchoada e confortável, tamanho médio', 100, 
+'Casas e camas', 'Gato');
+
+SELECT create_produto('Arranhador com Cama Suspensa', 199.90, 
+'Arranhador com cama suspensa integrada, estrutura de sisal', 100, 
+'Casas e camas', 'Gato');
+
+SELECT create_produto('Colchonete Térmico para Gatos', 99.90, 
+'Colchonete com isolamento térmico, ideal para dias frios', 100, 
+'Casas e camas', 'Gato');
+
+-- Roupas e acessórios e acessórios (Gato)
+
+SELECT create_produto('Suéter de Lã para Gatos', 59.90, 
+'Suéter de lã, cor cinza, tamanho pequeno', 100, 
+'Roupas e acessórios', 'Gato');
+
+SELECT create_produto('Capa de Chuva para Gatos', 69.90, 
+'Capa de chuva impermeável, cor vermelha, tamanho médio', 100, 
+'Roupas e acessórios', 'Gato');
+
+SELECT create_produto('Pijama de Algodão para Gatos', 49.90, 
+'Pijama de algodão macio, com estampa estrelada, tamanho médio', 100, 
+'Roupas e acessórios', 'Gato');
