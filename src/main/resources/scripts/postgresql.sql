@@ -82,7 +82,9 @@ CREATE TABLE petstation.carrinho(
     CONSTRAINT ck_qnt_produto CHECK (qnt_produto > 0)   
 );
 
--- Carregar Dados --
+-- Carregando Dados 
+
+-- * Categorias e Subcategorias *
 
 INSERT INTO petstation.categoria(nome, id_categoria) VALUES ('Cachorro', 1);
 INSERT INTO petstation.categoria(nome, id_categoria) VALUES ('Gato', 2);
@@ -122,3 +124,47 @@ INSERT INTO petstation.subcategoria(nome, id_categoria) VALUES ('Aquários e equ
 SELECT * from petstation.subcategoria WHERE id_categoria IN (1, 2);
 
 UPDATE petstation.subcategoria SET nome = 'Roupas e acessórios' WHERE nome = 'Roupas';
+
+-- * Cadastro de Produtos *
+
+INSERT INTO petstation.produto (nome, preco, descricao, estoque, id_subcategoria) 
+VALUES ('Ração Golden para Cães Adultos - 15Kg', 159.90, 
+'Ração tipo seca, sabor frango, para grande e médio porte', 100, 
+        (SELECT id_subcategoria FROM petstation.subcategoria 
+         WHERE nome = 'Rações e petiscos' AND id_categoria = (
+		 SELECT id_categoria FROM petstation.categoria 
+		 WHERE nome = 'Cachorro')));
+
+SELECT * from petstation.produto;
+
+CREATE OR REPLACE FUNCTION create_produto(
+    nome_produto VARCHAR,
+    preco_produto NUMERIC(10, 2),
+    descricao_produto VARCHAR,
+    estoque_produto INT,
+    nome_subcategoria VARCHAR,
+    nome_categoria VARCHAR
+) RETURNS VOID AS $$
+DECLARE
+    subcategoria_id INT;
+BEGIN
+    -- Obter o id_subcategoria com base na subcategoria e categoria fornecidas
+    SELECT sc.id_subcategoria 
+    INTO subcategoria_id
+    FROM petstation.subcategoria sc
+    JOIN petstation.categoria c ON sc.id_categoria = c.id_categoria
+    WHERE sc.nome = nome_subcategoria AND c.nome = nome_categoria;
+    
+    -- Inserir o produto na tabela produto
+    INSERT INTO petstation.produto (nome, preco, descricao, estoque, id_subcategoria)
+    VALUES (nome_produto, preco_produto, descricao_produto, estoque_produto, subcategoria_id);
+END;
+$$ LANGUAGE plpgsql;
+
+SELECT create_produto('Ração Golden para Cães Filhotes - 15Kg', 169.90, 
+'Ração tipo seca, sabor frango, para grande, médio e pequeno porte', 100, 
+'Rações e petiscos', 'Cachorro');
+
+SELECT create_produto('Snack Bifinho Frango - 60g', 12.90, 
+'Snack Bifinho sabor frango para grande, médio e pequeno porte', 100, 
+'Rações e petiscos', 'Cachorro');
