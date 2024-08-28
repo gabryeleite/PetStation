@@ -46,7 +46,7 @@ CREATE TABLE petstation.cliente(
     sobrenome VARCHAR(100) NOT NULL,
     sexo CHAR(1),
     data_nascimento DATE NOT NULL,
-    telefone CHAR(14) NOT NULL,
+    telefone CHAR(14) NOT NULL, -- CPF CHAR(11)
     email VARCHAR(80) NOT NULL,
     CONSTRAINT pk_cliente  PRIMARY KEY(id_cliente),
     CONSTRAINT uk_cliente_telefone UNIQUE(telefone),
@@ -349,3 +349,74 @@ SELECT create_produto('Capa de Chuva para Gatos', 69.90,
 SELECT create_produto('Pijama de Algodão para Gatos', 49.90, 
 'Pijama de algodão macio, com estampa estrelada, tamanho médio', 100, 
 'Roupas e acessórios', 'Gato');
+
+-- Alimentação (Pássaro)
+
+SELECT create_produto('Ração Alcon Club para Calopsitas - 500g', 19.90, 
+'Ração balanceada com grãos selecionados para calopsitas', 100, 
+'Alimentação', 'Pássaro');
+
+SELECT create_produto('Mistura de Sementes para Canários - 1Kg', 24.90, 
+'Mix de sementes selecionadas, indicado para canários', 100, 
+'Alimentação', 'Pássaro');
+
+SELECT create_produto('Farinhada para Periquitos - 250g', 14.90, 
+'Farinhada completa, enriquecida com vitaminas e minerais', 100, 
+'Alimentação', 'Pássaro');
+
+-- Brinquedos (Pássaro)
+
+SELECT create_produto('Balanço de Madeira para Pássaros', 29.90, 
+'Balanço em madeira natural, ideal para pequenos e médios pássaros', 100, 
+'Brinquedos', 'Pássaro');
+
+SELECT create_produto('Espelho com Guizo para Pássaros', 12.90, 
+'Brinquedo com espelho e guizo, indicado para periquitos e calopsitas', 100, 
+'Brinquedos', 'Pássaro');
+
+SELECT create_produto('Escada de Madeira para Pássaros', 19.90, 
+'Escada em madeira, com 5 degraus, para gaiolas de diversos tamanhos', 100, 
+'Brinquedos', 'Pássaro');
+
+-- Beleza e limpo (Pássaro)
+
+SELECT create_produto('Shampoo para Pássaros - 200ml', 29.90, 
+'Shampoo suave para limpeza de penas e pele', 100, 
+'Beleza e limpeza', 'Pássaro');
+
+SELECT create_produto('Lixa de Unha para Pássaros', 9.90, 
+'Lixa especial para manutenção das unhas de pássaros', 100, 
+'Beleza e limpeza', 'Pássaro');
+
+SELECT create_produto('Spray Higienizador de Gaiolas - 500ml', 24.90, 
+'Spray antibacteriano para limpeza e desinfecção de gaiolas', 100, 
+'Beleza e limpeza', 'Pássaro');
+
+-- Farmácia (Pássaro)
+
+SELECT create_produto('Vitaminas para Pássaros - 30ml', 19.90, 
+'Suplemento vitamínico líquido, indicado para todas as espécies de pássaros', 100, 
+'Farmácia', 'Pássaro');
+
+SELECT create_produto('Antibiótico para Pássaros - 10ml', 34.90, 
+'Medicação antibiótica para tratamento de infecções respiratórias', 100, 
+'Farmácia', 'Pássaro');
+
+SELECT create_produto('Cálcio Líquido para Pássaros - 50ml', 14.90, 
+'Suplemento de cálcio para fortalecimento de ossos e casca de ovos', 100, 
+'Farmácia', 'Pássaro');
+
+
+-- Gaiolas e Viveiros (Pássaro)
+
+SELECT create_produto('Gaiola para Canários', 149.90, 
+'Gaiola de metal com bandeja removível, ideal para canários', 100, 
+'Gaiolas e viveiros', 'Pássaro');
+
+SELECT create_produto('Viveiro de Madeira para Pássaros', 299.90, 
+'Viveiro espaçoso em madeira, ideal para aves de médio porte', 100, 
+'Gaiolas e viveiros', 'Pássaro');
+
+SELECT create_produto('Poleiro de Madeira Natural', 24.90, 
+'Poleiro de madeira natural, fácil de instalar em qualquer gaiola', 100, 
+'Gaiolas e viveiros', 'Pássaro');
