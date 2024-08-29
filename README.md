@@ -16,12 +16,13 @@
 <h1 align="center">
   
   ![Badge](https://img.shields.io/badge/Linguagem-JAVA-FFD700)
+  ![Badge](https://img.shields.io/badge/Framework-SpringBoot-FFD700)
   ![Badge](https://img.shields.io/badge/SGBD-PostGresql-FFD700)
   
 </h1>
 
 ## Diagrama Entidade-Relacionamento
-O Diagrama Entidade-Relacionamento (DER) do projeto **PetStation** foi desenhado para representar a estrutura de dados necessária para o funcionamento da loja virtual. O diagrama inclui as principais entidades como **Clientes**, **Produtos**, **Pedidos**, **Categorias**, **Subcategorias** e **Estoque**. Cada entidade possui atributos específicos que permitem a gestão eficiente dos dados.
+O Diagrama Entidade-Relacionamento (DER) do projeto **PetStation** foi desenhado para representar a estrutura de dados necessária para o funcionamento da loja virtual. O diagrama inclui as principais entidades como **Cliente**, **Produto**, **Pedido**, **Categoria** e **Subcategoria**. Cada entidade possui atributos específicos que permitem a gestão eficiente dos dados.
 
 [//]: # (--------Banner--------)
 <h1 align="center">
@@ -34,22 +35,22 @@ O Diagrama Entidade-Relacionamento (DER) do projeto **PetStation** foi desenhado
 
 Abaixo estão listados os relatórios que podem ser gerados a partir do banco de dados da PetStation, com os benefícios associados a cada um:
 
-1. **Relatório de Vendas por Período** 
+1. **Relatório de Vendas por Período**: 
    Ajuda a identificar períodos de maior e menor demanda, permitindo o planejamento estratégico de estoques e promoções.
 
-2. **Relatório de Estoque de Produtos** 
+2. **Relatório de Estoque de Produtos**:
    Facilita o controle do inventário, evitando a falta de produtos e otimizando o reabastecimento.
 
-3. **Relatório de Clientes Ativos**   
+3. **Relatório de Clientes Ativos**:   
    Auxilia na compreensão do comportamento dos clientes, permitindo campanhas de marketing mais direcionadas.
 
-4. **Relatório de Produtos Mais Vendidos por Categoria**  
+4. **Relatório de Produtos Mais Vendidos por Categoria**:  
    Permite a identificação dos produtos mais populares, auxiliando na promoção e investimento estratégico.
 
-5. **Relatório de Categorias com Maior Faturamento** 
+5. **Relatório de Categorias com Maior Faturamento**: 
    Identifica as categorias mais lucrativas, ajudando a orientar futuras estratégias de venda.
 
-6. **Relatório de Subcategorias com Maior Faturamento** 🏷 
+6. **Relatório de Subcategorias com Maior Faturamento**:
    Permite uma análise detalhada das subcategorias, facilitando a alocação de recursos e esforços de marketing.
 
 
