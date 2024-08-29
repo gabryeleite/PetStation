@@ -15,8 +15,8 @@
 [//]: # (--------Badge--------)
 <h1 align="center">
   
-  ![Badge](https://img.shields.io/badge/Linguagem-JAVA-purple)
-  ![Badge](https://img.shields.io/badge/SGBD-PostGresql-purple)
+  ![Badge](https://img.shields.io/badge/Linguagem-JAVA-FFD700)
+  ![Badge](https://img.shields.io/badge/SGBD-PostGresql-FFD700)
   
 </h1>
 
