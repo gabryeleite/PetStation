@@ -46,14 +46,14 @@ CREATE TABLE petstation.cliente(
     sobrenome VARCHAR(100) NOT NULL,
     sexo CHAR(1),
     data_nascimento DATE NOT NULL,
-    telefone CHAR(14) NOT NULL, -- CPF CHAR(11)
+    cpf CHAR(14) NOT NULL,
     email VARCHAR(80) NOT NULL,
     CONSTRAINT pk_cliente  PRIMARY KEY(id_cliente),
-    CONSTRAINT uk_cliente_telefone UNIQUE(telefone),
+    CONSTRAINT uk_cliente_cpf UNIQUE(cpf),
     CONSTRAINT uk_cliente_email UNIQUE(email),
     CONSTRAINT ck_cliente_sexo CHECK(sexo in ('M','F')), 
-    CONSTRAINT ck_cliente_telefone 
-		CHECK (telefone ~ '^\([0-9]{2}\)9[0-9]{4}-[0-9]{4}$') 
+    CONSTRAINT ck_cliente_cpf
+		CHECK (cpf ~ '^\d{3}\.\d{3}\.\d{3}-\d{2}$') 
 );
 
 CREATE SEQUENCE petstation.pedido_num_seq
@@ -490,3 +490,17 @@ SELECT create_produto('Filtro Externo para Aquário', 89.90,
 SELECT create_produto('Termostato para Aquário 50W', 39.90, 
 'Termostato ajustável, ideal para manter a temperatura da água estável', 100, 
 'Aquários e equipamentos', 'Peixe');
+
+-- * Cadastro de Clientes *
+
+INSERT INTO petstation.cliente(nome, sobrenome, sexo, data_nascimento, cpf, email) 
+VALUES ('Gabryel', 'Leite', 'M', TO_DATE('17-12-2004','dd-mm-yyyy')), '111.111.111-11', 'gabryeleite@uel.br';
+
+INSERT INTO petstation.cliente(nome, sobrenome, sexo, data_nascimento, cpf, email) 
+VALUES ('Beatriz', 'Passoni', 'F', TO_DATE('17-12-2004','dd-mm-yyyy')), '111.111.111-12', 'biapassoni@uel.br';
+
+INSERT INTO petstation.cliente(nome, sobrenome, sexo, data_nascimento, cpf, email) 
+VALUES ('Daniel', 'Kaster', 'M', TO_DATE('17-12-2004','dd-mm-yyyy')), '111.111.111-13', 'gabryeleite@uel.br';
+
+INSERT INTO petstation.cliente(nome, sobrenome, sexo, data_nascimento, cpf, email) 
+VALUES ('Bill', 'Gates', 'M', TO_DATE('17-12-2004','dd-mm-yyyy')), '111.111.111-14', 'billgates@uel.br';
