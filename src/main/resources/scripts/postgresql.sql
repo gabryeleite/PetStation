@@ -420,3 +420,73 @@ SELECT create_produto('Viveiro de Madeira para Pássaros', 299.90,
 SELECT create_produto('Poleiro de Madeira Natural', 24.90, 
 'Poleiro de madeira natural, fácil de instalar em qualquer gaiola', 100, 
 'Gaiolas e viveiros', 'Pássaro');
+
+-- Alimentaçao (Peixe)
+
+SELECT create_produto('Ração Alcon Goldfish - 100g', 12.90, 
+'Ração em flocos, indicada para peixes Goldfish', 100, 
+'Alimentação', 'Peixe');
+
+SELECT create_produto('Ração TetraMin - 250ml', 34.90, 
+'Ração balanceada em flocos, ideal para peixes tropicais', 100, 
+'Alimentação', 'Peixe');
+
+SELECT create_produto('Ração Spirulina para Peixes - 50g', 19.90, 
+'Ração rica em spirulina, ideal para peixes herbívoros', 100, 
+'Alimentação', 'Peixe');
+
+-- Decoracao (Peixe)
+
+SELECT create_produto('Planta Artificial para Aquário', 14.90, 
+'Planta artificial de plástico, fácil de limpar, cor verde', 100, 
+'Decoração', 'Peixe');
+
+SELECT create_produto('Caverna de Resina para Aquário', 39.90, 
+'Decoração em resina, forma de caverna, ideal para aquários médios e grandes', 100, 
+'Decoração', 'Peixe');
+
+SELECT create_produto('Substrato Colorido para Aquário - 1kg', 24.90, 
+'Substrato colorido, não tóxico, ideal para aquários de água doce', 100, 
+'Decoração', 'Peixe');
+
+-- Limpeza (Peixe)
+
+SELECT create_produto('Limpador Magnético para Vidros de Aquário', 29.90, 
+'Limpador magnético para remover algas e sujeira dos vidros', 100, 
+'Limpeza', 'Peixe');
+
+SELECT create_produto('Sifão para Limpeza de Aquário', 19.90, 
+'Sifão manual para limpeza de fundo de aquário', 100, 
+'Limpeza', 'Peixe');
+
+SELECT create_produto('Escova de Limpeza para Filtros de Aquário', 14.90, 
+'Escova de cerdas macias, ideal para limpeza de filtros e tubos', 100, 
+'Limpeza', 'Peixe');
+
+-- Farmácia (Peixe) 
+
+SELECT create_produto('Anti Cloro para Aquário - 120ml', 12.90, 
+'Solução para eliminar cloro e cloramina da água do aquário', 100, 
+'Farmácia', 'Peixe');
+
+SELECT create_produto('Bactericida para Peixes - 30ml', 24.90, 
+'Solução bactericida, tratamento de doenças bacterianas em peixes', 100, 
+'Farmácia', 'Peixe');
+
+SELECT create_produto('Remédio para Ictio - 30ml', 19.90, 
+'Solução para tratamento de ictio (doença dos pontos brancos)', 100, 
+'Farmácia', 'Peixe');
+
+-- Aquários e equipamentos (Peixe)
+
+SELECT create_produto('Aquário de Vidro 20L', 149.90, 
+'Aquário de vidro, capacidade de 20 litros, ideal para qualquer ambiente', 100, 
+'Aquários e equipamentos', 'Peixe');
+
+SELECT create_produto('Filtro Externo para Aquário', 89.90, 
+'Filtro externo para aquário de até 60 litros, com fluxo ajustável', 100, 
+'Aquários e equipamentos', 'Peixe');
+
+SELECT create_produto('Termostato para Aquário 50W', 39.90, 
+'Termostato ajustável, ideal para manter a temperatura da água estável', 100, 
+'Aquários e equipamentos', 'Peixe');
