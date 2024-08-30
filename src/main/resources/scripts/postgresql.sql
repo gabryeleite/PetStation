@@ -490,3 +490,99 @@ SELECT create_produto('Filtro Externo para Aquário', 89.90,
 SELECT create_produto('Termostato para Aquário 50W', 39.90, 
 'Termostato ajustável, ideal para manter a temperatura da água estável', 100, 
 'Aquários e equipamentos', 'Peixe');
+
+SELECT create_produto('Remédio para Ictio - 30ml', 19.90, 
+'Solução para tratamento de ictio (doença dos pontos brancos)', 100, 
+'Farmácia', 'Peixe');
+
+-- Aquários e equipamentos (Peixe)
+
+SELECT create_produto('Aquário de Vidro 20L', 149.90, 
+'Aquário de vidro, capacidade de 20 litros, ideal para qualquer ambiente', 100, 
+'Aquários e equipamentos', 'Peixe');
+
+SELECT create_produto('Filtro Externo para Aquário', 89.90, 
+'Filtro externo para aquário de até 60 litros, com fluxo ajustável', 100, 
+'Aquários e equipamentos', 'Peixe');
+
+SELECT create_produto('Termostato para Aquário 50W', 39.90, 
+'Termostato ajustável, ideal para manter a temperatura da água estável', 100, 
+'Aquários e equipamentos', 'Peixe');
+
+SELECT p.* FROM petstation.produto p
+JOIN petstation.subcategoria s ON p.id_subcategoria = s.id_subcategoria
+JOIN petstation.categoria c ON s.id_categoria = c.id_categoria
+WHERE c.nome = 'Peixe';
+
+-- * Cadastro de Clientes *
+
+INSERT INTO petstation.cliente(nome, sobrenome, sexo, data_nascimento, cpf, email) 
+VALUES ('Gabryel', 'Leite', 'M', TO_DATE('17-12-2004','dd-mm-yyyy'), '111.111.111-11', 'gabryeleite@uel.br');
+
+INSERT INTO petstation.cliente(nome, sobrenome, sexo, data_nascimento, cpf, email) 
+VALUES ('Beatriz', 'Passoni', 'F', TO_DATE('17-12-2004','dd-mm-yyyy'), '111.111.111-12', 'biapassoni@uel.br');
+
+INSERT INTO petstation.cliente(nome, sobrenome, sexo, data_nascimento, cpf, email) 
+VALUES ('Daniel', 'Kaster', 'M', TO_DATE('17-12-2004','dd-mm-yyyy'), '111.111.111-13', 'dskaster@uel.br');
+
+INSERT INTO petstation.cliente(nome, sobrenome, sexo, data_nascimento, cpf, email) 
+VALUES ('Bill', 'Gates', 'M', TO_DATE('17-12-2004','dd-mm-yyyy'), '111.111.111-14', 'billgates@uel.br');
+
+SELECT * FROM petstation.cliente;
+
+-- * Simulando Pedidos *
+
+ALTER TABLE petstation.produto ADD CONSTRAINT uk_produto UNIQUE(nome);
+
+-- Pedido 01 --
+
+-- CPF_cliente  : 111.111.111-11
+-- Data         : Atual 
+-- Horário      : Atual
+
+-- Carrinho --
+
+-- Produto      : 'Snack Dreamies Sabor Queijo - 60g'
+-- Qnt          : 3 unid
+-- Produto      : 'Rato de Pelúcia com Catnip'
+-- Qnt          : 1 unid
+
+INSERT INTO petstation.pedido(num, id_cliente, data_pedido, hora_pedido)
+VALUES (1, (SELECT id_cliente FROM petstation.cliente WHERE cpf = '111.111.111-11'), CURRENT_DATE, CURRENT_TIME);
+
+INSERT INTO petstation.carrinho(num_pedido, qnt_produto, num_produto)
+VALUES (1, 3, (SELECT num FROM petstation.produto WHERE nome = 'Snack Dreamies Sabor Queijo - 60g'));
+
+INSERT INTO petstation.carrinho(num_pedido, qnt_produto, num_produto)
+VALUES (1, 1, (SELECT num FROM petstation.produto WHERE nome = 'Rato de Pelúcia com Catnip'));
+
+SELECT * from petstation.pedido;
+SELECT * from petstation.carrinho;
+
+-- Pedido 02 --
+
+-- CPF_cliente  : 111.111.111-12
+-- Data         : Atual
+-- Horário      : Atual
+
+-- Carrinho --
+
+-- Produto      : 'Mistura de Sementes para Canários - 1Kg'
+-- Qnt          : 2 unid
+-- Produto      : 'Espelho com Guizo para Pássaros'
+-- Qnt          : 1 unid
+-- Produto      : 'Vitaminas para Pássaros - 30ml'
+-- Qnt          : 4 unid
+
+INSERT INTO petstation.pedido(num, id_cliente, data_pedido, hora_pedido)
+VALUES (2, (SELECT id_cliente FROM petstation.cliente WHERE cpf = '111.111.111-12'), CURRENT_DATE, CURRENT_TIME);
+
+INSERT INTO petstation.carrinho(num_pedido, qnt_produto, num_produto)
+VALUES (2, 2, (SELECT num FROM petstation.produto WHERE nome = 'Mistura de Sementes para Canários - 1Kg'));
+
+INSERT INTO petstation.carrinho(num_pedido, qnt_produto, num_produto)
+VALUES (2, 1, (SELECT num FROM petstation.produto WHERE nome = 'Espelho com Guizo para Pássaros'));
+
+INSERT INTO petstation.carrinho(num_pedido, qnt_produto, num_produto)
+VALUES (2, 4, (SELECT num FROM petstation.produto WHERE nome = 'Vitaminas para Pássaros - 30ml'));
+
