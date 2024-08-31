@@ -803,13 +803,18 @@ SELECT * FROM petstation.vw_resumo_pedido;
 
 SELECT 
     p.nome AS "Produto",
+    ctg.nome AS "Categoria",
     SUM(c.qnt_produto) AS "Quantidade Vendida"
 FROM 
     petstation.carrinho c
 JOIN 
     petstation.produto p ON c.num_produto = p.num
+JOIN 
+    petstation.subcategoria sc ON p.id_subcategoria = sc.id_subcategoria
+JOIN 
+    petstation.categoria ctg ON sc.id_categoria = ctg.id_categoria
 GROUP BY 
-    p.nome
+    p.nome, ctg.nome
 ORDER BY 
     "Quantidade Vendida" DESC
 LIMIT 5;
