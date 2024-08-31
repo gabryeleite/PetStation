@@ -6,11 +6,8 @@
 </h1>
 
 [//]: # (--------Descricao--------)
-<p align="center">
-  <a>
   A **PetStation** é uma loja virtual especializada em produtos para animais de estimação, como cachorros, gatos, aves e peixes. Nosso objetivo é oferecer uma ampla gama de produtos, desde rações e brinquedos até acessórios e medicamentos, garantindo o bem-estar e a felicidade dos pets. Com uma interface amigável e fácil de navegar, nossos clientes podem realizar pedidos rapidamente, visualizando detalhes completos dos produtos e acessando categorias e subcategorias para encontrar o que precisam.
-  </a>
-</p>
+
 
 [//]: # (--------Badge--------)
 <h1 align="center">
@@ -35,22 +32,22 @@ O Diagrama Entidade-Relacionamento (DER) do projeto **PetStation** foi desenhado
 
 Abaixo estão listados os relatórios que podem ser gerados a partir do banco de dados da PetStation, com os benefícios associados a cada um:
 
-1. **Relatório de Vendas por Período**: 
+1. **Relatório de Vendas por Período**:<br> 
    Ajuda a identificar períodos de maior e menor demanda, permitindo o planejamento estratégico de estoques e promoções.
 
-2. **Relatório de Estoque de Produtos**:
-   Facilita o controle do inventário, evitando a falta de produtos e otimizando o reabastecimento.
+2. **Relatório de Clientes Ativos**:<br>
+   Auxilia na compreensão do comportamento dos clientes, permitindo visualização dos usuários com maior quantidade de pedidos.
 
-3. **Relatório de Clientes Ativos**:   
-   Auxilia na compreensão do comportamento dos clientes, permitindo campanhas de marketing mais direcionadas.
+3. **Relatório de Produtos mais vendidos**:<br>
+   Facilita o controle do inventário, evitando a falta de produtos e otimizando o reabastecimento.
 
 4. **Relatório de Produtos Mais Vendidos por Categoria**:  
    Permite a identificação dos produtos mais populares, auxiliando na promoção e investimento estratégico.
 
-5. **Relatório de Categorias com Maior Faturamento**: 
+5. **Relatório de Categorias com Maior Faturamento**:<br> 
    Identifica as categorias mais lucrativas, ajudando a orientar futuras estratégias de venda.
 
-6. **Relatório de Subcategorias com Maior Faturamento**:
+6. **Relatório de Subcategorias com Maior Faturamento**:<br>
    Permite uma análise detalhada das subcategorias, facilitando a alocação de recursos e esforços de marketing.
 
 
