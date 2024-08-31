@@ -655,3 +655,53 @@ JOIN petstation.carrinho c ON p.num = c.num_produto
 JOIN petstation.pedido ped ON c.num_pedido = ped.num
 JOIN petstation.cliente cli ON ped.id_cliente = cli.id_cliente
 WHERE cli.cpf = '111.111.111-13';
+
+-- Atualiza estoque
+
+-- Pedido 01:
+-- 'Snack Dreamies Sabor Queijo - 60g'   | 3 unid
+-- 'Rato de Pelúcia com Catnip'          | 1 unid
+
+UPDATE petstation.produto SET estoque = estoque - 3
+WHERE nome = 'Snack Dreamies Sabor Queijo - 60g';
+
+UPDATE petstation.produto SET estoque = estoque - 1
+WHERE nome = 'Rato de Pelúcia com Catnip';
+
+-- Pedido 02:
+-- 'Mistura de Sementes para Canários - 1Kg'    | 2 unid
+-- 'Espelho com Guizo para Pássaros'    | 1 unid
+-- 'Vitaminas para Pássaros - 30ml'     | 4 unid
+
+UPDATE petstation.produto SET estoque = estoque - 2
+WHERE nome = 'Mistura de Sementes para Canários - 1Kg';
+
+UPDATE petstation.produto SET estoque = estoque - 1
+WHERE nome = 'Espelho com Guizo para Pássaros';
+
+UPDATE petstation.produto SET estoque = estoque - 4
+WHERE nome = 'Vitaminas para Pássaros - 30ml';
+
+-- Pedido 03:
+-- 'Ração Golden para Cães Adultos - 15Kg'  |  2 unid
+
+UPDATE petstation.produto SET estoque = estoque - 2
+WHERE nome = 'Ração Golden para Cães Adultos - 15Kg';
+
+-- Pedido 04:
+-- 'Ração Alcon Goldfish - 100g'    | 3 unid
+-- 'Planta Artificial para Aquário' | 2 unid
+
+UPDATE petstation.produto SET estoque = estoque - 3
+WHERE nome = 'Ração Alcon Goldfish - 100g';
+
+UPDATE petstation.produto SET estoque = estoque - 2
+WHERE nome = 'Planta Artificial para Aquário';
+
+-- Pedido 05:
+-- Peitoral Anti Puxão'     |  1 unid
+
+UPDATE petstation.produto SET estoque = estoque - 1
+WHERE nome = 'Peitoral Anti Puxão';
+
+SELECT * from petstation.produto ORDER BY num;
