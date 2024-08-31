@@ -834,3 +834,19 @@ GROUP BY
 ORDER BY 
     "Quantidade Vendida" DESC
 LIMIT 5;
+
+-- Clientes mais ativos (com mais pedidos)
+
+SELECT 
+    c.id_cliente AS "ID Cliente",
+    c.nome || ' ' || c.sobrenome AS "Nome do Cliente",
+    COUNT(p.num) AS "Número de Pedidos"
+FROM 
+    petstation.cliente c
+JOIN 
+    petstation.pedido p ON c.id_cliente = p.id_cliente
+GROUP BY 
+    c.id_cliente, c.nome, c.sobrenome
+ORDER BY 
+    "Número de Pedidos" DESC
+LIMIT 3;
