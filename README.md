@@ -24,7 +24,7 @@ O Diagrama Entidade-Relacionamento (DER) do projeto **PetStation** foi desenhado
 [//]: # (--------Banner--------)
 <h1 align="center">
   
-  ![oi](https://github.com/gabryeleite/PetStation/blob/117ecf5cfe03e60ee289c5cafcfaf3d58000bdc1/ER_petstation.jpg)
+  ![oi](https://github.com/gabryeleite/PetStation/blob/main/EntregaA/DER.png)
   
 </h1>
  
