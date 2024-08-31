@@ -796,3 +796,41 @@ ORDER BY
     p.num;
 
 SELECT * FROM petstation.vw_resumo_pedido;
+
+-- * Consultas *
+
+-- Produtos mais vendidos (Geral)
+
+SELECT 
+    p.nome AS "Produto",
+    SUM(c.qnt_produto) AS "Quantidade Vendida"
+FROM 
+    petstation.carrinho c
+JOIN 
+    petstation.produto p ON c.num_produto = p.num
+GROUP BY 
+    p.nome
+ORDER BY 
+    "Quantidade Vendida" DESC
+LIMIT 5;
+
+-- Produtos mais vendidos (Categoria)
+
+SELECT 
+    p.nome AS "Produto",
+    SUM(c.qnt_produto) AS "Quantidade Vendida"
+FROM 
+    petstation.carrinho c
+JOIN 
+    petstation.produto p ON c.num_produto = p.num
+JOIN 
+    petstation.subcategoria sc ON p.id_subcategoria = sc.id_subcategoria
+JOIN 
+    petstation.categoria ctg ON sc.id_categoria = ctg.id_categoria
+WHERE 
+    ctg.nome = 'Pássaro'
+GROUP BY 
+    p.nome
+ORDER BY 
+    "Quantidade Vendida" DESC
+LIMIT 5;
