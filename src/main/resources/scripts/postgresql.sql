@@ -181,6 +181,10 @@ SELECT create_produto('Mordedor Galinha', 7.90,
 'Mordedor feito de PVC, medidas: 29 x 8 x 5cm', 100, 
 'Brinquedos', 'Cachorro');
 
+SELECT create_produto('Bola Cravo - Azul', 8.90, 
+'Bolinha feita de Vinil, medidas: 6,5cm de diâmetro', 100, 
+'Brinquedos', 'Cachorro');
+
 -- Coleiras, guias e peitorais (Cachorro)
 
 SELECT create_produto('Peitoral Anti Puxão', 149.90, 
@@ -251,6 +255,11 @@ SELECT create_produto('Camiseta Florida', 39.90,
 'Camiseta de algodão, com estampa florida, para grande porte', 100, 
 'Roupas e acessórios', 'Cachorro');
 
+SELECT p.* FROM petstation.produto p
+JOIN petstation.subcategoria s ON p.id_subcategoria = s.id_subcategoria
+JOIN petstation.categoria c ON s.id_categoria = c.id_categoria
+WHERE c.nome = 'Cachorro';
+
 -- Rações e petiscos (Gato)
 
 SELECT create_produto('Ração Whiskas para Gatos Adultos - 1,5Kg', 49.90, 
@@ -292,7 +301,6 @@ SELECT create_produto('Guia Retrátil para Gatos', 49.90,
 SELECT create_produto('Coleira de Nylon com Sino', 19.90, 
 'Coleira de nylon ajustável com sino para gatos', 100, 
 'Coleiras e guias', 'Gato');
-
 
 -- Beleza e limpeza (Gato)
 
@@ -350,6 +358,11 @@ SELECT create_produto('Pijama de Algodão para Gatos', 49.90,
 'Pijama de algodão macio, com estampa estrelada, tamanho médio', 100, 
 'Roupas e acessórios', 'Gato');
 
+SELECT p.* FROM petstation.produto p
+JOIN petstation.subcategoria s ON p.id_subcategoria = s.id_subcategoria
+JOIN petstation.categoria c ON s.id_categoria = c.id_categoria
+WHERE c.nome = 'Gato';
+
 -- Alimentação (Pássaro)
 
 SELECT create_produto('Ração Alcon Club para Calopsitas - 500g', 19.90, 
@@ -378,7 +391,7 @@ SELECT create_produto('Escada de Madeira para Pássaros', 19.90,
 'Escada em madeira, com 5 degraus, para gaiolas de diversos tamanhos', 100, 
 'Brinquedos', 'Pássaro');
 
--- Beleza e limpo (Pássaro)
+-- Beleza e limpeza (Pássaro)
 
 SELECT create_produto('Shampoo para Pássaros - 200ml', 29.90, 
 'Shampoo suave para limpeza de penas e pele', 100, 
@@ -406,7 +419,6 @@ SELECT create_produto('Cálcio Líquido para Pássaros - 50ml', 14.90,
 'Suplemento de cálcio para fortalecimento de ossos e casca de ovos', 100, 
 'Farmácia', 'Pássaro');
 
-
 -- Gaiolas e Viveiros (Pássaro)
 
 SELECT create_produto('Gaiola para Canários', 149.90, 
@@ -420,6 +432,11 @@ SELECT create_produto('Viveiro de Madeira para Pássaros', 299.90,
 SELECT create_produto('Poleiro de Madeira Natural', 24.90, 
 'Poleiro de madeira natural, fácil de instalar em qualquer gaiola', 100, 
 'Gaiolas e viveiros', 'Pássaro');
+
+SELECT p.* FROM petstation.produto p
+JOIN petstation.subcategoria s ON p.id_subcategoria = s.id_subcategoria
+JOIN petstation.categoria c ON s.id_categoria = c.id_categoria
+WHERE c.nome = 'Pássaro';
 
 -- Alimentaçao (Peixe)
 
@@ -491,16 +508,150 @@ SELECT create_produto('Termostato para Aquário 50W', 39.90,
 'Termostato ajustável, ideal para manter a temperatura da água estável', 100, 
 'Aquários e equipamentos', 'Peixe');
 
+SELECT p.* FROM petstation.produto p
+JOIN petstation.subcategoria s ON p.id_subcategoria = s.id_subcategoria
+JOIN petstation.categoria c ON s.id_categoria = c.id_categoria
+WHERE c.nome = 'Peixe';
+
 -- * Cadastro de Clientes *
 
 INSERT INTO petstation.cliente(nome, sobrenome, sexo, data_nascimento, cpf, email) 
-VALUES ('Gabryel', 'Leite', 'M', TO_DATE('17-12-2004','dd-mm-yyyy')), '111.111.111-11', 'gabryeleite@uel.br';
+VALUES ('Gabryel', 'Leite', 'M', TO_DATE('17-12-2004','dd-mm-yyyy'), '111.111.111-11', 'gabryeleite@uel.br');
 
 INSERT INTO petstation.cliente(nome, sobrenome, sexo, data_nascimento, cpf, email) 
-VALUES ('Beatriz', 'Passoni', 'F', TO_DATE('17-12-2004','dd-mm-yyyy')), '111.111.111-12', 'biapassoni@uel.br';
+VALUES ('Beatriz', 'Passoni', 'F', TO_DATE('17-12-2004','dd-mm-yyyy'), '111.111.111-12', 'biapassoni@uel.br');
 
 INSERT INTO petstation.cliente(nome, sobrenome, sexo, data_nascimento, cpf, email) 
-VALUES ('Daniel', 'Kaster', 'M', TO_DATE('17-12-2004','dd-mm-yyyy')), '111.111.111-13', 'gabryeleite@uel.br';
+VALUES ('Daniel', 'Kaster', 'M', TO_DATE('17-12-2004','dd-mm-yyyy'), '111.111.111-13', 'dskaster@uel.br');
 
 INSERT INTO petstation.cliente(nome, sobrenome, sexo, data_nascimento, cpf, email) 
-VALUES ('Bill', 'Gates', 'M', TO_DATE('17-12-2004','dd-mm-yyyy')), '111.111.111-14', 'billgates@uel.br';
+VALUES ('Bill', 'Gates', 'M', TO_DATE('17-12-2004','dd-mm-yyyy'), '111.111.111-14', 'billgates@uel.br');
+
+SELECT * FROM petstation.cliente;
+
+-- * Simulando Pedidos *
+
+ALTER TABLE petstation.produto ADD CONSTRAINT uk_produto UNIQUE(nome);
+
+-- Pedido 01 --
+
+-- CPF_cliente  : 111.111.111-11
+-- Data         : Atual 
+-- Horário      : Atual
+
+-- Carrinho --
+
+-- Produto      : 'Snack Dreamies Sabor Queijo - 60g'
+-- Qnt          : 3 unid
+-- Produto      : 'Rato de Pelúcia com Catnip'
+-- Qnt          : 1 unid
+
+INSERT INTO petstation.pedido(num, id_cliente, data_pedido, hora_pedido)
+VALUES (1, (SELECT id_cliente FROM petstation.cliente WHERE cpf = '111.111.111-11'), CURRENT_DATE, CURRENT_TIME);
+
+INSERT INTO petstation.carrinho(num_pedido, qnt_produto, num_produto)
+VALUES (1, 3, (SELECT num FROM petstation.produto WHERE nome = 'Snack Dreamies Sabor Queijo - 60g'));
+
+INSERT INTO petstation.carrinho(num_pedido, qnt_produto, num_produto)
+VALUES (1, 1, (SELECT num FROM petstation.produto WHERE nome = 'Rato de Pelúcia com Catnip'));
+
+SELECT * from petstation.pedido;
+SELECT * from petstation.carrinho;
+
+-- Pedido 02 --
+
+-- CPF_cliente  : 111.111.111-12
+-- Data         : Atual
+-- Horário      : Atual
+
+-- Carrinho --
+
+-- Produto      : 'Mistura de Sementes para Canários - 1Kg'
+-- Qnt          : 2 unid
+-- Produto      : 'Espelho com Guizo para Pássaros'
+-- Qnt          : 1 unid
+-- Produto      : 'Vitaminas para Pássaros - 30ml'
+-- Qnt          : 4 unid
+
+INSERT INTO petstation.pedido(num, id_cliente, data_pedido, hora_pedido)
+VALUES (2, (SELECT id_cliente FROM petstation.cliente WHERE cpf = '111.111.111-12'), CURRENT_DATE, CURRENT_TIME);
+
+INSERT INTO petstation.carrinho(num_pedido, qnt_produto, num_produto)
+VALUES (2, 2, (SELECT num FROM petstation.produto WHERE nome = 'Mistura de Sementes para Canários - 1Kg'));
+
+INSERT INTO petstation.carrinho(num_pedido, qnt_produto, num_produto)
+VALUES (2, 1, (SELECT num FROM petstation.produto WHERE nome = 'Espelho com Guizo para Pássaros'));
+
+INSERT INTO petstation.carrinho(num_pedido, qnt_produto, num_produto)
+VALUES (2, 4, (SELECT num FROM petstation.produto WHERE nome = 'Vitaminas para Pássaros - 30ml'));
+
+-- Pedido 03 --
+
+-- CPF_cliente  : 111.111.111-13
+-- Data         : Atual
+-- Horário      : Atual
+
+-- Carrinho --
+
+-- Produto      : 'Ração Golden para Cães Adultos - 15Kg'
+-- Qnt          : 2 unid
+
+INSERT INTO petstation.pedido(num, id_cliente, data_pedido, hora_pedido)
+VALUES (3, (SELECT id_cliente FROM petstation.cliente WHERE cpf = '111.111.111-13'), CURRENT_DATE, CURRENT_TIME);
+
+INSERT INTO petstation.carrinho(num_pedido, qnt_produto, num_produto)
+VALUES (3, 2, (SELECT num FROM petstation.produto WHERE nome = 'Ração Golden para Cães Adultos - 15Kg'));
+
+-- Pedido 04 --
+
+-- CPF_cliente  : 111.111.111-14
+-- Data         : Atual
+-- Horário      : Atual
+
+-- Carrinho --
+
+-- Produto      : 'Ração Alcon Goldfish - 100g'
+-- Qnt          : 3 unid
+-- Produto      : 'Planta Artificial para Aquário'
+-- Qnt          : 2 unid
+
+INSERT INTO petstation.pedido(num, id_cliente, data_pedido, hora_pedido)
+VALUES (4, (SELECT id_cliente FROM petstation.cliente WHERE cpf = '111.111.111-14'), CURRENT_DATE, CURRENT_TIME);
+
+INSERT INTO petstation.carrinho(num_pedido, qnt_produto, num_produto)
+VALUES (4, 3, (SELECT num FROM petstation.produto WHERE nome = 'Ração Alcon Goldfish - 100g'));
+
+INSERT INTO petstation.carrinho(num_pedido, qnt_produto, num_produto)
+VALUES (4, 2, (SELECT num FROM petstation.produto WHERE nome = 'Planta Artificial para Aquário'));
+
+-- Pedido 05 --
+
+-- CPF_cliente  : 111.111.111-13
+-- Data         : Atual
+-- Horário      : Atual
+
+-- Carrinho --
+
+-- Produto      : 'Peitoral Anti Puxão'
+-- Qnt          : 1 unid
+
+INSERT INTO petstation.pedido(num, id_cliente, data_pedido, hora_pedido)
+VALUES (5, (SELECT id_cliente FROM petstation.cliente WHERE cpf = '111.111.111-13'), CURRENT_DATE, CURRENT_TIME);
+
+INSERT INTO petstation.carrinho(num_pedido, qnt_produto, num_produto)
+VALUES (5, 1, (SELECT num FROM petstation.produto WHERE nome = 'Peitoral Anti Puxão'));
+
+SELECT * from petstation.pedido;
+SELECT * from petstation.carrinho;
+
+-- pedidos de um cliente
+SELECT * from petstation.pedido 
+WHERE id_cliente = (SELECT id_cliente FROM petstation.cliente WHERE cpf = '111.111.111-13');
+
+-- produtos pedidos por um cliente
+SELECT p.nome AS produto, ped.num, ped.data_pedido
+FROM petstation.produto p
+JOIN petstation.carrinho c ON p.num = c.num_produto
+JOIN petstation.pedido ped ON c.num_pedido = ped.num
+JOIN petstation.cliente cli ON ped.id_cliente = cli.id_cliente
+WHERE cli.cpf = '111.111.111-13';
