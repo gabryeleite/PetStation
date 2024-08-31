@@ -866,3 +866,23 @@ GROUP BY
     p.data_pedido
 ORDER BY 
     p.data_pedido;
+
+    -- Subcategorias com maior faturamento
+
+SELECT 
+    sc.nome AS "Subcategoria",
+    cat.nome AS "Categoria",
+    SUM(c.qnt_produto * p.preco) AS "Faturamento Total"
+FROM 
+    petstation.carrinho c
+JOIN 
+    petstation.produto p ON c.num_produto = p.num
+JOIN 
+    petstation.subcategoria sc ON p.id_subcategoria = sc.id_subcategoria
+JOIN 
+    petstation.categoria cat ON sc.id_categoria = cat.id_categoria
+GROUP BY 
+    sc.nome, cat.nome
+ORDER BY 
+    "Faturamento Total" DESC
+LIMIT 5;
