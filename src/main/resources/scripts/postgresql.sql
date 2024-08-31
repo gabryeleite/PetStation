@@ -705,3 +705,73 @@ UPDATE petstation.produto SET estoque = estoque - 1
 WHERE nome = 'Peitoral Anti Puxão';
 
 SELECT * from petstation.produto ORDER BY num;
+
+-- * Views *
+
+-- View Produto:
+
+CREATE OR REPLACE VIEW petstation.vw_produto AS
+SELECT 
+    num AS "Número",
+    nome AS "Nome",
+    preco AS "Preço",
+    descricao AS "Descrição",
+    estoque AS "Estoque"
+FROM 
+    petstation.produto ORDER BY num;
+
+SELECT * FROM petstation.vw_produto;
+
+-- View Cliente:
+
+CREATE OR REPLACE VIEW petstation.vw_cliente AS
+SELECT 
+    id_cliente AS "ID Cliente",
+    nome AS "Nome",
+    sobrenome AS "Sobrenome",
+    sexo AS "Sexo",
+    data_nascimento AS "Nascimento",
+    cpf AS "CPF",
+    email AS "E-mail"
+FROM 
+    petstation.cliente ORDER BY id_cliente;
+
+SELECT * FROM petstation.vw_cliente;
+SELECT * FROM petstation.vw_cliente WHERE "Nascimento" >= TO_DATE('19-12-1970','dd-mm-yyyy');
+
+-- View Pedido:
+
+CREATE OR REPLACE VIEW petstation.vw_pedido AS
+SELECT 
+    p.num AS "Nº Pedido",
+    p.id_cliente AS "ID Cliente",
+    c.nome || ' ' || c.sobrenome AS "Cliente",
+    p.data_pedido AS "Data",
+    p.hora_pedido AS "Hora"
+FROM 
+    petstation.pedido p
+JOIN 
+    petstation.cliente c ON p.id_cliente = c.id_cliente
+ORDER BY 
+    p.num;
+
+SELECT * FROM petstation.vw_pedido;
+
+-- View Carrinho:
+
+CREATE OR REPLACE VIEW petstation.vw_carrinho AS
+SELECT 
+    c.num_pedido AS "Nº do Pedido",
+    c.num_produto AS "Nº do Produto",
+    p.nome AS "Produto",
+    p.preco AS "Preço",
+    c.qnt_produto AS "Quantidade",
+    (c.qnt_produto * p.preco) AS "Total"
+FROM 
+    petstation.carrinho c
+JOIN 
+    petstation.produto p ON c.num_produto = p.num
+ORDER BY 
+    c.num_pedido;
+
+SELECT * FROM petstation.vw_carrinho;
