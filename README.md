@@ -8,7 +8,7 @@
 [//]: # (--------Descricao--------)
 <p align="center">
   <a>
-  A **PetStation** é uma loja virtual especializada em produtos para animais de estimação. Nosso objetivo é oferecer uma ampla gama de produtos, desde rações e brinquedos até acessórios e medicamentos, para garantir o bem-estar e a felicidade dos pets. Com uma interface amigável e fácil de navegar, os clientes podem realizar pedidos rapidamente, visualizando detalhes completos dos produtos e acessando categorias e subcategorias para encontrar o que precisam.
+  A **PetStation** é uma loja virtual especializada em produtos para animais de estimação, como cachorros, gatos, aves e peixes. Nosso objetivo é oferecer uma ampla gama de produtos, desde rações e brinquedos até acessórios e medicamentos, garantindo o bem-estar e a felicidade dos pets. Com uma interface amigável e fácil de navegar, nossos clientes podem realizar pedidos rapidamente, visualizando detalhes completos dos produtos e acessando categorias e subcategorias para encontrar o que precisam.
   </a>
 </p>
 
