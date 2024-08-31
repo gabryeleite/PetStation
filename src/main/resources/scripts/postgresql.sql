@@ -850,3 +850,19 @@ GROUP BY
 ORDER BY 
     "Número de Pedidos" DESC
 LIMIT 3;
+
+-- Número de produtos vendidos por dia em determinado período 
+
+SELECT 
+    p.data_pedido AS "Data",
+    SUM(c.qnt_produto) AS "Quantidade Total de Produtos"
+FROM 
+    petstation.pedido p
+JOIN 
+    petstation.carrinho c ON p.num = c.num_pedido
+WHERE 
+    p.data_pedido BETWEEN '2024-08-01' AND '2024-08-31'  
+GROUP BY 
+    p.data_pedido
+ORDER BY 
+    p.data_pedido;
