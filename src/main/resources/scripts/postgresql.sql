@@ -775,3 +775,24 @@ ORDER BY
     c.num_pedido;
 
 SELECT * FROM petstation.vw_carrinho;
+
+-- Resumo Pedido (Pedido + Carrinho):
+
+CREATE OR REPLACE VIEW petstation.vw_resumo_pedido AS
+SELECT
+    p.num AS "Nº Pedido",
+    SUM(c.qnt_produto) AS "Quantidade",
+    SUM(c.qnt_produto * pr.preco) AS "Preço Total",
+    TO_CHAR(p.data_pedido, 'dd-mm-yyyy') AS "Data"
+FROM
+    petstation.pedido p
+INNER JOIN 
+    petstation.carrinho c ON p.num = c.num_pedido
+INNER JOIN 
+    petstation.produto pr ON c.num_produto = pr.num
+GROUP BY
+    p.num, p.data_pedido
+ORDER BY
+    p.num;
+
+SELECT * FROM petstation.vw_resumo_pedido;
