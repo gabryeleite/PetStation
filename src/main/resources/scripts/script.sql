@@ -781,17 +781,20 @@ SELECT * FROM petstation.vw_carrinho;
 CREATE OR REPLACE VIEW petstation.vw_resumo_pedido AS
 SELECT
     p.num AS "Nº Pedido",
-    SUM(c.qnt_produto) AS "Quantidade",
-    SUM(c.qnt_produto * pr.preco) AS "Preço Total",
+    c.nome || ' ' || c.sobrenome AS "Cliente",
+    SUM(car.qnt_produto) AS "Quantidade",
+    SUM(car.qnt_produto * pr.preco) AS "Preço Total",
     TO_CHAR(p.data_pedido, 'dd-mm-yyyy') AS "Data"
 FROM
     petstation.pedido p
 INNER JOIN 
-    petstation.carrinho c ON p.num = c.num_pedido
+    petstation.cliente c ON p.id_cliente = c.id_cliente
 INNER JOIN 
-    petstation.produto pr ON c.num_produto = pr.num
+    petstation.carrinho car ON p.num = car.num_pedido
+INNER JOIN 
+    petstation.produto pr ON car.num_produto = pr.num
 GROUP BY
-    p.num, p.data_pedido
+    p.num, p.data_pedido, c.nome, c.sobrenome
 ORDER BY
     p.num;
 
@@ -891,3 +894,92 @@ GROUP BY
 ORDER BY 
     "Faturamento Total" DESC
 LIMIT 5;
+
+-- * Simulações Pedidos *
+
+-- Pedido 06 --
+
+-- CPF_cliente  : 111.111.111-11
+-- Data         : Atual
+-- Horário      : Atual
+
+-- Carrinho --
+
+-- Produto      : 'Escova Removedora de Pelos'
+-- Qnt          : 2 unid
+-- Produto      : 'Shampoo Seco para Gatos - 300ml'
+-- Qnt          : 1 unid
+
+INSERT INTO petstation.pedido(num, id_cliente, data_pedido, hora_pedido)
+VALUES (6, (SELECT id_cliente FROM petstation.cliente WHERE cpf = '111.111.111-11'), 
+TO_DATE('31-08-2024','dd-mm-yyyy'), CURRENT_TIME);
+
+INSERT INTO petstation.carrinho(num_pedido, qnt_produto, num_produto)
+VALUES (6, 2, (SELECT num FROM petstation.produto WHERE nome = 'Escova Removedora de Pelos'));
+
+INSERT INTO petstation.carrinho(num_pedido, qnt_produto, num_produto)
+VALUES (6, 1, (SELECT num FROM petstation.produto WHERE nome = 'Shampoo Seco para Gatos - 300ml'));
+
+-- Atualiza estoque
+
+UPDATE petstation.produto SET estoque = estoque - 2
+WHERE nome = 'Escova Removedora de Pelos';
+
+UPDATE petstation.produto SET estoque = estoque - 1
+WHERE nome = 'Shampoo Seco para Gatos - 300ml';
+
+-- Pedido 07 --
+
+-- CPF_cliente  : 111.111.111-12
+-- Data         : Atual
+-- Horário      : Atual
+
+-- Carrinho --
+
+-- Produto      : 'Lixa de Unha para Pássaros'
+-- Qnt          : 3 unid
+-- Produto      : 'Poleiro de Madeira Natural'
+-- Qnt          : 1 unid
+
+INSERT INTO petstation.pedido(num, id_cliente, data_pedido, hora_pedido)
+VALUES (7, (SELECT id_cliente FROM petstation.cliente WHERE cpf = '111.111.111-12'), 
+TO_DATE('31-08-2024','dd-mm-yyyy'), CURRENT_TIME);
+
+INSERT INTO petstation.carrinho(num_pedido, qnt_produto, num_produto)
+VALUES (7, 3, (SELECT num FROM petstation.produto WHERE nome = 'Lixa de Unha para Pássaros'));
+
+INSERT INTO petstation.carrinho(num_pedido, qnt_produto, num_produto)
+VALUES (7, 1, (SELECT num FROM petstation.produto WHERE nome = 'Poleiro de Madeira Natural'));
+
+-- Atualiza estoque
+
+UPDATE petstation.produto SET estoque = estoque - 3
+WHERE nome = 'Lixa de Unha para Pássaros';
+
+UPDATE petstation.produto SET estoque = estoque - 1
+WHERE nome = 'Poleiro de Madeira Natural';
+
+-- Pedido 08 --
+
+-- CPF_cliente  : 111.111.111-11
+-- Data         : Atual
+-- Horário      : Atual
+
+-- Carrinho --
+
+-- Produto      : 'Snack Dreamies Sabor Queijo - 60g'
+-- Qnt          : 2 unid
+
+INSERT INTO petstation.pedido(num, id_cliente, data_pedido, hora_pedido)
+VALUES (8, (SELECT id_cliente FROM petstation.cliente WHERE cpf = '111.111.111-11'), CURRENT_DATE, CURRENT_TIME);
+
+INSERT INTO petstation.carrinho(num_pedido, qnt_produto, num_produto)
+VALUES (8, 2, (SELECT num FROM petstation.produto WHERE nome = 'Snack Dreamies Sabor Queijo - 60g'));
+
+-- Atualiza estoque
+
+UPDATE petstation.produto SET estoque = estoque - 2
+WHERE nome = 'Snack Dreamies Sabor Queijo - 60g';
+
+SELECT * FROM petstation.vw_carrinho;
+SELECT * FROM petstation.vw_resumo_pedido;
