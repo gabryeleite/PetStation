@@ -13,13 +13,12 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "produto", schema = "petstation")
+@Table(name = "produto", schema = "petstation", uniqueConstraints = @UniqueConstraint(columnNames = "nome"))
 public class Produto {
     
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "produto_seq")
-    @SequenceGenerator(name = "produto_seq", schema = "petstation", 
-    sequenceName = "produto_num_seq", allocationSize = 1)
+    @SequenceGenerator(name = "produto_seq", schema = "petstation", sequenceName = "produto_num_seq", allocationSize = 1)
     @Column(name = "num")
     private Integer num;
 
@@ -87,6 +86,34 @@ public class Produto {
     public void setSubcategoria(Subcategoria subcategoria) {
         this.subcategoria = subcategoria;
     }
+}
+
+@Entity
+@Table(name = "produto", uniqueConstraints = @UniqueConstraint(columnNames = "nome"))
+public class Produto {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "produto_num_seq")
+    @SequenceGenerator(name = "produto_num_seq", sequenceName = "petstation.produto_num_seq", allocationSize = 1)
+    private int num;
+
+    @Column(nullable = false, length = 50)
+    private String nome;
+
+    @Column(nullable = false, precision = 10, scale = 2)
+    private double preco;
+
+    @Column(length = 1000)
+    private String descricao;
+
+    @Column(nullable = false)
+    private int estoque;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_subcategoria", nullable = false)
+    private Subcategoria subcategoria;
+
+    // Getters and Setters
 }
 
 /*              Script SQL
