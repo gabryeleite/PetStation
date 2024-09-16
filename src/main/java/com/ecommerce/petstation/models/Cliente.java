@@ -54,6 +54,7 @@ public class Cliente {
     private List<Pedido> pedidos;
 
     // Getters and Setters
+    
     public Integer getIdCliente() {
         return idCliente;
     }
