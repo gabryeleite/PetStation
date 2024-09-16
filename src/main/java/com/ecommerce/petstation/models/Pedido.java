@@ -20,6 +20,7 @@ import jakarta.persistence.SequenceGenerator;
 @Entity
 @Table(name = "pedido", schema = "petstation")
 public class Pedido {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pedido_seq")
     @SequenceGenerator(name = "pedido_seq", schema = "petstation", 
@@ -38,9 +39,10 @@ public class Pedido {
     private LocalTime horaPedido;
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Carrinho> itensCarrinho;
+    private List<PedidoProduto> itensPedido;
 
     // Getters and Setters
+
     public Integer getNum() {
         return num;
     }
@@ -73,12 +75,12 @@ public class Pedido {
         this.horaPedido = horaPedido;
     }
 
-    public List<Carrinho> getItensCarrinho() {
-        return itensCarrinho;
+    public List<PedidoProduto> getitensPedido() {
+        return itensPedido;
     }
 
-    public void setItensCarrinho(List<Carrinho> itensCarrinho) {
-        this.itensCarrinho = itensCarrinho;
+    public void setitensPedido(List<PedidoProduto> itensPedido) {
+        this.itensPedido = itensPedido;
     }
 }
 

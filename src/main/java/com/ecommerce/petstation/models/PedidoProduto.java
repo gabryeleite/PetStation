@@ -9,7 +9,7 @@ import jakarta.persistence.ManyToOne;
 
 @Entity
 @Table(name = "carrinho", schema = "petstation")
-public class Carrinho {
+public class PedidoProduto {
     @Id
     @Column(name = "num_pedido")
     private Integer numPedido;
