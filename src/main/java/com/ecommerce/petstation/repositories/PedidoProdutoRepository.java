@@ -16,7 +16,7 @@ public interface PedidoProdutoRepository extends JpaRepository<PedidoProduto, In
     @Transactional
     @Query(value = "INSERT INTO compra_item (num_pedido, num_produto, qnt_produto, preco_produto)" +
                    " VALUES (:num_pedido, :num_produto, :qnt_produto, :preco_produto)", nativeQuery = true)
-    void createCarrinho(
+    void createPedidoProduto(
         @Param("num_pedido") Integer numPedido,
         @Param("num_produto") Integer numProduto,
         @Param("qnt_produto") Integer qntProduto,

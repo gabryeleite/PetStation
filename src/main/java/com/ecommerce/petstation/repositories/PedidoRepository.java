@@ -27,7 +27,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
     @Transactional
     @Query(value = "INSERT INTO compra (id_cliente, data_pedido, horario_pedido)" +
                    " VALUES (:id_cliente, :data_pedido, :horario_pedido)", nativeQuery = true)
-    void createCompra(
+    void createPedido(
             @Param("id_cliente") Integer cliente,
             @Param("data_pedido") LocalDate dataPedido,
             @Param("horario_pedido") LocalTime horarioPedido
