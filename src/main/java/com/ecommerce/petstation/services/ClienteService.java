@@ -26,8 +26,8 @@ public class ClienteService {
     }
 
     public void createCliente(String nome, String sobrenome, String sexo, 
-        LocalDate dataNascimento, String telefone, String email) throws Exception {
-        clienteRepository.createCliente(nome, sobrenome, sexo, dataNascimento, telefone, email);
+        LocalDate dataNascimento, String cpf, String email) throws Exception {
+        clienteRepository.createCliente(nome, sobrenome, sexo, dataNascimento, cpf, email);
     }
 
     //@Transactional
