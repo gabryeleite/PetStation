@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "produto", schema = "petstation", uniqueConstraints = @UniqueConstraint(columnNames = "nome"))
@@ -18,7 +19,8 @@ public class Produto {
     
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "produto_seq")
-    @SequenceGenerator(name = "produto_seq", schema = "petstation", sequenceName = "produto_num_seq", allocationSize = 1)
+    @SequenceGenerator(name = "produto_seq", schema = "petstation", 
+    sequenceName = "produto_num_seq", allocationSize = 1)
     @Column(name = "num")
     private Integer num;
 
@@ -88,34 +90,6 @@ public class Produto {
     }
 }
 
-@Entity
-@Table(name = "produto", uniqueConstraints = @UniqueConstraint(columnNames = "nome"))
-public class Produto {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "produto_num_seq")
-    @SequenceGenerator(name = "produto_num_seq", sequenceName = "petstation.produto_num_seq", allocationSize = 1)
-    private int num;
-
-    @Column(nullable = false, length = 50)
-    private String nome;
-
-    @Column(nullable = false, precision = 10, scale = 2)
-    private double preco;
-
-    @Column(length = 1000)
-    private String descricao;
-
-    @Column(nullable = false)
-    private int estoque;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_subcategoria", nullable = false)
-    private Subcategoria subcategoria;
-
-    // Getters and Setters
-}
-
 /*              Script SQL
 CREATE SEQUENCE petstation.produto_num_seq
 	START 1 INCREMENT 1;
@@ -127,6 +101,7 @@ CREATE TABLE petstation.produto(
 	descricao VARCHAR(1000),
     estoque INT NOT NULL,
 	id_subcategoria INT NOT NULL,
+    CONSTRAINT uk_produto UNIQUE(nome);
 	CONSTRAINT pk_produto PRIMARY KEY(num),
 	CONSTRAINT fk_subcategoria_id FOREIGN KEY(id_subcategoria)
 		REFERENCES petstation.subcategoria(id_subcategoria) ON DELETE CASCADE
