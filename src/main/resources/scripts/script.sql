@@ -805,7 +805,7 @@ INNER JOIN
 INNER JOIN 
     petstation.produto pr ON p.num_produto = pr.num
 GROUP BY
-    ped.num, p.data_pedido, c.nome, c.sobrenome
+    ped.num, ped.data_pedido, c.nome, c.sobrenome
 ORDER BY
     ped.num;
 
