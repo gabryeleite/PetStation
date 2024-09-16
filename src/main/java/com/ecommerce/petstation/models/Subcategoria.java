@@ -29,6 +29,7 @@ public class Subcategoria {
     private Categoria categoria;
 
     // Getters and Setters
+    
     public Integer getIdSubcategoria() {
         return idSubcategoria;
     }

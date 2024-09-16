@@ -41,6 +41,7 @@ public class Produto {
     private Subcategoria subcategoria;
 
     // Getters and Setters
+    
     public Integer getNum() {
         return num;
     }

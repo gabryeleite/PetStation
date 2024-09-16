@@ -16,11 +16,10 @@ import jakarta.persistence.UniqueConstraint;
 import jakarta.persistence.SequenceGenerator;
 
 @Entity
-@Table(name = "cliente", schema = "petstation",
-    uniqueConstraints = {
-        @UniqueConstraint(columnNames = "telefone"),
-        @UniqueConstraint(columnNames = "email")
-    })
+@Table(name = "cliente", schema = "petstation", uniqueConstraints = {
+    @UniqueConstraint(columnNames = "cpf"),
+    @UniqueConstraint(columnNames = "email")
+})
 public class Cliente {
 
     @Id
@@ -42,11 +41,14 @@ public class Cliente {
     @Column(name = "data_nascimento", nullable = false)
     private LocalDate dataNascimento;
 
-    @Column(name = "telefone", nullable = false, length = 14)
-    private String telefone;
+    @Column(nullable = false, length = 14)
+    private String cpf;
 
-    @Column(name = "email", nullable = false, length = 80)
+    @Column(nullable = false, length = 80)
     private String email;
+
+    @Column(nullable = false, length = 30)
+    private String senha;
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pedido> pedidos;
@@ -92,12 +94,12 @@ public class Cliente {
         this.dataNascimento = dataNascimento;
     }
 
-    public String getTelefone() {
-        return telefone;
+    public String getCpf() {
+        return cpf;
     }
 
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 
     public String getEmail() {
@@ -127,13 +129,14 @@ CREATE TABLE petstation.cliente(
     sobrenome VARCHAR(100) NOT NULL,
     sexo CHAR(1),
     data_nascimento DATE NOT NULL,
-    telefone CHAR(14) NOT NULL,
+    cpf CHAR(14) NOT NULL,
     email VARCHAR(80) NOT NULL,
+    senha VARCHAR(30) NOT NULL,
     CONSTRAINT pk_cliente  PRIMARY KEY(id_cliente),
-    CONSTRAINT uk_cliente_telefone UNIQUE(telefone),
+    CONSTRAINT uk_cliente_cpf UNIQUE(cpf),
     CONSTRAINT uk_cliente_email UNIQUE(email),
     CONSTRAINT ck_cliente_sexo CHECK(sexo in ('M','F')), 
-    CONSTRAINT ck_cliente_telefone 
-		CHECK (telefone ~ '^\([0-9]{2}\)9[0-9]{4}-[0-9]{4}$') 
+    CONSTRAINT ck_cliente_cpf
+		CHECK (cpf ~ '^\d{3}\.\d{3}\.\d{3}-\d{2}$') 
 );
 */
