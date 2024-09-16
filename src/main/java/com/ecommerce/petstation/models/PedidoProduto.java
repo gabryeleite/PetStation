@@ -1,5 +1,7 @@
 package com.ecommerce.petstation.models;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -8,8 +10,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-@Table(name = "carrinho", schema = "petstation")
+@Table(name = "pedido_produto", schema = "petstation")
 public class PedidoProduto {
+
     @Id
     @Column(name = "num_pedido")
     private Integer numPedido;
@@ -21,6 +24,9 @@ public class PedidoProduto {
     @Column(name = "qnt_produto", nullable = false)
     private Integer qntProduto;
 
+    @Column(name = "preco", nullable = false, precision = 10, scale = 2)
+    private BigDecimal precoProduto;
+
     @ManyToOne
     @JoinColumn(name = "num_pedido", insertable = false, updatable = false)
     private Pedido pedido;
@@ -30,6 +36,7 @@ public class PedidoProduto {
     private Produto produto;
 
     // Getters and Setters
+
     public Integer getNumPedido() {
         return numPedido;
     }
@@ -54,6 +61,14 @@ public class PedidoProduto {
         this.qntProduto = qntProduto;
     }
 
+    public BigDecimal getPrecoProduto() {
+        return precoProduto;
+    }
+
+    public void setPrecoProduto(BigDecimal preco) {
+        this.precoProduto = preco;
+    }
+
     public Pedido getPedido() {
         return pedido;
     }
@@ -72,11 +87,12 @@ public class PedidoProduto {
 }
 
 /*             Script SQL
-CREATE TABLE petstation.carrinho(
+CREATE TABLE petstation.pedido_produto(
     qnt_produto INT NOT NULL,
     num_pedido INT NOT NULL,
     num_produto INT NOT NULL,
-    CONSTRAINT pk_carrinho PRIMARY KEY(num_pedido, num_produto),
+    preco_produto NUMERIC(10,2) NOT NULL,
+    CONSTRAINT pk_pedido_produto PRIMARY KEY(num_pedido, num_produto),
     CONSTRAINT fk_pedido_num FOREIGN KEY(num_pedido)
         REFERENCES petstation.pedido(num) ON DELETE CASCADE,
     CONSTRAINT fk_produto_num FOREIGN KEY(num_produto)
