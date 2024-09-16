@@ -24,14 +24,14 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO cliente (nome, sobrenome, sexo, data_nascimento, telefone, email)" + 
-                   " VALUES (:nome, :sobrenome, :sexo, :data_nascimento, :telefone, :email)", nativeQuery = true)
+    @Query(value = "INSERT INTO cliente (nome, sobrenome, sexo, data_nascimento, cpf, email)" + 
+                   " VALUES (:nome, :sobrenome, :sexo, :data_nascimento, :cpf, :email)", nativeQuery = true)
     void createCliente(
             @Param("nome") String nome,
             @Param("sobrenome") String sobrenome,
             @Param("sexo") String sexo,
             @Param("data_nascimento") LocalDate dataNascimento,
-            @Param("telefone") String telefone,
+            @Param("cpf") String cpf,
             @Param("email") String email
     );
     
