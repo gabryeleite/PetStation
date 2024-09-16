@@ -48,6 +48,7 @@ CREATE TABLE petstation.cliente(
     data_nascimento DATE NOT NULL,
     cpf CHAR(14) NOT NULL,
     email VARCHAR(80) NOT NULL,
+    senha VARCHAR(30) NOT NULL,
     CONSTRAINT pk_cliente  PRIMARY KEY(id_cliente),
     CONSTRAINT uk_cliente_cpf UNIQUE(cpf),
     CONSTRAINT uk_cliente_email UNIQUE(email),
@@ -70,11 +71,11 @@ CREATE TABLE petstation.pedido(
         REFERENCES petstation.cliente(id_cliente) ON DELETE CASCADE
 );
 
-CREATE TABLE petstation.carrinho(
+CREATE TABLE petstation.pedido_produto(
     qnt_produto INT NOT NULL,
     num_pedido INT NOT NULL,
     num_produto INT NOT NULL,
-    CONSTRAINT pk_carrinho PRIMARY KEY(num_pedido, num_produto),
+    CONSTRAINT pk_pedido_produto PRIMARY KEY(num_pedido, num_produto),
     CONSTRAINT fk_pedido_num FOREIGN KEY(num_pedido)
         REFERENCES petstation.pedido(num) ON DELETE CASCADE,
     CONSTRAINT fk_produto_num FOREIGN KEY(num_produto)
@@ -515,23 +516,24 @@ WHERE c.nome = 'Peixe';
 
 -- * Cadastro de Clientes *
 
-INSERT INTO petstation.cliente(nome, sobrenome, sexo, data_nascimento, cpf, email) 
-VALUES ('Gabryel', 'Leite', 'M', TO_DATE('17-12-2004','dd-mm-yyyy'), '111.111.111-11', 'gabryeleite@uel.br');
+INSERT INTO petstation.cliente(nome, sobrenome, sexo, data_nascimento, cpf, email, senha) 
+VALUES ('Gabryel', 'Leite', 'M', TO_DATE('17-12-2004','dd-mm-yyyy'), '111.111.111-11', 'gabryeleite@uel.br', '1234');
 
-INSERT INTO petstation.cliente(nome, sobrenome, sexo, data_nascimento, cpf, email) 
-VALUES ('Beatriz', 'Passoni', 'F', TO_DATE('17-12-2004','dd-mm-yyyy'), '111.111.111-12', 'biapassoni@uel.br');
+INSERT INTO petstation.cliente(nome, sobrenome, sexo, data_nascimento, cpf, email, senha) 
+VALUES ('Beatriz', 'Passoni', 'F', TO_DATE('17-12-2004','dd-mm-yyyy'), '111.111.111-12', 'biapassoni@uel.br', '1234');
 
-INSERT INTO petstation.cliente(nome, sobrenome, sexo, data_nascimento, cpf, email) 
-VALUES ('Daniel', 'Kaster', 'M', TO_DATE('17-12-2004','dd-mm-yyyy'), '111.111.111-13', 'dskaster@uel.br');
+INSERT INTO petstation.cliente(nome, sobrenome, sexo, data_nascimento, cpf, email, senha) 
+VALUES ('Daniel', 'Kaster', 'M', TO_DATE('17-12-2004','dd-mm-yyyy'), '111.111.111-13', 'dskaster@uel.br', '1234');
 
-INSERT INTO petstation.cliente(nome, sobrenome, sexo, data_nascimento, cpf, email) 
-VALUES ('Bill', 'Gates', 'M', TO_DATE('17-12-2004','dd-mm-yyyy'), '111.111.111-14', 'billgates@uel.br');
+INSERT INTO petstation.cliente(nome, sobrenome, sexo, data_nascimento, cpf, email, senha) 
+VALUES ('Bill', 'Gates', 'M', TO_DATE('17-12-2004','dd-mm-yyyy'), '111.111.111-14', 'billgates@uel.br', '1234');
 
 SELECT * FROM petstation.cliente;
 
 -- * Simulando Pedidos *
 
 ALTER TABLE petstation.produto ADD CONSTRAINT uk_produto UNIQUE(nome);
+ALTER TABLE petstation.pedido_produto ADD COLUMN preco_produto NUMERIC(10,2) NOT NULL;
 
 -- Pedido 01 --
 
@@ -539,7 +541,7 @@ ALTER TABLE petstation.produto ADD CONSTRAINT uk_produto UNIQUE(nome);
 -- Data         : Atual 
 -- Horário      : Atual
 
--- Carrinho --
+-- pedido_produto --
 
 -- Produto      : 'Snack Dreamies Sabor Queijo - 60g'
 -- Qnt          : 3 unid
@@ -549,14 +551,16 @@ ALTER TABLE petstation.produto ADD CONSTRAINT uk_produto UNIQUE(nome);
 INSERT INTO petstation.pedido(num, id_cliente, data_pedido, hora_pedido)
 VALUES (1, (SELECT id_cliente FROM petstation.cliente WHERE cpf = '111.111.111-11'), CURRENT_DATE, CURRENT_TIME);
 
-INSERT INTO petstation.carrinho(num_pedido, qnt_produto, num_produto)
-VALUES (1, 3, (SELECT num FROM petstation.produto WHERE nome = 'Snack Dreamies Sabor Queijo - 60g'));
+INSERT INTO petstation.pedido_produto(num_pedido, qnt_produto, preco_produto, num_produto)
+VALUES (1, 3, (SELECT preco from petstation.produto WHERE nome = 'Snack Dreamies Sabor Queijo - 60g'), 
+(SELECT num FROM petstation.produto WHERE nome = 'Snack Dreamies Sabor Queijo - 60g'));
 
-INSERT INTO petstation.carrinho(num_pedido, qnt_produto, num_produto)
-VALUES (1, 1, (SELECT num FROM petstation.produto WHERE nome = 'Rato de Pelúcia com Catnip'));
+INSERT INTO petstation.pedido_produto(num_pedido, qnt_produto, preco_produto, num_produto)
+VALUES (1, 1, (SELECT preco from petstation.produto WHERE nome = 'Rato de Pelúcia com Catnip'), 
+(SELECT num FROM petstation.produto WHERE nome = 'Rato de Pelúcia com Catnip'));
 
 SELECT * from petstation.pedido;
-SELECT * from petstation.carrinho;
+SELECT * from petstation.pedido_produto;
 
 -- Pedido 02 --
 
@@ -564,7 +568,7 @@ SELECT * from petstation.carrinho;
 -- Data         : Atual
 -- Horário      : Atual
 
--- Carrinho --
+-- pedido_produto --
 
 -- Produto      : 'Mistura de Sementes para Canários - 1Kg'
 -- Qnt          : 2 unid
@@ -576,14 +580,17 @@ SELECT * from petstation.carrinho;
 INSERT INTO petstation.pedido(num, id_cliente, data_pedido, hora_pedido)
 VALUES (2, (SELECT id_cliente FROM petstation.cliente WHERE cpf = '111.111.111-12'), CURRENT_DATE, CURRENT_TIME);
 
-INSERT INTO petstation.carrinho(num_pedido, qnt_produto, num_produto)
-VALUES (2, 2, (SELECT num FROM petstation.produto WHERE nome = 'Mistura de Sementes para Canários - 1Kg'));
+INSERT INTO petstation.pedido_produto(num_pedido, qnt_produto, preco_produto, num_produto)
+VALUES (2, 2, (SELECT preco from petstation.produto WHERE nome = 'Mistura de Sementes para Canários - 1Kg'), 
+(SELECT num FROM petstation.produto WHERE nome = 'Mistura de Sementes para Canários - 1Kg'));
 
-INSERT INTO petstation.carrinho(num_pedido, qnt_produto, num_produto)
-VALUES (2, 1, (SELECT num FROM petstation.produto WHERE nome = 'Espelho com Guizo para Pássaros'));
+INSERT INTO petstation.pedido_produto(num_pedido, qnt_produto, preco_produto, num_produto)
+VALUES (2, 1, (SELECT preco from petstation.produto WHERE nome = 'Espelho com Guizo para Pássaros'), 
+(SELECT num FROM petstation.produto WHERE nome = 'Espelho com Guizo para Pássaros'));
 
-INSERT INTO petstation.carrinho(num_pedido, qnt_produto, num_produto)
-VALUES (2, 4, (SELECT num FROM petstation.produto WHERE nome = 'Vitaminas para Pássaros - 30ml'));
+INSERT INTO petstation.pedido_produto(num_pedido, qnt_produto, preco_produto, num_produto)
+VALUES (2, 4, (SELECT preco from petstation.produto WHERE nome = 'Vitaminas para Pássaros - 30ml'), 
+(SELECT num FROM petstation.produto WHERE nome = 'Vitaminas para Pássaros - 30ml'));
 
 -- Pedido 03 --
 
@@ -591,7 +598,7 @@ VALUES (2, 4, (SELECT num FROM petstation.produto WHERE nome = 'Vitaminas para P
 -- Data         : Atual
 -- Horário      : Atual
 
--- Carrinho --
+-- pedido_produto --
 
 -- Produto      : 'Ração Golden para Cães Adultos - 15Kg'
 -- Qnt          : 2 unid
@@ -599,8 +606,9 @@ VALUES (2, 4, (SELECT num FROM petstation.produto WHERE nome = 'Vitaminas para P
 INSERT INTO petstation.pedido(num, id_cliente, data_pedido, hora_pedido)
 VALUES (3, (SELECT id_cliente FROM petstation.cliente WHERE cpf = '111.111.111-13'), CURRENT_DATE, CURRENT_TIME);
 
-INSERT INTO petstation.carrinho(num_pedido, qnt_produto, num_produto)
-VALUES (3, 2, (SELECT num FROM petstation.produto WHERE nome = 'Ração Golden para Cães Adultos - 15Kg'));
+INSERT INTO petstation.pedido_produto(num_pedido, qnt_produto, preco_produto, num_produto)
+VALUES (3, 2, (SELECT preco from petstation.produto WHERE nome = 'Ração Golden para Cães Adultos - 15Kg'), 
+(SELECT num FROM petstation.produto WHERE nome = 'Ração Golden para Cães Adultos - 15Kg'));
 
 -- Pedido 04 --
 
@@ -608,7 +616,7 @@ VALUES (3, 2, (SELECT num FROM petstation.produto WHERE nome = 'Ração Golden p
 -- Data         : Atual
 -- Horário      : Atual
 
--- Carrinho --
+-- pedido_produto --
 
 -- Produto      : 'Ração Alcon Goldfish - 100g'
 -- Qnt          : 3 unid
@@ -618,11 +626,13 @@ VALUES (3, 2, (SELECT num FROM petstation.produto WHERE nome = 'Ração Golden p
 INSERT INTO petstation.pedido(num, id_cliente, data_pedido, hora_pedido)
 VALUES (4, (SELECT id_cliente FROM petstation.cliente WHERE cpf = '111.111.111-14'), CURRENT_DATE, CURRENT_TIME);
 
-INSERT INTO petstation.carrinho(num_pedido, qnt_produto, num_produto)
-VALUES (4, 3, (SELECT num FROM petstation.produto WHERE nome = 'Ração Alcon Goldfish - 100g'));
+INSERT INTO petstation.pedido_produto(num_pedido, qnt_produto, preco_produto, num_produto)
+VALUES (4, 3, (SELECT preco from petstation.produto WHERE nome = 'Ração Alcon Goldfish - 100g'), 
+(SELECT num FROM petstation.produto WHERE nome = 'Ração Alcon Goldfish - 100g'));
 
-INSERT INTO petstation.carrinho(num_pedido, qnt_produto, num_produto)
-VALUES (4, 2, (SELECT num FROM petstation.produto WHERE nome = 'Planta Artificial para Aquário'));
+INSERT INTO petstation.pedido_produto(num_pedido, qnt_produto, preco_produto, num_produto)
+VALUES (4, 2, (SELECT preco from petstation.produto WHERE nome = 'Planta Artificial para Aquário'), 
+(SELECT num FROM petstation.produto WHERE nome = 'Planta Artificial para Aquário'));
 
 -- Pedido 05 --
 
@@ -630,7 +640,7 @@ VALUES (4, 2, (SELECT num FROM petstation.produto WHERE nome = 'Planta Artificia
 -- Data         : Atual
 -- Horário      : Atual
 
--- Carrinho --
+-- pedido_produto --
 
 -- Produto      : 'Peitoral Anti Puxão'
 -- Qnt          : 1 unid
@@ -638,11 +648,12 @@ VALUES (4, 2, (SELECT num FROM petstation.produto WHERE nome = 'Planta Artificia
 INSERT INTO petstation.pedido(num, id_cliente, data_pedido, hora_pedido)
 VALUES (5, (SELECT id_cliente FROM petstation.cliente WHERE cpf = '111.111.111-13'), CURRENT_DATE, CURRENT_TIME);
 
-INSERT INTO petstation.carrinho(num_pedido, qnt_produto, num_produto)
-VALUES (5, 1, (SELECT num FROM petstation.produto WHERE nome = 'Peitoral Anti Puxão'));
+INSERT INTO petstation.pedido_produto(num_pedido, qnt_produto, preco_produto, num_produto)
+VALUES (5, 1, (SELECT preco from petstation.produto WHERE nome = 'Peitoral Anti Puxão'), 
+(SELECT num FROM petstation.produto WHERE nome = 'Peitoral Anti Puxão'));
 
 SELECT * from petstation.pedido;
-SELECT * from petstation.carrinho;
+SELECT * from petstation.pedido_produto;
 
 -- pedidos de um cliente
 SELECT * from petstation.pedido 
@@ -651,7 +662,7 @@ WHERE id_cliente = (SELECT id_cliente FROM petstation.cliente WHERE cpf = '111.1
 -- produtos pedidos por um cliente
 SELECT p.nome AS produto, ped.num, ped.data_pedido
 FROM petstation.produto p
-JOIN petstation.carrinho c ON p.num = c.num_produto
+JOIN petstation.pedido_produto c ON p.num = c.num_produto
 JOIN petstation.pedido ped ON c.num_pedido = ped.num
 JOIN petstation.cliente cli ON ped.id_cliente = cli.id_cliente
 WHERE cli.cpf = '111.111.111-13';
@@ -757,46 +768,46 @@ ORDER BY
 
 SELECT * FROM petstation.vw_pedido;
 
--- View Carrinho:
+-- View pedido_produto:
 
-CREATE OR REPLACE VIEW petstation.vw_carrinho AS
+CREATE OR REPLACE VIEW petstation.vw_pedido_produto AS
 SELECT 
     c.num_pedido AS "Nº do Pedido",
     c.num_produto AS "Nº do Produto",
     p.nome AS "Produto",
-    p.preco AS "Preço",
+    c.preco_produto AS "Preço",
     c.qnt_produto AS "Quantidade",
-    (c.qnt_produto * p.preco) AS "Total"
+    (c.qnt_produto * c.preco_produto) AS "Total"
 FROM 
-    petstation.carrinho c
+    petstation.pedido_produto c
 JOIN 
     petstation.produto p ON c.num_produto = p.num
 ORDER BY 
     c.num_pedido;
 
-SELECT * FROM petstation.vw_carrinho;
+SELECT * FROM petstation.vw_pedido_produto;
 
--- Resumo Pedido (Pedido + Carrinho):
+-- Resumo Pedido (Pedido + pedido_produto):
 
 CREATE OR REPLACE VIEW petstation.vw_resumo_pedido AS
 SELECT
-    p.num AS "Nº Pedido",
+    ped.num AS "Nº Pedido",
     c.nome || ' ' || c.sobrenome AS "Cliente",
-    SUM(car.qnt_produto) AS "Quantidade",
-    SUM(car.qnt_produto * pr.preco) AS "Preço Total",
-    TO_CHAR(p.data_pedido, 'dd-mm-yyyy') AS "Data"
+    SUM(p.qnt_produto) AS "Quantidade",
+    SUM(p.qnt_produto * p.preco_produto) AS "Preço Total",
+    TO_CHAR(ped.data_pedido, 'dd-mm-yyyy') AS "Data"
 FROM
-    petstation.pedido p
+    petstation.pedido ped
 INNER JOIN 
-    petstation.cliente c ON p.id_cliente = c.id_cliente
+    petstation.cliente c ON ped.id_cliente = c.id_cliente
 INNER JOIN 
-    petstation.carrinho car ON p.num = car.num_pedido
+    petstation.pedido_produto p ON ped.num = p.num_pedido
 INNER JOIN 
-    petstation.produto pr ON car.num_produto = pr.num
+    petstation.produto pr ON p.num_produto = pr.num
 GROUP BY
-    p.num, p.data_pedido, c.nome, c.sobrenome
+    ped.num, p.data_pedido, c.nome, c.sobrenome
 ORDER BY
-    p.num;
+    ped.num;
 
 SELECT * FROM petstation.vw_resumo_pedido;
 
@@ -809,7 +820,7 @@ SELECT
     ctg.nome AS "Categoria",
     SUM(c.qnt_produto) AS "Quantidade Vendida"
 FROM 
-    petstation.carrinho c
+    petstation.pedido_produto c
 JOIN 
     petstation.produto p ON c.num_produto = p.num
 JOIN 
@@ -828,7 +839,7 @@ SELECT
     p.nome AS "Produto",
     SUM(c.qnt_produto) AS "Quantidade Vendida"
 FROM 
-    petstation.carrinho c
+    petstation.pedido_produto c
 JOIN 
     petstation.produto p ON c.num_produto = p.num
 JOIN 
@@ -867,7 +878,7 @@ SELECT
 FROM 
     petstation.pedido p
 JOIN 
-    petstation.carrinho c ON p.num = c.num_pedido
+    petstation.pedido_produto c ON p.num = c.num_pedido
 WHERE 
     p.data_pedido BETWEEN '2024-08-01' AND '2024-08-31'  
 GROUP BY 
@@ -880,9 +891,9 @@ ORDER BY
 SELECT 
     sc.nome AS "Subcategoria",
     ctg.nome AS "Categoria",
-    SUM(c.qnt_produto * p.preco) AS "Faturamento Total"
+    SUM(c.qnt_produto * c.preco_produto) AS "Faturamento Total"
 FROM 
-    petstation.carrinho c
+    petstation.pedido_produto c
 JOIN 
     petstation.produto p ON c.num_produto = p.num
 JOIN 
@@ -903,7 +914,7 @@ LIMIT 5;
 -- Data         : Atual
 -- Horário      : Atual
 
--- Carrinho --
+-- pedido_produto --
 
 -- Produto      : 'Escova Removedora de Pelos'
 -- Qnt          : 2 unid
@@ -914,11 +925,13 @@ INSERT INTO petstation.pedido(num, id_cliente, data_pedido, hora_pedido)
 VALUES (6, (SELECT id_cliente FROM petstation.cliente WHERE cpf = '111.111.111-11'), 
 TO_DATE('31-08-2024','dd-mm-yyyy'), CURRENT_TIME);
 
-INSERT INTO petstation.carrinho(num_pedido, qnt_produto, num_produto)
-VALUES (6, 2, (SELECT num FROM petstation.produto WHERE nome = 'Escova Removedora de Pelos'));
+INSERT INTO petstation.pedido_produto(num_pedido, qnt_produto, preco_produto, num_produto)
+VALUES (6, 2, (SELECT preco from petstation.produto WHERE nome = 'Escova Removedora de Pelos'), 
+(SELECT num FROM petstation.produto WHERE nome = 'Escova Removedora de Pelos'));
 
-INSERT INTO petstation.carrinho(num_pedido, qnt_produto, num_produto)
-VALUES (6, 1, (SELECT num FROM petstation.produto WHERE nome = 'Shampoo Seco para Gatos - 300ml'));
+INSERT INTO petstation.pedido_produto(num_pedido, qnt_produto, preco_produto, num_produto)
+VALUES (6, 1, (SELECT preco from petstation.produto WHERE nome = 'Shampoo Seco para Gatos - 300ml'), 
+(SELECT num FROM petstation.produto WHERE nome = 'Shampoo Seco para Gatos - 300ml'));
 
 -- Atualiza estoque
 
@@ -934,7 +947,7 @@ WHERE nome = 'Shampoo Seco para Gatos - 300ml';
 -- Data         : Atual
 -- Horário      : Atual
 
--- Carrinho --
+-- pedido_produto --
 
 -- Produto      : 'Lixa de Unha para Pássaros'
 -- Qnt          : 3 unid
@@ -945,11 +958,13 @@ INSERT INTO petstation.pedido(num, id_cliente, data_pedido, hora_pedido)
 VALUES (7, (SELECT id_cliente FROM petstation.cliente WHERE cpf = '111.111.111-12'), 
 TO_DATE('31-08-2024','dd-mm-yyyy'), CURRENT_TIME);
 
-INSERT INTO petstation.carrinho(num_pedido, qnt_produto, num_produto)
-VALUES (7, 3, (SELECT num FROM petstation.produto WHERE nome = 'Lixa de Unha para Pássaros'));
+INSERT INTO petstation.pedido_produto(num_pedido, qnt_produto, preco_produto, num_produto)
+VALUES (7, 3, (SELECT preco from petstation.produto WHERE nome = 'Lixa de Unha para Pássaros'), 
+(SELECT num FROM petstation.produto WHERE nome = 'Lixa de Unha para Pássaros'));
 
-INSERT INTO petstation.carrinho(num_pedido, qnt_produto, num_produto)
-VALUES (7, 1, (SELECT num FROM petstation.produto WHERE nome = 'Poleiro de Madeira Natural'));
+INSERT INTO petstation.pedido_produto(num_pedido, qnt_produto, preco_produto, num_produto)
+VALUES (7, 1, (SELECT preco from petstation.produto WHERE nome = 'Poleiro de Madeira Natural'), 
+(SELECT num FROM petstation.produto WHERE nome = 'Poleiro de Madeira Natural'));
 
 -- Atualiza estoque
 
@@ -965,7 +980,7 @@ WHERE nome = 'Poleiro de Madeira Natural';
 -- Data         : Atual
 -- Horário      : Atual
 
--- Carrinho --
+-- pedido_produto --
 
 -- Produto      : 'Snack Dreamies Sabor Queijo - 60g'
 -- Qnt          : 2 unid
@@ -973,13 +988,22 @@ WHERE nome = 'Poleiro de Madeira Natural';
 INSERT INTO petstation.pedido(num, id_cliente, data_pedido, hora_pedido)
 VALUES (8, (SELECT id_cliente FROM petstation.cliente WHERE cpf = '111.111.111-11'), CURRENT_DATE, CURRENT_TIME);
 
-INSERT INTO petstation.carrinho(num_pedido, qnt_produto, num_produto)
-VALUES (8, 2, (SELECT num FROM petstation.produto WHERE nome = 'Snack Dreamies Sabor Queijo - 60g'));
+INSERT INTO petstation.pedido_produto(num_pedido, qnt_produto, preco_produto, num_produto)
+VALUES (8, 2, (SELECT preco from petstation.produto WHERE nome = 'Snack Dreamies Sabor Queijo - 60g'), 
+(SELECT num FROM petstation.produto WHERE nome = 'Snack Dreamies Sabor Queijo - 60g'));
 
 -- Atualiza estoque
 
 UPDATE petstation.produto SET estoque = estoque - 2
 WHERE nome = 'Snack Dreamies Sabor Queijo - 60g';
 
-SELECT * FROM petstation.vw_carrinho;
+SELECT * FROM petstation.vw_pedido_produto;
 SELECT * FROM petstation.vw_resumo_pedido;
+
+SELECT p.nome AS "Produto", c.qnt_produto AS "Quantidade", ped.num AS "Nº Pedido", 
+ped.data_pedido AS "Data Pedido"
+FROM petstation.produto p
+JOIN petstation.pedido_produto c ON p.num = c.num_produto
+JOIN petstation.pedido ped ON c.num_pedido = ped.num
+JOIN petstation.cliente cli ON ped.id_cliente = cli.id_cliente
+WHERE cli.cpf = '111.111.111-11';
