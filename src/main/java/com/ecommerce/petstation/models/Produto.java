@@ -2,6 +2,8 @@ package com.ecommerce.petstation.models;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -37,6 +39,7 @@ public class Produto {
     private Integer estoque;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "id_subcategoria", nullable = false)
     private Subcategoria subcategoria;
 
