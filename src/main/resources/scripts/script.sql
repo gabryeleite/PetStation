@@ -71,11 +71,15 @@ CREATE TABLE petstation.pedido(
         REFERENCES petstation.cliente(id_cliente) ON DELETE CASCADE
 );
 
+CREATE SEQUENCE petstation.pedido_produto_id_seq
+	START 1 INCREMENT 1;
+
 CREATE TABLE petstation.pedido_produto(
+    id INT DEFAULT nextval('petstation.pedido_produto_id_seq'),
     qnt_produto INT NOT NULL,
     num_pedido INT NOT NULL,
     num_produto INT NOT NULL,
-    CONSTRAINT pk_pedido_produto PRIMARY KEY(num_pedido, num_produto),
+    CONSTRAINT pk_pedido_produto PRIMARY KEY(id),
     CONSTRAINT fk_pedido_num FOREIGN KEY(num_pedido)
         REFERENCES petstation.pedido(num) ON DELETE CASCADE,
     CONSTRAINT fk_produto_num FOREIGN KEY(num_produto)
