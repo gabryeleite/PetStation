@@ -15,21 +15,18 @@ import com.ecommerce.petstation.models.Produto;
 @Repository 
 public interface ProdutoRepository extends JpaRepository<Produto, Integer> {
 
-    @Query(value = "SELECT * FROM produto ORDER BY num DESC", nativeQuery = true)
+    @Query(value = "SELECT * FROM petstation.produto ORDER BY num DESC", nativeQuery = true)
     List<Produto> findAll();
 
-    @Query(value = "SELECT * FROM produto WHERE num = (:num)", nativeQuery = true)
+    @Query(value = "SELECT * FROM petstation.produto WHERE num = (:num)", nativeQuery = true)
     Produto findByIdProduto(@Param("num") Integer num);
     
-    @Query(value = "SELECT * FROM produto WHERE id_subcategoria = (:id_subcategoria)", nativeQuery = true)
+    @Query(value = "SELECT * FROM petstation.produto WHERE id_subcategoria = (:id_subcategoria)", nativeQuery = true)
     List<Produto> findBySubcategoria(@Param("id_subcategoria") Integer subcategoria);
-
-    @Query(value = "SELECT LAST_INSERT_ID()", nativeQuery = true)
-    Integer findLastInsertId();
 
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO produto (nome, preco, descricao, estoque, id_subcategoria)" +
+    @Query(value = "INSERT INTO petstation.produto (nome, preco, descricao, estoque, id_subcategoria)" +
                    " VALUES (:nome, :preco, :descricao, :estoque, :id_subcategoria)", nativeQuery = true)
     void createProduto(
         @Param("nome") String nome,
@@ -41,7 +38,7 @@ public interface ProdutoRepository extends JpaRepository<Produto, Integer> {
 
     @Modifying
     @Transactional
-    @Query(value = "UPDATE produto SET estoque = (:novo_estoque) WHERE num = (:num)", nativeQuery = true)
+    @Query(value = "UPDATE petstation.produto SET estoque = (:novo_estoque) WHERE num = (:num)", nativeQuery = true)
     void updateEstoque(@Param("novo_estoque") Integer novoEstoque, @Param("num") Integer num);
 
 }
