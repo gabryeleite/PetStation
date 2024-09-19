@@ -9,7 +9,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import com.ecommerce.petstation.models.Categoria;
 import com.ecommerce.petstation.models.Subcategoria;
 
 @Repository
@@ -26,7 +25,7 @@ public class PgSubcategoriaDAO implements SubcategoriaDAO {
         String sql = "INSERT INTO petstation.subcategoria(nome, id_categoria) VALUES(?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, subcategoria.getNome());
-            stmt.setInt(2, subcategoria.getCategoria().getIdCategoria());
+            stmt.setInt(2, subcategoria.getIdCategoria());
             stmt.executeUpdate();
         }
     }
@@ -41,8 +40,7 @@ public class PgSubcategoriaDAO implements SubcategoriaDAO {
             if (rs.next()) {
                 Subcategoria subcategoria = new Subcategoria();
                 subcategoria.setNome(rs.getString("nome"));
-                //subcategoria.setCategoria(rs.getInt("id_categoria"));
-                subcategoria.setCategoria(new Categoria() {{ setIdCategoria(rs.getInt("id_categoria")); }} );
+                subcategoria.setIdCategoria(rs.getInt("id_categoria"));
                 return subcategoria;
             } else {
                 return null;
@@ -55,7 +53,7 @@ public class PgSubcategoriaDAO implements SubcategoriaDAO {
         String sql = "UPDATE petstation.subcategoria SET nome = ?, SET id_categoria = ? WHERE id_subcategoria = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, subcategoria.getNome());
-            stmt.setInt(2, subcategoria.getCategoria().getIdCategoria());
+            stmt.setInt(2, subcategoria.getIdCategoria());
             stmt.executeUpdate();
         }
     }
