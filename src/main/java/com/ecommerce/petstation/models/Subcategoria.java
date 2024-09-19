@@ -1,32 +1,12 @@
 package com.ecommerce.petstation.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.SequenceGenerator;
-
-@Entity
-@Table(name = "subcategoria", schema = "petstation")
 public class Subcategoria {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "subcategoria_seq")
-    @SequenceGenerator(name = "subcategoria_seq", schema = "petstation", 
-    sequenceName = "subcategoria_id_seq", allocationSize = 1)
-    @Column(name = "id_subcategoria")
     private Integer idSubcategoria;
 
-    @Column(name = "nome", nullable = false, length = 50)
     private String nome;
 
-    @ManyToOne
-    @JoinColumn(name = "id_categoria", nullable = false)
-    private Categoria categoria;
+    private Integer idCategoria;
 
     // Getters and Setters
     
@@ -46,12 +26,12 @@ public class Subcategoria {
         this.nome = nome;
     }
 
-    public Categoria getCategoria() {
-        return categoria;
+    public Integer getIdCategoria() {
+        return idCategoria;
     }
 
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
+    public void setIdCategoria(Integer idCategoria) {
+        this.idCategoria = idCategoria;
     }
 }
 

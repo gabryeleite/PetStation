@@ -2,46 +2,17 @@ package com.ecommerce.petstation.models;
 
 import java.math.BigDecimal;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.SequenceGenerator;
-
-@Entity
-@Table(name = "pedido_produto", schema = "petstation")
 public class PedidoProduto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pedido_produto_seq")
-    @SequenceGenerator(name = "pedido_produto_seq", schema = "petstation", 
-    sequenceName = "pedido_produto_id_seq", allocationSize = 1)
-    @Column(name = "id")
     private Integer id;
 
-    @Column(name = "num_pedido")
     private Integer numPedido;
 
-    @Column(name = "num_produto")
     private Integer numProduto;
 
-    @Column(name = "qnt_produto", nullable = false)
     private Integer qntProduto;
 
-    @Column(name = "preco", nullable = false, precision = 10, scale = 2)
     private BigDecimal precoProduto;
-
-    @ManyToOne
-    @JoinColumn(name = "num_pedido", insertable = false, updatable = false)
-    private Pedido pedido;
-
-    @ManyToOne
-    @JoinColumn(name = "num_produto", insertable = false, updatable = false)
-    private Produto produto;
 
     // Getters and Setters
 
@@ -61,14 +32,6 @@ public class PedidoProduto {
         this.numPedido = numPedido;
     }
 
-    public Integer getNumProduto() {
-        return numProduto;
-    }
-
-    public void setNumProduto(Integer numProduto) {
-        this.numProduto = numProduto;
-    }
-
     public Integer getQntProduto() {
         return qntProduto;
     }
@@ -81,25 +44,18 @@ public class PedidoProduto {
         return precoProduto;
     }
 
-    public void setPrecoProduto(BigDecimal preco) {
-        this.precoProduto = preco;
+    public void setPrecoProduto(BigDecimal precoProduto) {
+        this.precoProduto = precoProduto;
     }
 
-    public Pedido getPedido() {
-        return pedido;
+    public Integer getNumProduto() {
+        return numProduto;
     }
 
-    public void setPedido(Pedido pedido) {
-        this.pedido = pedido;
+    public void setNumProduto(Integer numProduto) {
+        this.numProduto = numProduto;
     }
 
-    public Produto getProduto() {
-        return produto;
-    }
-
-    public void setProduto(Produto produto) {
-        this.produto = produto;
-    }
 }
 
 /*             Script SQL

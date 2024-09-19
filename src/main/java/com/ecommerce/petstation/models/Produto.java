@@ -2,46 +2,19 @@ package com.ecommerce.petstation.models;
 
 import java.math.BigDecimal;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
-
-@Entity
-@Table(name = "produto", schema = "petstation", uniqueConstraints = @UniqueConstraint(columnNames = "nome"))
 public class Produto {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "produto_seq")
-    @SequenceGenerator(name = "produto_seq", schema = "petstation", 
-    sequenceName = "produto_num_seq", allocationSize = 1)
-    @Column(name = "num")
+
     private Integer num;
 
-    @Column(name = "nome", nullable = false, length = 50)
     private String nome;
 
-    @Column(name = "preco", nullable = false, precision = 10, scale = 2)
     private BigDecimal preco;
 
-    @Column(name = "descricao", length = 1000)
     private String descricao;
 
-    @Column(name = "estoque", nullable = false)
     private Integer estoque;
 
-    @ManyToOne
-    @JsonIgnore
-    @JoinColumn(name = "id_subcategoria", nullable = false)
-    private Subcategoria subcategoria;
+    private Integer idSubcategoria;
 
     // Getters and Setters
     
@@ -85,12 +58,12 @@ public class Produto {
         this.estoque = estoque;
     }
 
-    public Subcategoria getSubcategoria() {
-        return subcategoria;
+    public Integer getIdSubcategoria() {
+        return idSubcategoria;
     }
 
-    public void setSubcategoria(Subcategoria subcategoria) {
-        this.subcategoria = subcategoria;
+    public void setIdSubcategoria(Integer idSubcategoria) {
+        this.idSubcategoria = idSubcategoria;
     }
 }
 

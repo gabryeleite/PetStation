@@ -4,53 +4,24 @@ import java.time.LocalDate;
 
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
-import jakarta.persistence.SequenceGenerator;
-
-@Entity
-@Table(name = "cliente", schema = "petstation", uniqueConstraints = {
-    @UniqueConstraint(columnNames = "cpf"),
-    @UniqueConstraint(columnNames = "email")
-})
 public class Cliente {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "cliente_seq")
-    @SequenceGenerator(name = "cliente_seq", schema = "petstation", 
-    sequenceName = "cliente_id_seq", allocationSize = 1)
-    @Column(name = "id_cliente")
     private Integer idCliente;
 
-    @Column(name = "nome", nullable = false, length = 50)
     private String nome;
 
-    @Column(name = "sobrenome", nullable = false, length = 100)
     private String sobrenome;
 
-    @Column(name = "sexo", length = 1)
     private String sexo;
 
-    @Column(name = "data_nascimento", nullable = false)
     private LocalDate dataNascimento;
 
-    @Column(nullable = false, length = 14)
     private String cpf;
 
-    @Column(nullable = false, length = 80)
     private String email;
 
-    @Column(nullable = false, length = 30)
-    private String senha;
+    //private String senha;
 
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pedido> pedidos;
 
     // Getters and Setters
