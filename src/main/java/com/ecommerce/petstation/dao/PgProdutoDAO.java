@@ -12,7 +12,6 @@ import java.util.logging.Logger;
 import org.springframework.stereotype.Repository;
 
 import com.ecommerce.petstation.models.Produto;
-import com.ecommerce.petstation.models.Subcategoria;
 
 @Repository
 public class PgProdutoDAO implements ProdutoDAO {
@@ -58,7 +57,7 @@ public class PgProdutoDAO implements ProdutoDAO {
             statement.setBigDecimal(2, produto.getPreco());
             statement.setString(3, produto.getDescricao());
             statement.setInt(4, produto.getEstoque());
-            statement.setInt(5, produto.getSubcategoria().getIdSubcategoria());
+            statement.setInt(5, produto.getIdSubcategoria());
             statement.executeUpdate();
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, "Erro ao inserir produto.", ex);
@@ -86,8 +85,8 @@ public class PgProdutoDAO implements ProdutoDAO {
                     produto.setPreco(result.getBigDecimal("preco"));
                     produto.setDescricao(result.getString("descricao"));
                     produto.setEstoque(result.getInt("estoque"));
-                    //produto.setSubcategoria(result.getInt("id_subcategoria"));
-                    produto.setSubcategoria(new Subcategoria() {{ setIdSubcategoria(result.getInt("id_subcategoria")); }} );
+                    produto.setIdSubcategoria(result.getInt("id_subcategoria"));
+                    
                 } else {
                     throw new SQLException("Erro ao visualizar: produto não encontrado.");
                 }
@@ -110,7 +109,7 @@ public class PgProdutoDAO implements ProdutoDAO {
             statement.setBigDecimal(2, produto.getPreco());
             statement.setString(3, produto.getDescricao());
             statement.setInt(4, produto.getEstoque());
-            statement.setInt(5, produto.getSubcategoria().getIdSubcategoria());
+            statement.setInt(5, produto.getIdSubcategoria());
             statement.setInt(6, produto.getNum());
 
             if (statement.executeUpdate() < 1) {
@@ -153,7 +152,7 @@ public class PgProdutoDAO implements ProdutoDAO {
     public List<Produto> all() throws SQLException {
         List<Produto> produtos = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement(ALL_QUERY);
-             ResultSet result = statement.executeQuery()) {
+            ResultSet result = statement.executeQuery()) {
             while (result.next()) {
                 Produto produto = new Produto();
                 produto.setNum(result.getInt("num"));
@@ -161,8 +160,8 @@ public class PgProdutoDAO implements ProdutoDAO {
                 produto.setPreco(result.getBigDecimal("preco"));
                 produto.setDescricao(result.getString("descricao"));
                 produto.setEstoque(result.getInt("estoque"));
-                //produto.setSubcategoria(result.getInt("id_subcategoria"));
-                produto.setSubcategoria(new Subcategoria() {{ setIdSubcategoria(result.getInt("id_subcategoria")); }} );
+                produto.setIdSubcategoria(result.getInt("id_subcategoria"));
+
                 produtos.add(produto);
             }
         } catch (SQLException ex) {
@@ -185,8 +184,7 @@ public class PgProdutoDAO implements ProdutoDAO {
                     produto.setPreco(result.getBigDecimal("preco"));
                     produto.setDescricao(result.getString("descricao"));
                     produto.setEstoque(result.getInt("estoque"));
-                    //produto.setIdSubcategoria(result.getInt("id_subcategoria"));
-                    produto.setSubcategoria(new Subcategoria() {{ setIdSubcategoria(result.getInt("id_subcategoria")); }} );
+                    produto.setIdSubcategoria(result.getInt("id_subcategoria"));
                 }
             }
         } catch (SQLException ex) {
@@ -209,8 +207,7 @@ public class PgProdutoDAO implements ProdutoDAO {
                     produto.setPreco(result.getBigDecimal("preco"));
                     produto.setDescricao(result.getString("descricao"));
                     produto.setEstoque(result.getInt("estoque"));
-                    //produto.setIdSubcategoria(result.getInt("id_subcategoria"));
-                    produto.setSubcategoria(new Subcategoria() {{ setIdSubcategoria(result.getInt("id_subcategoria")); }} );
+                    produto.setIdSubcategoria(result.getInt("id_subcategoria"));
                     produtos.add(produto);
                 }
             }
