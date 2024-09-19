@@ -1,36 +1,47 @@
 package com.ecommerce.petstation.controllers;
 
+import java.sql.SQLException;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ecommerce.petstation.dao.PgProdutoDAO;
 import com.ecommerce.petstation.models.Produto;
-import com.ecommerce.petstation.repositories.ProdutoRepository;
 
 @RestController
 @RequestMapping(value="/api")
 public class ProdutoController {
-    
+
     @Autowired
-    ProdutoRepository produtoRepository;
+    private PgProdutoDAO pgProdutoDAO;
 
     @GetMapping(value="/helloworld")
     public String helloworld(){
         return "Hello World";
-    };
+    }
 
     @GetMapping(value="/produtos")
-    public List<Produto> produtos(){
-        return produtoRepository.findAll();
-    };
+    public List<Produto> produtos() {
+        try {
+            return pgProdutoDAO.all();
+        } catch (SQLException e) {
+            // Gerenciar exceções adequadamente (pode retornar um código de erro apropriado)
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     @GetMapping(value="/produto/{id}")
-    public Produto produtoById(@PathVariable(value="id") Integer id){
-        return produtoRepository.findByIdProduto(id);
-    };
-
+    public Produto produtoById(@PathVariable(value="id") Integer id) {
+        try {
+            return pgProdutoDAO.findByIdProduto(id);
+        } catch (SQLException e) {
+            // Gerenciar exceções adequadamente
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
