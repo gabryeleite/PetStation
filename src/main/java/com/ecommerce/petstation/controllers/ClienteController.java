@@ -12,7 +12,7 @@ import com.ecommerce.petstation.dao.PgClienteDAO;
 import com.ecommerce.petstation.models.Cliente;
 
 @RestController
-@RequestMapping(value="/api")
+@RequestMapping(value="/clientectr")
 public class ClienteController {
 
     @Autowired

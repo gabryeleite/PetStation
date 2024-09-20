@@ -21,23 +21,23 @@ public class PgClienteDAO implements ClienteDAO {
     private static final Logger LOGGER = Logger.getLogger(PgClienteDAO.class.getName());
 
     private static final String CREATE_QUERY =
-            "INSERT INTO petstation.cliente (nome, sobrenome, sexo, dataNascimento, cpf, email) " +
+            "INSERT INTO petstation.cliente (nome, sobrenome, sexo, data_nascimento, cpf, email) " +
                     "VALUES (?, ?, ?, ?, ?, ?);";
 
     private static final String READ_QUERY =
-            "SELECT nome, sobrenome, sexo, dataNascimento, cpf, email FROM petstation.cliente WHERE num = ?;";
+            "SELECT nome, sobrenome, sexo, data_nascimento, cpf, emaipgl FROM petstation.cliente WHERE id_cliente = ?;";
 
     private static final String UPDATE_QUERY =
-            "UPDATE petstation.cliente SET nome = ?, sobrenome = ?, sexo = ?, dataNascimento = ?, cpf = ?, email = ? WHERE num = ?;";
+            "UPDATE petstation.cliente SET nome = ?, sobrenome = ?, sexo = ?, data_nascimento = ?, cpf = ?, email = ? WHERE id_cliente = ?;";
 
     private static final String DELETE_QUERY =
-            "DELETE FROM petstation.cliente WHERE num = ?;";
+            "DELETE FROM petstation.cliente WHERE id_cliente = ?;";
 
     private static final String ALL_QUERY =
-            "SELECT nome, sobrenome, sexo, dataNascimento, cpf, email FROM petstation.cliente ORDER BY num DESC;";
+            "SELECT nome, sobrenome, sexo, data_nascimento, cpf, email FROM petstation.cliente ORDER BY id_cliente DESC;";
 
     private static final String FIND_BY_ID_CLIENTE_QUERY =
-            "SELECT * FROM petstation.cliente WHERE num = ?;";
+            "SELECT * FROM petstation.cliente WHERE id_cliente = ?;";
 
     public PgClienteDAO(Connection connection) {
         this.connection = connection;
@@ -75,7 +75,7 @@ public class PgClienteDAO implements ClienteDAO {
                     cliente.setSobrenome(result.getString("sobrenome"));
                     cliente.setSexo(result.getString("sexo"));
                     // Tive que dar um cast pra LocalDate, nao sei se esta correto
-                    cliente.setDataNascimento((LocalDate) result.getObject("dataNascimento"));
+                    cliente.setDataNascimento(result.getDate("data_nascimento").toLocalDate());
                     cliente.setCpf(result.getString("cpf"));
                     cliente.setEmail(result.getString("email"));
                 } else {
@@ -146,7 +146,7 @@ public class PgClienteDAO implements ClienteDAO {
                 cliente.setSobrenome(result.getString("sobrenome"));
                 cliente.setSexo(result.getString("sexo"));
                 // Tive que dar um cast pra LocalDate, nao sei se esta correto
-                cliente.setDataNascimento((LocalDate) result.getObject("dataNascimento"));
+                cliente.setDataNascimento(result.getDate("data_nascimento").toLocalDate());
                 cliente.setCpf(result.getString("cpf"));
                 cliente.setEmail(result.getString("email"));
 
@@ -160,10 +160,10 @@ public class PgClienteDAO implements ClienteDAO {
     }
 
     @Override
-    public Cliente findByIdCliente(Integer num) throws SQLException {
+    public Cliente findByIdCliente(Integer id_cliente) throws SQLException {
         Cliente cliente = null;
         try (PreparedStatement statement = connection.prepareStatement(FIND_BY_ID_CLIENTE_QUERY)) {
-            statement.setInt(1, num);
+            statement.setInt(1, id_cliente);
             try (ResultSet result = statement.executeQuery()) {
                 if (result.next()) {
                     cliente = new Cliente();
@@ -171,7 +171,7 @@ public class PgClienteDAO implements ClienteDAO {
                     cliente.setSobrenome(result.getString("sobrenome"));
                     cliente.setSexo(result.getString("sexo"));
                     // Tive que dar um cast pra LocalDate, nao sei se esta correto
-                    cliente.setDataNascimento((LocalDate) result.getObject("dataNascimento"));
+                    cliente.setDataNascimento((LocalDate) result.getObject("data_nascimento"));
                     cliente.setCpf(result.getString("cpf"));
                     cliente.setEmail(result.getString("email"));
                 }
