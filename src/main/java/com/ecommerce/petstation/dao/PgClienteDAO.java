@@ -21,29 +21,29 @@ public class PgClienteDAO implements ClienteDAO {
     private static final Logger LOGGER = Logger.getLogger(PgClienteDAO.class.getName());
 
     private static final String CREATE_QUERY =
-            "INSERT INTO petstation.cliente (nome, sobrenome, sexo, data_nascimento, cpf, email) " +
-                    "VALUES (?, ?, ?, ?, ?, ?);";
+            "INSERT INTO petstation.cliente (nome, sobrenome, sexo, data_nascimento, cpf, email, senha) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?);";
 
     private static final String READ_QUERY =
-            "SELECT nome, sobrenome, sexo, data_nascimento, cpf, emaipgl FROM petstation.cliente WHERE id_cliente = ?;";
+            "SELECT nome, sobrenome, sexo, data_nascimento, cpf, email, senha FROM petstation.cliente WHERE id_cliente = ?;";
 
     private static final String UPDATE_QUERY =
-            "UPDATE petstation.cliente SET nome = ?, sobrenome = ?, sexo = ?, data_nascimento = ?, cpf = ?, email = ? WHERE id_cliente = ?;";
+            "UPDATE petstation.cliente SET nome = ?, sobrenome = ?, sexo = ?, data_nascimento = ?, cpf = ?, email = ?, senha = ? WHERE id_cliente = ?;";
 
     private static final String DELETE_QUERY =
             "DELETE FROM petstation.cliente WHERE id_cliente = ?;";
 
     private static final String ALL_QUERY =
-            "SELECT id_cliente, nome, sobrenome, sexo, data_nascimento, cpf, email FROM petstation.cliente ORDER BY id_cliente DESC;";
+            "SELECT id_cliente, nome, sobrenome, sexo, data_nascimento, cpf, email, senha FROM petstation.cliente ORDER BY id_cliente DESC;";
 
     private static final String FIND_BY_ID_CLIENTE_QUERY =
             "SELECT * FROM petstation.cliente WHERE id_cliente = ?;";
 
     private static final String CLIENTES_COM_MAIS_PEDIDOS_QUERY =
-            "SELECT c.id_cliente, c.nome, c.sobrenome, COUNT(p.num) AS total_pedidos " +
+            "SELECT c.id_cliente, c.nome, c.sobrenome, c.sexo, c.data_nascimento, c.cpf, c.email, c.senha, COUNT(p.num) AS total_pedidos " +
                     "FROM petstation.cliente c " +
                     "JOIN petstation.pedido p ON c.id_cliente = p.id_cliente " +
-                    "GROUP BY c.id_cliente, c.nome, c.sobrenome " +
+                    "GROUP BY c.id_cliente, c.nome, c.sobrenome, c.sexo, c.data_nascimento, c.cpf, c.email, c.senha " +
                     "ORDER BY total_pedidos DESC;";
 
     public PgClienteDAO(Connection connection) {
@@ -59,6 +59,7 @@ public class PgClienteDAO implements ClienteDAO {
             statement.setObject(4, cliente.getDataNascimento());
             statement.setString(5, cliente.getCpf());
             statement.setString(6, cliente.getEmail());
+            statement.setString(7, cliente.getSenha());
             statement.executeUpdate();
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, "Erro ao inserir cliente.", ex);
@@ -85,6 +86,7 @@ public class PgClienteDAO implements ClienteDAO {
                     cliente.setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
                     cliente.setCpf(rs.getString("cpf"));
                     cliente.setEmail(rs.getString("email"));
+                    cliente.setSenha(rs.getString("senha"));
                 } else {
                     throw new SQLException("Erro ao visualizar: cliente não encontrado.");
                 }
@@ -156,7 +158,7 @@ public class PgClienteDAO implements ClienteDAO {
                 cliente.setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
                 cliente.setCpf(rs.getString("cpf"));
                 cliente.setEmail(rs.getString("email"));
-
+                cliente.setSenha(rs.getString("senha"));
                 clientes.add(cliente);
             }
         } catch (SQLException ex) {
@@ -182,6 +184,7 @@ public class PgClienteDAO implements ClienteDAO {
                     cliente.setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
                     cliente.setCpf(rs.getString("cpf"));
                     cliente.setEmail(rs.getString("email"));
+                    cliente.setSenha(rs.getString("senha"));
                 }
             }
         } catch (SQLException ex) {
@@ -207,6 +210,7 @@ public class PgClienteDAO implements ClienteDAO {
                 cliente.setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
                 cliente.setCpf(rs.getString("cpf"));
                 cliente.setEmail(rs.getString("email"));
+                cliente.setSenha(rs.getString("senha"));
                 return cliente;
             } else {
                 return null;
@@ -224,6 +228,11 @@ public class PgClienteDAO implements ClienteDAO {
                 cliente.setIdCliente(rs.getInt("id_cliente"));
                 cliente.setNome(rs.getString("nome"));
                 cliente.setSobrenome(rs.getString("sobrenome"));
+                cliente.setSexo(rs.getString("sexo"));
+                cliente.setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
+                cliente.setCpf(rs.getString("cpf"));
+                cliente.setEmail(rs.getString("email"));
+                cliente.setSenha(rs.getString("senha"));
                 clientes.add(cliente);
             }
         } catch (SQLException ex) {

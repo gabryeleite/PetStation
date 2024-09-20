@@ -54,6 +54,7 @@ public class PgSubcategoriaDAO implements SubcategoriaDAO {
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, subcategoria.getNome());
             stmt.setInt(2, subcategoria.getIdCategoria());
+            stmt.setInt(3, subcategoria.getIdSubcategoria());
             stmt.executeUpdate();
         }
     }

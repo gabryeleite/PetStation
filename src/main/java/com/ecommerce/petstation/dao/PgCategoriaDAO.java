@@ -20,12 +20,15 @@ public class PgCategoriaDAO implements CategoriaDAO {
 
     @Override
     public void create(Categoria categoria) throws SQLException {
-        String sql = "INSERT INTO petstation.categoria(nome) VALUES(?)";
+        String sql = "INSERT INTO petstation.categoria (nome) VALUES (?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, categoria.getNome());
             stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw e;
         }
     }
+
 
     @Override
     public Categoria read(Integer id) throws SQLException {
@@ -49,6 +52,7 @@ public class PgCategoriaDAO implements CategoriaDAO {
         String sql = "UPDATE petstation.categoria SET nome = ? WHERE id_categoria = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, categoria.getNome());
+            stmt.setInt(2, categoria.getIdCategoria());
             stmt.executeUpdate();
         }
     }
@@ -71,6 +75,7 @@ public class PgCategoriaDAO implements CategoriaDAO {
 
             while (rs.next()) {
                 Categoria categoria = new Categoria();
+                categoria.setIdCategoria(rs.getInt("id_categoria"));
                 categoria.setNome(rs.getString("nome"));
                 categorias.add(categoria);
             }
@@ -78,7 +83,7 @@ public class PgCategoriaDAO implements CategoriaDAO {
             return categorias;
         }
     }
-
+/*
     @Override
     public Categoria getCategoriaByNome(String nome) throws SQLException {
         String sql = "SELECT * FROM petstation.categoria WHERE nome = ?";
@@ -88,12 +93,13 @@ public class PgCategoriaDAO implements CategoriaDAO {
 
             if (rs.next()) {
                 Categoria categoria = new Categoria();
+                categoria.setIdCategoria(rs.getInt("id"));
                 categoria.setNome(rs.getString("nome"));
                 return categoria;
             } else {
                 return null;
             }
         }
-    }
+    } */
 
 }

@@ -20,7 +20,7 @@ public class Cliente {
 
     private String email;
 
-    //private String senha;
+    private String senha;
 
     private List<Pedido> pedidos;
 
@@ -80,6 +80,14 @@ public class Cliente {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 
     public List<Pedido> getPedidos() {
