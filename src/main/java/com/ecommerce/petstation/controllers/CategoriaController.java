@@ -61,4 +61,14 @@ public class CategoriaController {
         }
     }
 
+    @DeleteMapping(value="/delete-categoria/{id}")
+    public ResponseEntity<String> deleteCategoria(@PathVariable Integer id) throws SQLException {
+        try {
+            pgCategoriaDAO.delete(id);
+            return ResponseEntity.ok("Categoria excluído com sucesso.");
+        } catch (SQLException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro ao excluir: categoria não encontrado.");
+        }
+    }
+
 }

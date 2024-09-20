@@ -54,8 +54,8 @@ public class ProdutoController {
             pgProdutoDAO.create(produto);
             return ResponseEntity.ok("Produto criado com sucesso.");
         } catch (SQLException e) {
-            if (e.getMessage().contains("subcategoria associada não existe")) {
-                return ResponseEntity.badRequest().body("Erro: Subcategoria associada não existe.");
+            if (e.getMessage().contains("produto associada não existe")) {
+                return ResponseEntity.badRequest().body("Erro: Produto associada não existe.");
             } else if (e.getMessage().contains("nome já existente")) {
                 return ResponseEntity.badRequest().body("Erro: Nome do produto já existe.");
             } else if (e.getMessage().contains("campos obrigatórios não podem ser nulos")) {
@@ -63,6 +63,16 @@ public class ProdutoController {
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao criar produto.");
             }
+        }
+    }
+
+    @DeleteMapping(value="/delete-produto/{id}")
+    public ResponseEntity<String> deleteProduto(@PathVariable Integer id) throws SQLException {
+        try {
+            pgProdutoDAO.delete(id);
+            return ResponseEntity.ok("Produto excluído com sucesso.");
+        } catch (SQLException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro ao excluir: produto não encontrado.");
         }
     }
 

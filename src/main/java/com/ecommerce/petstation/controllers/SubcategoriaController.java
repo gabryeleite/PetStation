@@ -61,6 +61,16 @@ public class SubcategoriaController {
         }
     }
 
+    @DeleteMapping(value="/delete-subcategoria/{id}")
+    public ResponseEntity<String> deleteSubcategoria(@PathVariable Integer id) throws SQLException {
+        try {
+            pgSubcategoriaDAO.delete(id);
+            return ResponseEntity.ok("Subcategoria excluído com sucesso.");
+        } catch (SQLException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro ao excluir: subcategoria não encontrado.");
+        }
+    }
+
     @GetMapping(value = "/subcategoria-categoria/{id}")
     public List<Subcategoria> subcategoriaByCategoria(@PathVariable(value="id") Integer id) {
         try {
