@@ -40,12 +40,7 @@ public class PgClienteDAO implements ClienteDAO {
             "SELECT * FROM petstation.cliente WHERE id_cliente = ?;";
 
     private static final String CLIENTES_COM_MAIS_PEDIDOS_QUERY =
-            "SELECT c.*, COUNT(p.id_pedido) AS total_pedidos " +
-                    "FROM petstation.cliente c " +
-                    "JOIN petstation.pedido p ON c.id_cliente = p.id_cliente " +
-                    "GROUP BY c.id_cliente " +
-                    "ORDER BY total_pedidos DESC " +
-                    "LIMIT 10;";  // Ou qualquer outro número para limitar a quantidade de clientes
+            "SELECT COUNT(ped.num) AS total_pedidos from petstation.produto join petstation.pedido ped on petstation.produto.num = ped.num group by petstation.produto.nome order by total_pedidos DESC;";
 
 
     public PgClienteDAO(Connection connection) {
@@ -155,7 +150,6 @@ public class PgClienteDAO implements ClienteDAO {
                 cliente.setNome(result.getString("nome"));
                 cliente.setSobrenome(result.getString("sobrenome"));
                 cliente.setSexo(result.getString("sexo"));
-                // Tive que dar um cast pra LocalDate, nao sei se esta correto
                 cliente.setDataNascimento(result.getDate("data_nascimento").toLocalDate());
                 cliente.setCpf(result.getString("cpf"));
                 cliente.setEmail(result.getString("email"));
@@ -193,7 +187,6 @@ public class PgClienteDAO implements ClienteDAO {
         return cliente;
     }
 
-    /*
     @Override
     public List<Cliente> findClientesComMaisPedidos() throws SQLException {
         List<Cliente> clientes = new ArrayList<>();
@@ -208,7 +201,6 @@ public class PgClienteDAO implements ClienteDAO {
                 cliente.setDataNascimento(result.getDate("data_nascimento").toLocalDate());
                 cliente.setCpf(result.getString("cpf"));
                 cliente.setEmail(result.getString("email"));
-                // Adicionar mais informações, se necessário
                 clientes.add(cliente);
             }
         } catch (SQLException ex) {
@@ -216,5 +208,6 @@ public class PgClienteDAO implements ClienteDAO {
             throw new SQLException("Erro ao buscar clientes com mais pedidos.");
         }
         return clientes;
-    }   */
+    }
+
 }

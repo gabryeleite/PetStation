@@ -28,10 +28,16 @@ public class ClienteController {
         }
     }
 
-    //@GetMapping("/mais-pedidos")
-   // public List<Cliente> getClientesComMaisPedidos() throws SQLException {
-    //    return clienteDAO.findClientesComMaisPedidos();
-   // }
+    @GetMapping("/mais-pedidos")
+    public List<Cliente> getClientesComMaisPedidos() throws SQLException {
+        try {
+            return pgClienteDAO.findClientesComMaisPedidos();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
 }
 
 /*
