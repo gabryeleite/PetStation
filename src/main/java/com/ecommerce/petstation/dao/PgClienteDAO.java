@@ -142,6 +142,7 @@ public class PgClienteDAO implements ClienteDAO {
              ResultSet result = statement.executeQuery()) {
             while (result.next()) {
                 Cliente cliente = new Cliente();
+                cliente.setIdCliente(result.getInt("id_cliente"));
                 cliente.setNome(result.getString("nome"));
                 cliente.setSobrenome(result.getString("sobrenome"));
                 cliente.setSexo(result.getString("sexo"));
