@@ -47,9 +47,9 @@ public class PgPedidoDAO implements PedidoDAO {
         String sql = "INSERT INTO petstation.pedido(data_pedido, hora_pedido, id_cliente) VALUES(?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             //stmt.setInt(1, pedido.getNum());
-            stmt.setObject(2, pedido.getDataPedido());
-            stmt.setObject(3, pedido.getHoraPedido());
-            stmt.setInt(4, pedido.getIdCliente());
+            stmt.setObject(1, pedido.getDataPedido());
+            stmt.setObject(2, pedido.getHoraPedido());
+            stmt.setInt(3, pedido.getIdCliente());
             stmt.executeUpdate();
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, "Erro ao criar pedido.", ex);
