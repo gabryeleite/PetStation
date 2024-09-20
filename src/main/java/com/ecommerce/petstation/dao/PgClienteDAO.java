@@ -40,8 +40,11 @@ public class PgClienteDAO implements ClienteDAO {
             "SELECT * FROM petstation.cliente WHERE id_cliente = ?;";
 
     private static final String CLIENTES_COM_MAIS_PEDIDOS_QUERY =
-            "SELECT COUNT(ped.num) AS total_pedidos from petstation.produto join petstation.pedido ped on petstation.produto.num = ped.num group by petstation.produto.nome order by total_pedidos DESC;";
-
+            "SELECT c.id_cliente, c.nome, c.sobrenome, COUNT(p.num) AS total_pedidos " +
+                    "FROM petstation.cliente c " +
+                    "JOIN petstation.pedido p ON c.id_cliente = p.id_cliente " +
+                    "GROUP BY c.id_cliente, c.nome, c.sobrenome " +
+                    "ORDER BY total_pedidos DESC;";
 
     public PgClienteDAO(Connection connection) {
         this.connection = connection;
@@ -197,10 +200,6 @@ public class PgClienteDAO implements ClienteDAO {
                 cliente.setIdCliente(result.getInt("id_cliente"));
                 cliente.setNome(result.getString("nome"));
                 cliente.setSobrenome(result.getString("sobrenome"));
-                cliente.setSexo(result.getString("sexo"));
-                cliente.setDataNascimento(result.getDate("data_nascimento").toLocalDate());
-                cliente.setCpf(result.getString("cpf"));
-                cliente.setEmail(result.getString("email"));
                 clientes.add(cliente);
             }
         } catch (SQLException ex) {
@@ -209,5 +208,6 @@ public class PgClienteDAO implements ClienteDAO {
         }
         return clientes;
     }
+
 
 }

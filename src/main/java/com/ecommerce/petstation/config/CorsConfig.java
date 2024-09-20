@@ -13,20 +13,21 @@ public class CorsConfig {
     public CorsFilter corsFilter() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
 
-        // Permitir origens específicas ou todas ()
-        corsConfiguration.addAllowedOrigin("");
+        // Permitir todas as origens
+        corsConfiguration.addAllowedOriginPattern("");
 
-        // Permitir métodos HTTP específicos ou todos ()
+        // Permitir todos os métodos HTTP
         corsConfiguration.addAllowedMethod("");
 
-        // Permitir headers específicos ou todos ()
-        corsConfiguration.addAllowedHeader("");
+        // Permitir todos os headers
+        corsConfiguration.addAllowedHeader("*");
 
         // Definir se os cookies devem ser compartilhados
         corsConfiguration.setAllowCredentials(true);
 
+        // Aplicar as configurações de CORS para todos os endpoints
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", corsConfiguration); // Aplicar para todos os endpoints
+        source.registerCorsConfiguration("/**", corsConfiguration);
 
         return new CorsFilter(source);
     }
