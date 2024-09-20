@@ -50,7 +50,7 @@ public class PgSubcategoriaDAO implements SubcategoriaDAO {
 
     @Override
     public void update(Subcategoria subcategoria) throws SQLException {
-        String sql = "UPDATE petstation.subcategoria SET nome = ?, SET id_categoria = ? WHERE id_subcategoria = ?";
+        String sql = "UPDATE petstation.subcategoria SET nome = ?, id_categoria = ? WHERE id_subcategoria = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, subcategoria.getNome());
             stmt.setInt(2, subcategoria.getIdCategoria());

@@ -62,7 +62,7 @@ public class SubcategoriaController {
         }
     }
 
-    @GetMapping(value = "/subcategoria-categoria/{id_categoria}")
+    @GetMapping(value = "/subcategoria-categoria/{id}")
     public List<Subcategoria> subcategoriaByCategoria(@PathVariable(value="id") Integer id) {
         try {
             return pgSubcategoriaDAO.findByCategoria(id);
