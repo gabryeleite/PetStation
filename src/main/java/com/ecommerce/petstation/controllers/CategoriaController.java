@@ -3,7 +3,6 @@ package com.ecommerce.petstation.controllers;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.ecommerce.petstation.models.Cliente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

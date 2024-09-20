@@ -68,7 +68,7 @@ public class PgCategoriaDAO implements CategoriaDAO {
 
     @Override
     public List<Categoria> all() throws SQLException {
-        String sql = "SELECT * FROM petstation.categoria";
+        String sql = "SELECT * FROM petstation.categoria order by id_categoria";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
             List<Categoria> categorias = new ArrayList<>();
