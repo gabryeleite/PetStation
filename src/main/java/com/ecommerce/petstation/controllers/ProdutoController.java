@@ -2,7 +2,11 @@ package com.ecommerce.petstation.controllers;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.ecommerce.petstation.dao.PgProdutoDAO;
@@ -15,6 +19,7 @@ public class ProdutoController {
     @Autowired
     private PgProdutoDAO pgProdutoDAO;
 
+    // Vou deixar isso para teste de conexao do banco
     @GetMapping(value="/helloworld")
     public String helloworld(){
         return "Hello World";
@@ -27,7 +32,6 @@ public class ProdutoController {
         try {
             return pgProdutoDAO.all();
         } catch (SQLException e) {
-            // Gerenciar exceções adequadamente (pode retornar um código de erro apropriado)
             e.printStackTrace();
             return null;
         }
@@ -43,4 +47,40 @@ public class ProdutoController {
             return null;
         }
     }
+
+    @PostMapping(value="/criar-produto")
+    public ResponseEntity<String> criarProduto(@RequestBody Produto produto) {
+        try {
+            pgProdutoDAO.create(produto);
+            return ResponseEntity.ok("Produto criado com sucesso.");
+        } catch (SQLException e) {
+            if (e.getMessage().contains("subcategoria associada não existe")) {
+                return ResponseEntity.badRequest().body("Erro: Subcategoria associada não existe.");
+            } else if (e.getMessage().contains("nome já existente")) {
+                return ResponseEntity.badRequest().body("Erro: Nome do produto já existe.");
+            } else if (e.getMessage().contains("campos obrigatórios não podem ser nulos")) {
+                return ResponseEntity.badRequest().body("Erro: Campos obrigatórios não podem ser nulos.");
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao criar produto.");
+            }
+        }
+    }
+
+    @PostMapping(value="/atualizar-estoque/{id}")
+    public ResponseEntity<String> updateEstoque(@PathVariable(value="id") Integer id, @RequestBody(required=true) Map<String, Integer> body) {
+        Integer novoEstoque = body.get("novoEstoque");
+        if (novoEstoque == null) {
+            return ResponseEntity.badRequest().body("O campo 'novoEstoque' é obrigatório.");
+        }
+
+        try {
+            pgProdutoDAO.updateEstoque(novoEstoque, id);
+            return ResponseEntity.ok("Estoque atualizado com sucesso.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao atualizar o estoque.");
+        }
+    }
+
+
 }

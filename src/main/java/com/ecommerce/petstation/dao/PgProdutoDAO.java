@@ -218,31 +218,6 @@ public class PgProdutoDAO implements ProdutoDAO {
         return produtos;
     }
 
-    /* 
-    @Override
-    public void createProduto(String nome, BigDecimal preco, String descricao, Integer estoque, Integer idSubcategoria) throws SQLException {
-        try (PreparedStatement statement = connection.prepareStatement(CREATE_QUERY)) {
-            statement.setString(1, nome);
-            statement.setBigDecimal(2, preco);
-            statement.setString(3, descricao);
-            statement.setInt(4, estoque);
-            statement.setInt(5, idSubcategoria);
-            statement.executeUpdate();
-        } catch (SQLException ex) {
-            LOGGER.log(Level.SEVERE, "Erro ao inserir produto.", ex);
-            if (ex.getMessage().contains("fk_produto_subcategoria")) {
-                throw new SQLException("Erro ao inserir produto: subcategoria associada não existe.");
-            } else if (ex.getMessage().contains("uq_produto_nome")) {
-                throw new SQLException("Erro ao inserir produto: nome já existente.");
-            } else if (ex.getMessage().contains("not-null")) {
-                throw new SQLException("Erro ao inserir produto: campos obrigatórios não podem ser nulos.");
-            } else {
-                throw new SQLException("Erro ao inserir produto.");
-            }
-        }
-    }
-    */
-
     @Override
     public void updateEstoque(Integer novoEstoque, Integer num) throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement(UPDATE_ESTOQUE_QUERY)) {

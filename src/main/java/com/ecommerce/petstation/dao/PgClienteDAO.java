@@ -75,16 +75,16 @@ public class PgClienteDAO implements ClienteDAO {
         Cliente cliente = new Cliente();
         try (PreparedStatement statement = connection.prepareStatement(READ_QUERY)) {
             statement.setInt(1, id);
-            try (ResultSet result = statement.executeQuery()) {
-                if (result.next()) {
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
                     cliente.setIdCliente(id);
-                    cliente.setNome(result.getString("nome"));
-                    cliente.setSobrenome(result.getString("sobrenome"));
-                    cliente.setSexo(result.getString("sexo"));
+                    cliente.setNome(rs.getString("nome"));
+                    cliente.setSobrenome(rs.getString("sobrenome"));
+                    cliente.setSexo(rs.getString("sexo"));
                     // Tive que dar um cast pra LocalDate, nao sei se esta correto
-                    cliente.setDataNascimento(result.getDate("data_nascimento").toLocalDate());
-                    cliente.setCpf(result.getString("cpf"));
-                    cliente.setEmail(result.getString("email"));
+                    cliente.setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
+                    cliente.setCpf(rs.getString("cpf"));
+                    cliente.setEmail(rs.getString("email"));
                 } else {
                     throw new SQLException("Erro ao visualizar: cliente não encontrado.");
                 }
@@ -146,16 +146,16 @@ public class PgClienteDAO implements ClienteDAO {
     public List<Cliente> all() throws SQLException {
         List<Cliente> clientes = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement(ALL_QUERY);
-             ResultSet result = statement.executeQuery()) {
-            while (result.next()) {
+             ResultSet rs = statement.executeQuery()) {
+            while (rs.next()) {
                 Cliente cliente = new Cliente();
-                cliente.setIdCliente(result.getInt("id_cliente"));
-                cliente.setNome(result.getString("nome"));
-                cliente.setSobrenome(result.getString("sobrenome"));
-                cliente.setSexo(result.getString("sexo"));
-                cliente.setDataNascimento(result.getDate("data_nascimento").toLocalDate());
-                cliente.setCpf(result.getString("cpf"));
-                cliente.setEmail(result.getString("email"));
+                cliente.setIdCliente(rs.getInt("id_cliente"));
+                cliente.setNome(rs.getString("nome"));
+                cliente.setSobrenome(rs.getString("sobrenome"));
+                cliente.setSexo(rs.getString("sexo"));
+                cliente.setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
+                cliente.setCpf(rs.getString("cpf"));
+                cliente.setEmail(rs.getString("email"));
 
                 clientes.add(cliente);
             }
@@ -171,16 +171,17 @@ public class PgClienteDAO implements ClienteDAO {
         Cliente cliente = null;
         try (PreparedStatement statement = connection.prepareStatement(FIND_BY_ID_CLIENTE_QUERY)) {
             statement.setInt(1, id_cliente);
-            try (ResultSet result = statement.executeQuery()) {
-                if (result.next()) {
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
                     cliente = new Cliente();
-                    cliente.setNome(result.getString("nome"));
-                    cliente.setSobrenome(result.getString("sobrenome"));
-                    cliente.setSexo(result.getString("sexo"));
-                    // Tive que dar um cast pra LocalDate, nao sei se esta correto
-                    cliente.setDataNascimento((LocalDate) result.getObject("data_nascimento"));
-                    cliente.setCpf(result.getString("cpf"));
-                    cliente.setEmail(result.getString("email"));
+                    cliente.setIdCliente(rs.getInt("id_cliente"));
+                    cliente.setNome(rs.getString("nome"));
+                    cliente.setSobrenome(rs.getString("sobrenome"));
+                    cliente.setSexo(rs.getString("sexo"));
+                    // Corrected conversion from java.sql.Date to java.time.LocalDate
+                    cliente.setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
+                    cliente.setCpf(rs.getString("cpf"));
+                    cliente.setEmail(rs.getString("email"));
                 }
             }
         } catch (SQLException ex) {
@@ -190,16 +191,39 @@ public class PgClienteDAO implements ClienteDAO {
         return cliente;
     }
 
+
+    @Override
+    public Cliente findByCpfCliente(String cpf) throws SQLException {
+        String sql = "SELECT * FROM petstation.cliente WHERE cpf = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, cpf);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                Cliente cliente = new Cliente();
+                cliente.setIdCliente(rs.getInt("id_cliente"));
+                cliente.setNome(rs.getString("nome"));
+                cliente.setSobrenome(rs.getString("sobrenome"));
+                cliente.setSexo(rs.getString("sexo"));
+                cliente.setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
+                cliente.setCpf(rs.getString("cpf"));
+                cliente.setEmail(rs.getString("email"));
+                return cliente;
+            } else {
+                return null;
+            }
+        }
+    }
+
     @Override
     public List<Cliente> findClientesComMaisPedidos() throws SQLException {
         List<Cliente> clientes = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement(CLIENTES_COM_MAIS_PEDIDOS_QUERY);
-             ResultSet result = statement.executeQuery()) {
-            while (result.next()) {
+             ResultSet rs = statement.executeQuery()) {
+            while (rs.next()) {
                 Cliente cliente = new Cliente();
-                cliente.setIdCliente(result.getInt("id_cliente"));
-                cliente.setNome(result.getString("nome"));
-                cliente.setSobrenome(result.getString("sobrenome"));
+                cliente.setIdCliente(rs.getInt("id_cliente"));
+                cliente.setNome(rs.getString("nome"));
+                cliente.setSobrenome(rs.getString("sobrenome"));
                 clientes.add(cliente);
             }
         } catch (SQLException ex) {
