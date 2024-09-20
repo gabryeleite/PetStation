@@ -3,10 +3,7 @@ package com.ecommerce.petstation.controllers;
 import java.sql.SQLException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.ecommerce.petstation.dao.PgProdutoDAO;
 import com.ecommerce.petstation.models.Produto;
@@ -23,6 +20,8 @@ public class ProdutoController {
         return "Hello World";
     }
 
+
+    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping(value="/produtos")
     public List<Produto> produtos() {
         try {
