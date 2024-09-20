@@ -2,12 +2,15 @@ package com.ecommerce.petstation.models;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class Categoria {
 
     private Integer idCategoria;
 
     private String nome;
 
+    @JsonIgnore
     private List<Subcategoria> subcategorias;
 
     // Getters and Setters

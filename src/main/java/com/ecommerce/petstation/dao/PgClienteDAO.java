@@ -1,6 +1,5 @@
 package com.ecommerce.petstation.dao;
 
-import com.ecommerce.petstation.models.*;
 import com.ecommerce.petstation.models.Cliente;
 import org.springframework.stereotype.Repository;
 
@@ -8,7 +7,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
