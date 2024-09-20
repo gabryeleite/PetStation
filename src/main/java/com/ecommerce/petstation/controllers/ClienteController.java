@@ -18,11 +18,6 @@ public class ClienteController {
     @Autowired
     private PgClienteDAO pgClienteDAO;
 
-    @GetMapping(value = "/helloworld")
-    public String helloworld() {
-        return "Hello World";
-    }
-
     @GetMapping(value = "/clientes")
     public List<Cliente> clientes() {
         try {
@@ -32,7 +27,13 @@ public class ClienteController {
             return null;
         }
     }
+
+    //@GetMapping("/mais-pedidos")
+   // public List<Cliente> getClientesComMaisPedidos() throws SQLException {
+    //    return clienteDAO.findClientesComMaisPedidos();
+   // }
 }
+
 /*
     @GetMapping(value="/produto/{id}")
     public Cliente produtoById(@PathVariable(value="id") Integer id) {

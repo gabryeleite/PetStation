@@ -8,6 +8,7 @@ import com.ecommerce.petstation.models.Cliente;
 public interface ClienteDAO extends DAO<Cliente> {
     Cliente findByIdCliente(Integer idCliente) throws SQLException;
     // Cliente findByCpfCliente(Integer idCliente) throws SQLException;
-    // CLIENTES COM MAIS PEDIDOS
+    //List<Cliente> findClientesComMaisPedidos() throws SQLException;
+
 }
 

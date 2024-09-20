@@ -34,10 +34,19 @@ public class PgClienteDAO implements ClienteDAO {
             "DELETE FROM petstation.cliente WHERE id_cliente = ?;";
 
     private static final String ALL_QUERY =
-            "SELECT nome, sobrenome, sexo, data_nascimento, cpf, email FROM petstation.cliente ORDER BY id_cliente DESC;";
+            "SELECT id_cliente, nome, sobrenome, sexo, data_nascimento, cpf, email FROM petstation.cliente ORDER BY id_cliente DESC;";
 
     private static final String FIND_BY_ID_CLIENTE_QUERY =
             "SELECT * FROM petstation.cliente WHERE id_cliente = ?;";
+
+    private static final String CLIENTES_COM_MAIS_PEDIDOS_QUERY =
+            "SELECT c.*, COUNT(p.id_pedido) AS total_pedidos " +
+                    "FROM petstation.cliente c " +
+                    "JOIN petstation.pedido p ON c.id_cliente = p.id_cliente " +
+                    "GROUP BY c.id_cliente " +
+                    "ORDER BY total_pedidos DESC " +
+                    "LIMIT 10;";  // Ou qualquer outro número para limitar a quantidade de clientes
+
 
     public PgClienteDAO(Connection connection) {
         this.connection = connection;
@@ -184,4 +193,28 @@ public class PgClienteDAO implements ClienteDAO {
         return cliente;
     }
 
+    /*
+    @Override
+    public List<Cliente> findClientesComMaisPedidos() throws SQLException {
+        List<Cliente> clientes = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement(CLIENTES_COM_MAIS_PEDIDOS_QUERY);
+             ResultSet result = statement.executeQuery()) {
+            while (result.next()) {
+                Cliente cliente = new Cliente();
+                cliente.setIdCliente(result.getInt("id_cliente"));
+                cliente.setNome(result.getString("nome"));
+                cliente.setSobrenome(result.getString("sobrenome"));
+                cliente.setSexo(result.getString("sexo"));
+                cliente.setDataNascimento(result.getDate("data_nascimento").toLocalDate());
+                cliente.setCpf(result.getString("cpf"));
+                cliente.setEmail(result.getString("email"));
+                // Adicionar mais informações, se necessário
+                clientes.add(cliente);
+            }
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, "Erro ao buscar clientes com mais pedidos.", ex);
+            throw new SQLException("Erro ao buscar clientes com mais pedidos.");
+        }
+        return clientes;
+    }   */
 }
