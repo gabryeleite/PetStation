@@ -31,7 +31,7 @@ public class ClienteController {
     @GetMapping(value = "/cliente-id/{id}")
     public Cliente clienteById(@PathVariable(value="id") Integer id) {
         try {
-            return pgClienteDAO.findByIdCliente(id);
+            return pgClienteDAO.read(id);
         } catch (SQLException e) {
             e.printStackTrace();
             return null;

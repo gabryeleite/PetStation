@@ -35,9 +35,6 @@ public class PgClienteDAO implements ClienteDAO {
     private static final String ALL_QUERY =
             "SELECT id_cliente, nome, sobrenome, sexo, data_nascimento, cpf, email, senha FROM petstation.cliente ORDER BY id_cliente DESC;";
 
-    private static final String FIND_BY_ID_CLIENTE_QUERY =
-            "SELECT * FROM petstation.cliente WHERE id_cliente = ?;";
-
     private static final String CLIENTES_COM_MAIS_PEDIDOS_QUERY =
             "SELECT c.id_cliente, c.nome, c.sobrenome, c.sexo, c.data_nascimento, c.cpf, c.email, c.senha, COUNT(p.num) AS total_pedidos " +
                     "FROM petstation.cliente c " +
@@ -165,32 +162,6 @@ public class PgClienteDAO implements ClienteDAO {
             throw new SQLException("Erro ao listar clientes.");
         }
         return clientes;
-    }
-
-    @Override
-    public Cliente findByIdCliente(Integer id_cliente) throws SQLException {
-        Cliente cliente = null;
-        try (PreparedStatement statement = connection.prepareStatement(FIND_BY_ID_CLIENTE_QUERY)) {
-            statement.setInt(1, id_cliente);
-            try (ResultSet rs = statement.executeQuery()) {
-                if (rs.next()) {
-                    cliente = new Cliente();
-                    cliente.setIdCliente(rs.getInt("id_cliente"));
-                    cliente.setNome(rs.getString("nome"));
-                    cliente.setSobrenome(rs.getString("sobrenome"));
-                    cliente.setSexo(rs.getString("sexo"));
-                    // Corrected conversion from java.sql.Date to java.time.LocalDate
-                    cliente.setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
-                    cliente.setCpf(rs.getString("cpf"));
-                    cliente.setEmail(rs.getString("email"));
-                    cliente.setSenha(rs.getString("senha"));
-                }
-            }
-        } catch (SQLException ex) {
-            LOGGER.log(Level.SEVERE, "Erro ao buscar cliente por ID.", ex);
-            throw new SQLException("Erro ao buscar cliente por ID.");
-        }
-        return cliente;
     }
 
 

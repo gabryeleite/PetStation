@@ -36,9 +36,6 @@ public class PgProdutoDAO implements ProdutoDAO {
     private static final String ALL_QUERY =
             "SELECT num, nome, preco, descricao, estoque, id_subcategoria FROM petstation.produto ORDER BY num DESC;";
 
-    private static final String FIND_BY_ID_PRODUTO_QUERY =
-            "SELECT * FROM petstation.produto WHERE num = ?;";
-
     //private static final String FIND_BY_SUBCATEGORIA_QUERY =
     //        "SELECT * FROM petstation.produto WHERE id_subcategoria = ?;";
 
@@ -178,29 +175,6 @@ public class PgProdutoDAO implements ProdutoDAO {
             throw new SQLException("Erro ao listar produtos.");
         }
         return produtos;
-    }
-
-    @Override
-    public Produto findByIdProduto(Integer num) throws SQLException {
-        Produto produto = null;
-        try (PreparedStatement statement = connection.prepareStatement(FIND_BY_ID_PRODUTO_QUERY)) {
-            statement.setInt(1, num);
-            try (ResultSet result = statement.executeQuery()) {
-                if (result.next()) {
-                    produto = new Produto();
-                    produto.setNum(result.getInt("num"));
-                    produto.setNome(result.getString("nome"));
-                    produto.setPreco(result.getBigDecimal("preco"));
-                    produto.setDescricao(result.getString("descricao"));
-                    produto.setEstoque(result.getInt("estoque"));
-                    produto.setIdSubcategoria(result.getInt("id_subcategoria"));
-                }
-            }
-        } catch (SQLException ex) {
-            LOGGER.log(Level.SEVERE, "Erro ao buscar produto por ID.", ex);
-            throw new SQLException("Erro ao buscar produto por ID.");
-        }
-        return produto;
     }
 
     @Override

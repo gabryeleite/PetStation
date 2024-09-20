@@ -27,7 +27,7 @@ public class ProdutoController {
     }
 
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    //@CrossOrigin(origins = "http://localhost:3000")
     @GetMapping(value="/produtos")
     public List<Produto> produtos() {
         try {
@@ -41,7 +41,7 @@ public class ProdutoController {
     @GetMapping(value="/produto/{id}")
     public Produto produtoById(@PathVariable(value="id") Integer id) {
         try {
-            return pgProdutoDAO.findByIdProduto(id);
+            return pgProdutoDAO.read(id);
         } catch (SQLException e) {
             // Gerenciar exceções adequadamente
             e.printStackTrace();
