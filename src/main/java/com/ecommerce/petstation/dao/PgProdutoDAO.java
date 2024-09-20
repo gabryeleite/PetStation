@@ -44,6 +44,14 @@ public class PgProdutoDAO implements ProdutoDAO {
     private static final String UPDATE_ESTOQUE_QUERY =
             "UPDATE petstation.produto SET estoque = ? WHERE num = ?;";
 
+    private static final String FIND_MAIS_VENDIDOS_QUERY =
+            "SELECT p.num, p.nome, p.preco, p.descricao, p.estoque, p.id_subcategoria, SUM(pp.qnt_produto) AS total_vendido " +
+                    "FROM petstation.produto p " +
+                    "JOIN petstation.pedido_produto pp ON p.num = pp.num_produto " +
+                    "GROUP BY p.num, p.nome, p.preco, p.descricao, p.estoque, p.id_subcategoria " +
+                    "ORDER BY total_vendido DESC " +
+                    "LIMIT 5;";
+
     public PgProdutoDAO(Connection connection) {
         this.connection = connection;
     }
@@ -195,30 +203,6 @@ public class PgProdutoDAO implements ProdutoDAO {
     }
 
     @Override
-    public List<Produto> findBySubcategoria(Integer subcategoria) throws SQLException {
-        List<Produto> produtos = new ArrayList<>();
-        try (PreparedStatement statement = connection.prepareStatement(FIND_BY_SUBCATEGORIA_QUERY)) {
-            statement.setInt(1, subcategoria);
-            try (ResultSet result = statement.executeQuery()) {
-                while (result.next()) {
-                    Produto produto = new Produto();
-                    produto.setNum(result.getInt("num"));
-                    produto.setNome(result.getString("nome"));
-                    produto.setPreco(result.getBigDecimal("preco"));
-                    produto.setDescricao(result.getString("descricao"));
-                    produto.setEstoque(result.getInt("estoque"));
-                    produto.setIdSubcategoria(result.getInt("id_subcategoria"));
-                    produtos.add(produto);
-                }
-            }
-        } catch (SQLException ex) {
-            LOGGER.log(Level.SEVERE, "Erro ao buscar produtos por subcategoria.", ex);
-            throw new SQLException("Erro ao buscar produtos por subcategoria.");
-        }
-        return produtos;
-    }
-
-    @Override
     public void updateEstoque(Integer novoEstoque, Integer num) throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement(UPDATE_ESTOQUE_QUERY)) {
             statement.setInt(1, novoEstoque);
@@ -235,4 +219,30 @@ public class PgProdutoDAO implements ProdutoDAO {
             }
         }
     }
+
+    @Override
+    public List<Produto> findMaisVendidos() throws SQLException {
+        List<Produto> produtos = new ArrayList<>();
+
+        try (PreparedStatement statement = connection.prepareStatement(FIND_MAIS_VENDIDOS_QUERY);
+             ResultSet result = statement.executeQuery()) {
+
+            while (result.next()) {
+                Produto produto = new Produto();
+                produto.setNum(result.getInt("num"));
+                produto.setNome(result.getString("nome"));
+                produto.setPreco(result.getBigDecimal("preco"));
+                produto.setDescricao(result.getString("descricao"));
+                produto.setEstoque(result.getInt("estoque"));
+                produto.setIdSubcategoria(result.getInt("id_subcategoria"));
+                produtos.add(produto);
+            }
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, "Erro ao buscar produtos mais vendidos.", ex);
+            throw new SQLException("Erro ao buscar produtos mais vendidos.");
+        }
+
+        return produtos;
+    }
+
 }

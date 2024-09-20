@@ -1,6 +1,7 @@
 package com.ecommerce.petstation.controllers;
 
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -89,6 +90,17 @@ public class ProdutoController {
         } catch (SQLException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao atualizar o estoque.");
+        }
+    }
+
+    @GetMapping("/mais-vendidos")
+    public ResponseEntity<List<Produto>> getMaisVendidos() {
+        try {
+            List<Produto> produtos = pgProdutoDAO.findMaisVendidos();
+            return ResponseEntity.ok(produtos);
+        } catch (SQLException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.emptyList());
         }
     }
 
