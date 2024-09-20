@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.springframework.stereotype.Repository;
 
@@ -17,6 +19,8 @@ public class PgSubcategoriaDAO implements SubcategoriaDAO {
 
     private final Connection connection;
 
+    private static final Logger LOGGER = Logger.getLogger(PgSubcategoriaDAO.class.getName());
+
     public PgSubcategoriaDAO(Connection connection) {
         this.connection = connection;
     }
@@ -27,7 +31,17 @@ public class PgSubcategoriaDAO implements SubcategoriaDAO {
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, subcategoria.getNome());
             stmt.setInt(2, subcategoria.getIdCategoria());
-            stmt.executeUpdate();
+
+            if (stmt.executeUpdate() < 1) {
+                throw new SQLException("Erro ao criar subcategoria: inserção falhou.");
+            }
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, "Erro ao criar subcategoria.", ex);
+            if (ex.getMessage().contains("not-null")) {
+                throw new SQLException("Erro ao criar subcategoria: campos obrigatórios não podem ser nulos.");
+            } else {
+                throw new SQLException("Erro ao criar subcategoria.");
+            }
         }
     }
 
@@ -36,15 +50,22 @@ public class PgSubcategoriaDAO implements SubcategoriaDAO {
         String sql = "SELECT * FROM petstation.subcategoria WHERE id_subcategoria = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                Subcategoria subcategoria = new Subcategoria();
-                subcategoria.setNome(rs.getString("nome"));
-                subcategoria.setIdCategoria(rs.getInt("id_categoria"));
-                return subcategoria;
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Subcategoria subcategoria = new Subcategoria();
+                    subcategoria.setNome(rs.getString("nome"));
+                    subcategoria.setIdCategoria(rs.getInt("id_categoria"));
+                    return subcategoria;
+                } else {
+                    throw new SQLException("Erro ao visualizar: subcategoria não encontrada.");
+                }
+            }
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, "Erro ao ler subcategoria.", ex);
+            if (ex.getMessage().equals("Erro ao visualizar: subcategoria não encontrada.")) {
+                throw ex;
             } else {
-                return null;
+                throw new SQLException("Erro ao ler subcategoria.");
             }
         }
     }
@@ -56,7 +77,19 @@ public class PgSubcategoriaDAO implements SubcategoriaDAO {
             stmt.setString(1, subcategoria.getNome());
             stmt.setInt(2, subcategoria.getIdCategoria());
             stmt.setInt(3, subcategoria.getIdSubcategoria());
-            stmt.executeUpdate();
+
+            if (stmt.executeUpdate() < 1) {
+                throw new SQLException("Erro ao editar: subcategoria não encontrada.");
+            }
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, "Erro ao atualizar subcategoria.", ex);
+            if (ex.getMessage().equals("Erro ao editar: subcategoria não encontrada.")) {
+                throw ex;
+            } else if (ex.getMessage().contains("not-null")) {
+                throw new SQLException("Erro ao editar subcategoria: campos obrigatórios não podem ser nulos.");
+            } else {
+                throw new SQLException("Erro ao editar subcategoria.");
+            }
         }
     }
 
@@ -65,42 +98,58 @@ public class PgSubcategoriaDAO implements SubcategoriaDAO {
         String sql = "DELETE FROM petstation.subcategoria WHERE id_subcategoria = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
-            stmt.executeUpdate();
+
+            if (stmt.executeUpdate() < 1) {
+                throw new SQLException("Erro ao excluir: subcategoria não encontrada.");
+            }
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, "Erro ao excluir subcategoria.", ex);
+            if (ex.getMessage().equals("Erro ao excluir: subcategoria não encontrada.")) {
+                throw ex;
+            } else {
+                throw new SQLException("Erro ao excluir subcategoria.");
+            }
         }
     }
 
     @Override
     public List<Subcategoria> all() throws SQLException {
         String sql = "SELECT * FROM petstation.subcategoria";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            ResultSet rs = stmt.executeQuery();
-            List<Subcategoria> categorias = new ArrayList<>();
+        List<Subcategoria> categorias = new ArrayList<>();
+        try (PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 Subcategoria subcategoria = new Subcategoria();
                 subcategoria.setNome(rs.getString("nome"));
+                subcategoria.setIdCategoria(rs.getInt("id_categoria"));
                 categorias.add(subcategoria);
             }
 
-            return categorias;
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, "Erro ao listar subcategorias.", ex);
+            throw new SQLException("Erro ao listar subcategorias.");
         }
+        return categorias;
     }
 
     public List<Subcategoria> findByCategoria(Integer idCategoria) throws SQLException {
         String sql = "SELECT * FROM petstation.subcategoria WHERE id_categoria = ?";
+        List<Subcategoria> categorias = new ArrayList<>();
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, idCategoria);
-            ResultSet rs = stmt.executeQuery();
-            List<Subcategoria> categorias = new ArrayList<>();
-
-            while (rs.next()) {
-                Subcategoria subcategoria = new Subcategoria();
-                subcategoria.setNome(rs.getString("nome"));
-                categorias.add(subcategoria);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Subcategoria subcategoria = new Subcategoria();
+                    subcategoria.setNome(rs.getString("nome"));
+                    subcategoria.setIdCategoria(rs.getInt("id_categoria"));
+                    categorias.add(subcategoria);
+                }
             }
-
-            return categorias;
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, "Erro ao buscar subcategorias por categoria.", ex);
+            throw new SQLException("Erro ao buscar subcategorias por categoria.");
         }
+        return categorias;
     }
-
 }
