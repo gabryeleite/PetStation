@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.ecommerce.petstation.dao.PgSubcategoriaDAO;
+import com.ecommerce.petstation.daos.daosPg.PgSubcategoriaDAO;
 import com.ecommerce.petstation.models.Subcategoria;
 
 @RestController

@@ -1,4 +1,4 @@
-package com.ecommerce.petstation.dao;
+package com.ecommerce.petstation.daos.daosPg;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 
 import org.springframework.stereotype.Repository;
 
+import com.ecommerce.petstation.daos.ProdutoDAO;
 import com.ecommerce.petstation.models.Produto;
 
 @Repository
@@ -38,8 +39,8 @@ public class PgProdutoDAO implements ProdutoDAO {
     private static final String FIND_BY_ID_PRODUTO_QUERY =
             "SELECT * FROM petstation.produto WHERE num = ?;";
 
-    private static final String FIND_BY_SUBCATEGORIA_QUERY =
-            "SELECT * FROM petstation.produto WHERE id_subcategoria = ?;";
+    //private static final String FIND_BY_SUBCATEGORIA_QUERY =
+    //        "SELECT * FROM petstation.produto WHERE id_subcategoria = ?;";
 
     private static final String UPDATE_ESTOQUE_QUERY =
             "UPDATE petstation.produto SET estoque = ? WHERE num = ?;";

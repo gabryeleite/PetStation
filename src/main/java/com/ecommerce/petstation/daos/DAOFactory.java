@@ -1,9 +1,10 @@
-package com.ecommerce.petstation.dao;
+package com.ecommerce.petstation.daos;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import com.ecommerce.petstation.daos.daosPg.PgDAOFactory;
 import com.ecommerce.petstation.jdbc.*;
 
 // Fábrica que fornece instâncias de DAOs, lida com a lógica de criação de objetos

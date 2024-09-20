@@ -1,5 +1,6 @@
-package com.ecommerce.petstation.dao;
+package com.ecommerce.petstation.daos.daosPg;
 
+import com.ecommerce.petstation.daos.ClienteDAO;
 import com.ecommerce.petstation.models.Cliente;
 import org.springframework.stereotype.Repository;
 

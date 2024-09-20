@@ -1,4 +1,4 @@
-package com.ecommerce.petstation.dao;
+package com.ecommerce.petstation.daos;
 
 import java.sql.SQLException;
 import java.util.List;

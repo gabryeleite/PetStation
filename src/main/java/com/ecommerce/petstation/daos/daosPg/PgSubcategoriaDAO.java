@@ -1,4 +1,4 @@
-package com.ecommerce.petstation.dao;
+package com.ecommerce.petstation.daos.daosPg;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.ecommerce.petstation.daos.SubcategoriaDAO;
 import com.ecommerce.petstation.models.Subcategoria;
 
 @Repository

@@ -25,6 +25,7 @@ public class Cliente {
     @JsonIgnore
     private String senha;
 
+    @JsonIgnore
     private List<Pedido> pedidos;
 
     // Getters and Setters

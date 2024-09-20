@@ -5,16 +5,19 @@ import java.time.LocalTime;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class Pedido {
     
     private Integer num;
 
-    private Cliente cliente;
+    private Integer idCliente;
 
     private LocalDate dataPedido;
 
     private LocalTime horaPedido;
 
+    @JsonIgnore
     private List<PedidoProduto> itensPedido;
 
     // Getters and Setters
@@ -27,12 +30,12 @@ public class Pedido {
         this.num = num;
     }
 
-    public Cliente getCliente() {
-        return cliente;
+    public Integer getIdCliente() {
+        return idCliente;
     }
 
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
+    public void setIdCliente(Integer idCliente) {
+        this.idCliente = idCliente;
     }
 
     public LocalDate getDataPedido() {
