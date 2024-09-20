@@ -1,5 +1,7 @@
 package com.ecommerce.petstation.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.time.LocalDate;
 
 import java.util.List;
@@ -20,6 +22,7 @@ public class Cliente {
 
     private String email;
 
+    @JsonIgnore
     private String senha;
 
     private List<Pedido> pedidos;

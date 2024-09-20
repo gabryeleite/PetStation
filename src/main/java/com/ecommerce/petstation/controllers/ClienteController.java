@@ -81,6 +81,22 @@ public class ClienteController {
         }
     }
 
+    @PostMapping(value="/update-cliente")
+    public ResponseEntity<String> updateCliente(@RequestBody Cliente cliente) {
+        try {
+            pgClienteDAO.update(cliente);
+            return ResponseEntity.ok("Cliente criado com sucesso.");
+        } catch (SQLException e) {
+            if (e.getMessage().contains("nome já existente")) {
+                return ResponseEntity.badRequest().body("Erro: Nome do cliente já existe.");
+            } else if (e.getMessage().contains("campos obrigatórios não podem ser nulos")) {
+                return ResponseEntity.badRequest().body("Erro: Campos obrigatórios não podem ser nulos.");
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao criar cliente.");
+            }
+        }
+    }
+
     @GetMapping("/mais-pedidos")
     public List<Cliente> getClientesComMaisPedidos() throws SQLException {
         try {
