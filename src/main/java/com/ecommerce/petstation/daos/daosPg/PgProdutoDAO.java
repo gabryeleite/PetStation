@@ -36,8 +36,12 @@ public class PgProdutoDAO implements ProdutoDAO {
     private static final String ALL_QUERY =
             "SELECT num, nome, preco, descricao, estoque, id_subcategoria FROM petstation.produto ORDER BY num DESC;";
 
-    //private static final String FIND_BY_SUBCATEGORIA_QUERY =
-    //        "SELECT * FROM petstation.produto WHERE id_subcategoria = ?;";
+    private static final String FIND_BY_CATEGORIA_QUERY =
+            "SELECT p.num, p.nome, p.preco, p.descricao, p.estoque, p.id_subcategoria, s.nome AS nome_subcategoria, c.nome AS nome_categoria " +
+            "FROM petstation.produto p " +
+            "JOIN petstation.subcategoria s ON p.id_subcategoria = s.id_subcategoria " +
+            "JOIN petstation.categoria c ON s.id_categoria = c.id_categoria " +
+            "WHERE c.id_categoria = ? ORDER BY p.num";
 
     private static final String UPDATE_ESTOQUE_QUERY =
             "UPDATE petstation.produto SET estoque = ? WHERE num = ?;";
@@ -173,6 +177,28 @@ public class PgProdutoDAO implements ProdutoDAO {
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, "Erro ao listar produtos.", ex);
             throw new SQLException("Erro ao listar produtos.");
+        }
+        return produtos;
+    }
+
+    @Override
+    public List<Produto> findByCategoria(Integer idCategoria)throws SQLException {
+        List<Produto> produtos = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement(FIND_BY_CATEGORIA_QUERY)) {
+            statement.setInt(1, idCategoria);
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    Produto produto = new Produto();
+                    produto.setNum(rs.getInt("num"));
+                    produto.setNome(rs.getString("nome"));
+                    produto.setPreco(rs.getBigDecimal("preco"));
+                    produto.setDescricao(rs.getString("descricao"));
+                    produto.setEstoque(rs.getInt("estoque"));
+                    produto.setIdSubcategoria(rs.getInt("id_subcategoria"));
+    
+                    produtos.add(produto);
+                }
+            }
         }
         return produtos;
     }

@@ -77,6 +77,16 @@ public class ProdutoController {
         }
     }
 
+    @GetMapping(value="/produtos-categoria/{id}")
+    public List<Produto> produtosCategoria(@PathVariable("id") Integer idCategoria) {
+        try {
+            return pgProdutoDAO.findByCategoria(idCategoria);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     @PostMapping(value="/atualizar-estoque/{id}")
     public ResponseEntity<String> updateEstoque(@PathVariable(value="id") Integer id, @RequestBody(required=true) Map<String, Integer> body) {
         Integer novoEstoque = body.get("novoEstoque");
