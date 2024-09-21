@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import org.springframework.stereotype.Repository;
 
 import com.ecommerce.petstation.daos.ProdutoDAO;
+import com.ecommerce.petstation.dtos.ProdutoPedidoDTO;
 import com.ecommerce.petstation.models.Produto;
 
 @Repository
@@ -42,6 +43,15 @@ public class PgProdutoDAO implements ProdutoDAO {
             "JOIN petstation.subcategoria s ON p.id_subcategoria = s.id_subcategoria " +
             "JOIN petstation.categoria c ON s.id_categoria = c.id_categoria " +
             "WHERE c.id_categoria = ? ORDER BY p.num";
+
+    private static final String FIND_BY_CLIENTE_QUERY =
+            "SELECT p.nome AS Produto, c.qnt_produto AS Quantidade, ped.num AS Nº_Pedido, " +
+            "ped.data_pedido AS Data_Pedido " +
+            "FROM petstation.produto p " +
+            "JOIN petstation.pedido_produto c ON p.num = c.num_produto " +
+            "JOIN petstation.pedido ped ON c.num_pedido = ped.num " +
+            "JOIN petstation.cliente cli ON ped.id_cliente = cli.id_cliente " +
+            "WHERE cli.id_cliente = ?";
 
     private static final String UPDATE_ESTOQUE_QUERY =
             "UPDATE petstation.produto SET estoque = ? WHERE num = ?;";
@@ -201,6 +211,28 @@ public class PgProdutoDAO implements ProdutoDAO {
             }
         }
         return produtos;
+    }
+
+    @Override
+    public List<ProdutoPedidoDTO> findByCliente(Integer idCliente)throws SQLException {
+        List<ProdutoPedidoDTO> produtosPedidos = new ArrayList<>();
+
+        try (PreparedStatement statement = connection.prepareStatement(FIND_BY_CLIENTE_QUERY)) {
+            statement.setInt(1, idCliente);
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    ProdutoPedidoDTO produtoPedido = new ProdutoPedidoDTO();
+                    produtoPedido.setNomeProduto(rs.getString("Produto"));
+                    produtoPedido.setQuantidade(rs.getInt("Quantidade"));
+                    produtoPedido.setNumPedido(rs.getInt("Nº_Pedido"));
+                    produtoPedido.setDataPedido(rs.getDate("Data_Pedido").toLocalDate());
+
+                    produtosPedidos.add(produtoPedido);
+                }
+            }
+        }
+
+        return produtosPedidos;
     }
 
     @Override
