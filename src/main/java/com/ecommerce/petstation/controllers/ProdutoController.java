@@ -125,5 +125,14 @@ public class ProdutoController {
         }
     }
 
+    @GetMapping(value="/produtos-termo/{termo}")
+    public List<Produto> produtosTermo(@PathVariable("termo") String termo) {
+        try {
+            return pgProdutoDAO.findByTermo(termo);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 }

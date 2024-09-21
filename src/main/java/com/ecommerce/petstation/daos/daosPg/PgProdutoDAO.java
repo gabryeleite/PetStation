@@ -58,11 +58,16 @@ public class PgProdutoDAO implements ProdutoDAO {
 
     private static final String FIND_MAIS_VENDIDOS_QUERY =
             "SELECT p.num, p.nome, p.preco, p.descricao, p.estoque, p.id_subcategoria, SUM(pp.qnt_produto) AS total_vendido " +
-                    "FROM petstation.produto p " +
-                    "JOIN petstation.pedido_produto pp ON p.num = pp.num_produto " +
-                    "GROUP BY p.num, p.nome, p.preco, p.descricao, p.estoque, p.id_subcategoria " +
-                    "ORDER BY total_vendido DESC " +
-                    "LIMIT 5;";
+            "FROM petstation.produto p " +
+            "JOIN petstation.pedido_produto pp ON p.num = pp.num_produto " +
+            "GROUP BY p.num, p.nome, p.preco, p.descricao, p.estoque, p.id_subcategoria " +
+            "ORDER BY total_vendido DESC " +
+            "LIMIT 5;";
+
+    private static final String FIND_BY_TERMO_QUERY =
+            "SELECT num, nome, preco, descricao, estoque, id_subcategoria " +
+            "FROM petstation.produto " +
+            "WHERE nome ILIKE ? OR descricao ILIKE ?;";
 
     public PgProdutoDAO(Connection connection) {
         this.connection = connection;
@@ -275,6 +280,33 @@ public class PgProdutoDAO implements ProdutoDAO {
             throw new SQLException("Erro ao buscar produtos mais vendidos.");
         }
 
+        return produtos;
+    }
+
+    @Override
+    public List<Produto> findByTermo(String termo) throws SQLException {
+        List<Produto> produtos = new ArrayList<>();
+        String termoLike = "%" + termo + "%";  // Para buscar em qualquer parte do nome ou descrição
+        try (PreparedStatement statement = connection.prepareStatement(FIND_BY_TERMO_QUERY)) {
+            statement.setString(1, termoLike);
+            statement.setString(2, termoLike);
+            try (ResultSet result = statement.executeQuery()) {
+                while (result.next()) {
+                    Produto produto = new Produto();
+                    produto.setNum(result.getInt("num"));
+                    produto.setNome(result.getString("nome"));
+                    produto.setPreco(result.getBigDecimal("preco"));
+                    produto.setDescricao(result.getString("descricao"));
+                    produto.setEstoque(result.getInt("estoque"));
+                    produto.setIdSubcategoria(result.getInt("id_subcategoria"));
+
+                    produtos.add(produto);
+                }
+            }
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, "Erro ao buscar produtos por termo.", ex);
+            throw new SQLException("Erro ao buscar produtos por termo.");
+        }
         return produtos;
     }
 

@@ -12,5 +12,6 @@ public interface ProdutoDAO extends DAO<Produto> {
     List<Produto> findMaisVendidos() throws SQLException;
     List<Produto> findByCategoria(Integer idCategoria) throws SQLException;
     List<ProdutoDTO> findByCliente(String cpfCliente) throws SQLException;
+    List<Produto> findByTermo(String termo) throws SQLException;
 
 }
