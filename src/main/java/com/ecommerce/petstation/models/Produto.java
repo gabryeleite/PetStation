@@ -66,21 +66,3 @@ public class Produto {
         this.idSubcategoria = idSubcategoria;
     }
 }
-
-/*              Script SQL
-CREATE SEQUENCE petstation.produto_num_seq
-	START 1 INCREMENT 1;
-
-CREATE TABLE petstation.produto( 
-    num INT DEFAULT nextval('petstation.produto_num_seq'),
-    nome VARCHAR(50) NOT NULL,
-    preco NUMERIC(10,2) NOT NULL,
-	descricao VARCHAR(1000),
-    estoque INT NOT NULL,
-	id_subcategoria INT NOT NULL,
-    CONSTRAINT uk_produto UNIQUE(nome);
-	CONSTRAINT pk_produto PRIMARY KEY(num),
-	CONSTRAINT fk_subcategoria_id FOREIGN KEY(id_subcategoria)
-		REFERENCES petstation.subcategoria(id_subcategoria) ON DELETE CASCADE
-);
-*/

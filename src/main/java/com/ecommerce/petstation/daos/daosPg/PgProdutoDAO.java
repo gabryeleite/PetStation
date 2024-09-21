@@ -21,22 +21,6 @@ public class PgProdutoDAO implements ProdutoDAO {
     private final Connection connection;
     private static final Logger LOGGER = Logger.getLogger(PgProdutoDAO.class.getName());
 
-    private static final String CREATE_QUERY =
-            "INSERT INTO petstation.produto (nome, preco, descricao, estoque, id_subcategoria) " +
-            "VALUES (?, ?, ?, ?, ?);";
-
-    private static final String READ_QUERY =
-            "SELECT nome, preco, descricao, estoque, id_subcategoria FROM petstation.produto WHERE num = ?;";
-
-    private static final String UPDATE_QUERY =
-            "UPDATE petstation.produto SET nome = ?, preco = ?, descricao = ?, estoque = ?, id_subcategoria = ? WHERE num = ?;";
-
-    private static final String DELETE_QUERY =
-            "DELETE FROM petstation.produto WHERE num = ?;";
-
-    private static final String ALL_QUERY =
-            "SELECT num, nome, preco, descricao, estoque, id_subcategoria FROM petstation.produto ORDER BY num DESC;";
-
     private static final String FIND_BY_CATEGORIA_QUERY =
             "SELECT p.num, p.nome, p.preco, p.descricao, p.estoque, p.id_subcategoria, s.nome AS nome_subcategoria, c.nome AS nome_categoria " +
             "FROM petstation.produto p " +
@@ -75,9 +59,9 @@ public class PgProdutoDAO implements ProdutoDAO {
 
     @Override
     public void create(Produto produto) throws SQLException {
-        // Pode-se reutilizar createProduto
-        //createProduto(produto.getNome(), produto.getPreco(), produto.getDescricao(), produto.getEstoque(), produto.getSubcategoria().getIdSubcategoria());
-        try (PreparedStatement statement = connection.prepareStatement(CREATE_QUERY)) {
+        String sql = "INSERT INTO petstation.produto (nome, preco, descricao, estoque, id_subcategoria) " +
+                "VALUES (?, ?, ?, ?, ?);";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, produto.getNome());
             statement.setBigDecimal(2, produto.getPreco());
             statement.setString(3, produto.getDescricao());
@@ -101,7 +85,8 @@ public class PgProdutoDAO implements ProdutoDAO {
     @Override
     public Produto read(Integer id) throws SQLException {
         Produto produto = new Produto();
-        try (PreparedStatement statement = connection.prepareStatement(READ_QUERY)) {
+        String sql = "SELECT nome, preco, descricao, estoque, id_subcategoria FROM petstation.produto WHERE num = ?;";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
             try (ResultSet result = statement.executeQuery()) {
                 if (result.next()) {
@@ -129,7 +114,8 @@ public class PgProdutoDAO implements ProdutoDAO {
 
     @Override
     public void update(Produto produto) throws SQLException {
-        try (PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY)) {
+        String sql = "UPDATE petstation.produto SET nome = ?, preco = ?, descricao = ?, estoque = ?, id_subcategoria = ? WHERE num = ?;";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, produto.getNome());
             statement.setBigDecimal(2, produto.getPreco());
             statement.setString(3, produto.getDescricao());
@@ -158,7 +144,8 @@ public class PgProdutoDAO implements ProdutoDAO {
 
     @Override
     public void delete(Integer id) throws SQLException {
-        try (PreparedStatement statement = connection.prepareStatement(DELETE_QUERY)) {
+        String sql = "DELETE FROM petstation.produto WHERE num = ?;";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
             if (statement.executeUpdate() < 1) {
                 throw new SQLException("Erro ao excluir: produto não encontrado.");
@@ -176,7 +163,8 @@ public class PgProdutoDAO implements ProdutoDAO {
     @Override
     public List<Produto> all() throws SQLException {
         List<Produto> produtos = new ArrayList<>();
-        try (PreparedStatement statement = connection.prepareStatement(ALL_QUERY);
+        String sql = "SELECT num, nome, preco, descricao, estoque, id_subcategoria FROM petstation.produto ORDER BY num DESC;";
+        try (PreparedStatement statement = connection.prepareStatement(sql);
             ResultSet result = statement.executeQuery()) {
             while (result.next()) {
                 Produto produto = new Produto();
@@ -231,7 +219,6 @@ public class PgProdutoDAO implements ProdutoDAO {
                     produtoPedido.setQuantidade(rs.getInt("Quantidade"));
                     produtoPedido.setNfPedido(rs.getString("NF_Pedido"));
                     produtoPedido.setDataPedido(rs.getDate("Data_Pedido").toLocalDate());
-
                     produtosPedidos.add(produtoPedido);
                 }
             }

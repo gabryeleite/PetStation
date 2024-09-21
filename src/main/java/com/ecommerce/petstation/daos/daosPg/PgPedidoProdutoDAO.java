@@ -4,11 +4,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.ecommerce.petstation.dtos.PedidoProduto2DTO;
 import org.springframework.stereotype.Repository;
 
 import com.ecommerce.petstation.daos.PedidoProdutoDAO;
@@ -30,7 +32,6 @@ public class PgPedidoProdutoDAO implements PedidoProdutoDAO{
     public void create(PedidoProduto venda) throws SQLException {
         String sql = "INSERT INTO petstation.pedido_produto(nf_pedido, num_produto, qnt_produto, preco_produto) VALUES(?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            //stmt.setInt(1, venda.getId());
             stmt.setString(1, venda.getNfPedido());
             stmt.setInt(2, venda.getNumProduto());
             stmt.setInt(3, venda.getQntProduto());
@@ -119,6 +120,27 @@ public class PgPedidoProdutoDAO implements PedidoProdutoDAO{
                 pedidoProduto.setQuantidade(rs.getInt("Quantidade"));
                 pedidoProduto.setTotal(rs.getBigDecimal("Total"));
 
+                pedidoProdutoList.add(pedidoProduto);
+            }
+        }
+        return pedidoProdutoList;
+    }
+
+    @Override
+    public List<PedidoProduto2DTO> resumoVendas() throws SQLException {
+        String sql = "SELECT \"NF Pedido\", \"Cliente\", \"Quantidade\", \"Preço Total\", \"Data\" " +
+                "FROM petstation.vw_resumo_pedido";
+        List<PedidoProduto2DTO> pedidoProdutoList = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet rs = statement.executeQuery()) {
+
+            while (rs.next()) {
+                PedidoProduto2DTO pedidoProduto = new PedidoProduto2DTO();
+                pedidoProduto.setNfPedido(rs.getString("NF Pedido"));
+                pedidoProduto.setCliente(rs.getString("Cliente"));
+                pedidoProduto.setQuantidade(rs.getInt("Quantidade"));
+                pedidoProduto.setPrecoTotal(rs.getBigDecimal("Preço Total"));
+                pedidoProduto.setData(rs.getDate("Data").toLocalDate());
                 pedidoProdutoList.add(pedidoProduto);
             }
         }
