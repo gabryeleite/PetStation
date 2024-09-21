@@ -27,12 +27,12 @@ public class PgPedidoDAO implements PedidoDAO {
 
     @Override
     public void create(Pedido pedido) throws SQLException {
-        String sql = "INSERT INTO petstation.pedido(data_pedido, hora_pedido, cpf_cliente) VALUES(?, ?, ?)";
+        String sql = "INSERT INTO petstation.pedido(nota_fiscal, cpf_cliente, data_pedido, hora_pedido) VALUES(?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            //stmt.setInt(1, pedido.getNum());
-            stmt.setObject(1, pedido.getDataPedido());
-            stmt.setObject(2, pedido.getHoraPedido());
-            stmt.setString(3, pedido.getCliente());
+            stmt.setString(1, pedido.getNotaFiscal());
+            stmt.setString(2, pedido.getCpfCliente());
+            stmt.setObject(3, pedido.getDataPedido());
+            stmt.setObject(4, pedido.getHoraPedido());
             stmt.executeUpdate();
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, "Erro ao criar pedido.", ex);
@@ -73,7 +73,7 @@ public class PgPedidoDAO implements PedidoDAO {
                 pedido.setNotaFiscal(rs.getString("nota_fiscal"));
                 pedido.setDataPedido(rs.getDate("data_pedido").toLocalDate());
                 pedido.setHoraPedido(rs.getTime("hora_pedido").toLocalTime());
-                pedido.setCliente(rs.getString("cpf_cliente"));
+                pedido.setCpfCliente(rs.getString("cpf_cliente"));
                 pedidos.add(pedido);
             }
         } catch (SQLException ex) {
@@ -86,13 +86,14 @@ public class PgPedidoDAO implements PedidoDAO {
     @Override
     public List<Pedido> findByCliente(String cpfCliente) throws SQLException {
         List<Pedido> pedidos = new ArrayList<>();
-        String sql = "SELECT nota_fiscal, data_pedido, hora_pedido FROM petstation.pedido WHERE cpf_cliente = ?;";
+        String sql = "SELECT nota_fiscal, cpf_cliente, data_pedido, hora_pedido FROM petstation.pedido WHERE cpf_cliente = ?;";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, cpfCliente);
             try(ResultSet rs = statement.executeQuery()) {
                 while (rs.next()) {
                     Pedido pedido = new Pedido();
                     pedido.setNotaFiscal(rs.getString("nota_fiscal"));
+                    pedido.setCpfCliente(rs.getString("cpf_cliente"));
                     pedido.setDataPedido(rs.getDate("data_pedido").toLocalDate());
                     pedido.setHoraPedido(rs.getTime("hora_pedido").toLocalTime());
                     pedidos.add(pedido);
@@ -116,7 +117,7 @@ public class PgPedidoDAO implements PedidoDAO {
                     pedido.setNotaFiscal(rs.getString("nota_fiscal"));
                     pedido.setDataPedido(rs.getDate("data_pedido").toLocalDate());
                     pedido.setHoraPedido(rs.getTime("hora_pedido").toLocalTime());
-                    pedido.setCliente(rs.getString("cpf_cliente"));
+                    pedido.setCpfCliente(rs.getString("cpf_cliente"));
                 } else {
                     throw new SQLException("Erro ao visualizar: pedido não encontrado.");
                 }

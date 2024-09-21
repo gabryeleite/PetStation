@@ -71,10 +71,10 @@ public class ClienteController {
         }
     }
 
-    @DeleteMapping(value="/delete-cliente/{id}")
-    public ResponseEntity<String> deleteCliente(@PathVariable Integer id) throws SQLException {
+    @DeleteMapping(value="/delete-cliente/{cpf}")
+    public ResponseEntity<String> deleteCliente(@PathVariable String cpf) throws SQLException {
         try {
-            pgClienteDAO.delete(id);
+            pgClienteDAO.delete(cpf);
             return ResponseEntity.ok("Cliente excluído com sucesso.");
         } catch (SQLException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro ao excluir: cliente não encontrado.");

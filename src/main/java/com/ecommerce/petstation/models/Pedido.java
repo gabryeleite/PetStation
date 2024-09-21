@@ -30,11 +30,11 @@ public class Pedido {
         this.notaFiscal = notaFiscal;
     }
 
-    public String getCliente() {
+    public String getCpfCliente() {
         return cpfCliente;
     }
 
-    public void setCliente(String cpfCliente) {
+    public void setCpfCliente(String cpfCliente) {
         this.cpfCliente = cpfCliente;
     }
 

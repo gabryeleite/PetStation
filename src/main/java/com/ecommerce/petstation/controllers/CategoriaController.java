@@ -34,7 +34,9 @@ public class CategoriaController {
             pgCategoriaDAO.create(categoria);
             return ResponseEntity.ok("Categoria criada com sucesso.");
         } catch (SQLException e) {
-            if (e.getSQLState().equals("23505")) { // Verifica violação de unicidade
+            String sqlState = e.getSQLState();
+
+            if (sqlState != null && sqlState.equals("23505")) { // Verifica violação de unicidade
                 return ResponseEntity.badRequest().body("Erro: Nome da categoria já existe.");
             } else if (e.getMessage().contains("campos obrigatórios não podem ser nulos")) {
                 return ResponseEntity.badRequest().body("Erro: Campos obrigatórios não podem ser nulos.");
@@ -43,6 +45,7 @@ public class CategoriaController {
             }
         }
     }
+
 
 
     @PostMapping(value="/update-categoria")

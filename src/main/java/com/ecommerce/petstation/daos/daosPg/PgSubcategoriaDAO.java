@@ -53,6 +53,7 @@ public class PgSubcategoriaDAO implements SubcategoriaDAO {
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     Subcategoria subcategoria = new Subcategoria();
+                    subcategoria.setIdSubcategoria(rs.getInt("id_subcategoria"));
                     subcategoria.setNome(rs.getString("nome"));
                     subcategoria.setIdCategoria(rs.getInt("id_categoria"));
                     return subcategoria;
@@ -115,41 +116,43 @@ public class PgSubcategoriaDAO implements SubcategoriaDAO {
     @Override
     public List<Subcategoria> all() throws SQLException {
         String sql = "SELECT * FROM petstation.subcategoria";
-        List<Subcategoria> categorias = new ArrayList<>();
+        List<Subcategoria> subcategorias = new ArrayList<>();
         try (PreparedStatement stmt = connection.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 Subcategoria subcategoria = new Subcategoria();
+                subcategoria.setIdSubcategoria(rs.getInt("id_subcategoria"));
                 subcategoria.setNome(rs.getString("nome"));
                 subcategoria.setIdCategoria(rs.getInt("id_categoria"));
-                categorias.add(subcategoria);
+                subcategorias.add(subcategoria);
             }
 
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, "Erro ao listar subcategorias.", ex);
             throw new SQLException("Erro ao listar subcategorias.");
         }
-        return categorias;
+        return subcategorias;
     }
 
     public List<Subcategoria> findByCategoria(Integer idCategoria) throws SQLException {
         String sql = "SELECT * FROM petstation.subcategoria WHERE id_categoria = ?";
-        List<Subcategoria> categorias = new ArrayList<>();
+        List<Subcategoria> subcategorias = new ArrayList<>();
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, idCategoria);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     Subcategoria subcategoria = new Subcategoria();
+                    subcategoria.setIdSubcategoria(rs.getInt("id_subcategoria"));
                     subcategoria.setNome(rs.getString("nome"));
                     subcategoria.setIdCategoria(rs.getInt("id_categoria"));
-                    categorias.add(subcategoria);
+                    subcategorias.add(subcategoria);
                 }
             }
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, "Erro ao buscar subcategorias por categoria.", ex);
             throw new SQLException("Erro ao buscar subcategorias por categoria.");
         }
-        return categorias;
+        return subcategorias;
     }
 }
