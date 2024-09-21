@@ -23,10 +23,10 @@ public class PedidoController {
     @Autowired
     private PgPedidoDAO pgPedidoDAO;
 
-    @GetMapping(value = "/pedido/{id}")
-    public Pedido readPedido(@PathVariable(value="id") Integer id) {
+    @GetMapping(value = "/pedido/{nf}")
+    public Pedido readPedido(@PathVariable(value="nf") String nf) {
         try {
-            return pgPedidoDAO.read(id);
+            return pgPedidoDAO.findByNF(nf);
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
@@ -57,10 +57,10 @@ public class PedidoController {
         }
     }
 
-    @GetMapping(value = "/pedidos-cliente/{id}")
-    public List<Pedido> pedidosCliente(@PathVariable(value="id") Integer id) {
+    @GetMapping(value = "/pedidos-cliente/{cpf}")
+    public List<Pedido> pedidosCliente(@PathVariable(value="cpf") String cpf) {
         try {
-            return pgPedidoDAO.findByIdCliente(id);
+            return pgPedidoDAO.findByCliente(cpf);
         } catch (SQLException e) {
             e.printStackTrace();
             return null;

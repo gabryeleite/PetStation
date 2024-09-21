@@ -8,8 +8,6 @@ import java.util.List;
 
 public class Cliente {
 
-    private Integer idCliente;
-
     private String nome;
 
     private String sobrenome;
@@ -29,14 +27,6 @@ public class Cliente {
     private List<Pedido> pedidos;
 
     // Getters and Setters
-    
-    public Integer getIdCliente() {
-        return idCliente;
-    }
-
-    public void setIdCliente(Integer idCliente) {
-        this.idCliente = idCliente;
-    }
 
     public String getNome() {
         return nome;

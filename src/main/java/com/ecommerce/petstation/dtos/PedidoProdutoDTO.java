@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 public class PedidoProdutoDTO {
 
     private String nomeProduto;
-    private Integer numPedido;
+    private String nfPedido;
     private Integer numProduto;
     private Integer quantidade;
     private BigDecimal preco;
@@ -28,12 +28,12 @@ public class PedidoProdutoDTO {
         this.quantidade = quantidade;
     }
 
-    public Integer getNumPedido() {
-        return numPedido;
+    public String getNfPedido() {
+        return nfPedido;
     }
 
-    public void setNumPedido(Integer numPedido) {
-        this.numPedido = numPedido;
+    public void setNfPedido(String nfPedido) {
+        this.nfPedido = nfPedido;
     }
 
     public Integer getNumProduto() {

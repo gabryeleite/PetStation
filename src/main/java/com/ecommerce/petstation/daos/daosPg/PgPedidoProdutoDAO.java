@@ -28,10 +28,10 @@ public class PgPedidoProdutoDAO implements PedidoProdutoDAO{
 
     @Override
     public void create(PedidoProduto venda) throws SQLException {
-        String sql = "INSERT INTO petstation.pedido_produto(num_pedido, num_produto, qnt_produto, preco_produto) VALUES(?, ?, ?, ?)";
+        String sql = "INSERT INTO petstation.pedido_produto(nf_pedido, num_produto, qnt_produto, preco_produto) VALUES(?, ?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             //stmt.setInt(1, venda.getId());
-            stmt.setInt(1, venda.getNumPedido());
+            stmt.setString(1, venda.getNfPedido());
             stmt.setInt(2, venda.getNumProduto());
             stmt.setInt(3, venda.getQntProduto());
             stmt.setBigDecimal(4, venda.getPrecoProduto());
@@ -83,13 +83,13 @@ public class PgPedidoProdutoDAO implements PedidoProdutoDAO{
     @Override
     public List<PedidoProduto> all() throws SQLException {
         List<PedidoProduto> vendas = new ArrayList<>();
-        String sql = "SELECT id, num_pedido, num_produto, qnt_produto, preco_produto FROM petstation.pedido_produto;";
+        String sql = "SELECT id, nf_pedido, num_produto, qnt_produto, preco_produto FROM petstation.pedido_produto;";
         try (PreparedStatement stmt = connection.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 PedidoProduto pedido = new PedidoProduto();
                 pedido.setId(rs.getInt("id"));
-                pedido.setNumPedido(rs.getInt("num_pedido"));
+                pedido.setNfPedido(rs.getString("nf_pedido"));
                 pedido.setNumProduto(rs.getInt("num_produto"));
                 pedido.setQntProduto(rs.getInt("qnt_produto"));
                 pedido.setPrecoProduto(rs.getBigDecimal("preco_produto"));
@@ -104,7 +104,7 @@ public class PgPedidoProdutoDAO implements PedidoProdutoDAO{
 
     @Override
     public List<PedidoProdutoDTO> filtrarVendas() throws SQLException {
-        String sql = "SELECT \"Nº do Pedido\", \"Nº do Produto\", \"Produto\", \"Preço\", \"Quantidade\", \"Total\" " +
+        String sql = "SELECT \"NF Pedido\", \"Nº do Produto\", \"Produto\", \"Preço\", \"Quantidade\", \"Total\" " +
                     "FROM petstation.vw_pedido_produto";
         List<PedidoProdutoDTO> pedidoProdutoList = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement(sql);
@@ -112,7 +112,7 @@ public class PgPedidoProdutoDAO implements PedidoProdutoDAO{
 
             while (rs.next()) {
                 PedidoProdutoDTO pedidoProduto = new PedidoProdutoDTO();
-                pedidoProduto.setNumPedido(rs.getInt("Nº do Pedido"));
+                pedidoProduto.setNfPedido(rs.getString("NF Pedido"));
                 pedidoProduto.setNumProduto(rs.getInt("Nº do Produto"));
                 pedidoProduto.setNomeProduto(rs.getString("Produto"));
                 pedidoProduto.setPreco(rs.getBigDecimal("Preço"));

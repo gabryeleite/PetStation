@@ -23,23 +23,23 @@ public class PgClienteDAO implements ClienteDAO {
             "INSERT INTO petstation.cliente (nome, sobrenome, sexo, data_nascimento, cpf, email, senha) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?);";
 
-    private static final String READ_QUERY =
-            "SELECT nome, sobrenome, sexo, data_nascimento, cpf, email, senha FROM petstation.cliente WHERE id_cliente = ?;";
+    //private static final String READ_QUERY =
+    //        "SELECT nome, sobrenome, sexo, data_nascimento, cpf, email, senha FROM petstation.cliente WHERE cpf = ?;";
 
     private static final String UPDATE_QUERY =
-            "UPDATE petstation.cliente SET nome = ?, sobrenome = ?, sexo = ?, data_nascimento = ?, cpf = ?, email = ?, senha = ? WHERE id_cliente = ?;";
+            "UPDATE petstation.cliente SET nome = ?, sobrenome = ?, sexo = ?, data_nascimento = ?, cpf = ?, email = ?, senha = ? WHERE cpf = ?;";
 
     private static final String DELETE_QUERY =
-            "DELETE FROM petstation.cliente WHERE id_cliente = ?;";
+            "DELETE FROM petstation.cliente WHERE cpf = ?;";
 
     private static final String ALL_QUERY =
-            "SELECT id_cliente, nome, sobrenome, sexo, data_nascimento, cpf, email, senha FROM petstation.cliente ORDER BY id_cliente DESC;";
+            "SELECT nome, sobrenome, sexo, data_nascimento, cpf, email, senha FROM petstation.cliente;";
 
     private static final String CLIENTES_COM_MAIS_PEDIDOS_QUERY =
-            "SELECT c.id_cliente, c.nome, c.sobrenome, c.sexo, c.data_nascimento, c.cpf, c.email, c.senha, COUNT(p.num) AS total_pedidos " +
+            "SELECT c.nome, c.sobrenome, c.sexo, c.data_nascimento, c.cpf, c.email, c.senha, COUNT(p.num) AS total_pedidos " +
                     "FROM petstation.cliente c " +
-                    "JOIN petstation.pedido p ON c.id_cliente = p.id_cliente " +
-                    "GROUP BY c.id_cliente, c.nome, c.sobrenome, c.sexo, c.data_nascimento, c.cpf, c.email, c.senha " +
+                    "JOIN petstation.pedido p ON c.cpf = p.cpf_cliente " +
+                    "GROUP BY c.cpf, c.nome, c.sobrenome, c.sexo, c.data_nascimento, c.cpf, c.email, c.senha " +
                     "ORDER BY total_pedidos DESC;";
 
     public PgClienteDAO(Connection connection) {
@@ -69,34 +69,10 @@ public class PgClienteDAO implements ClienteDAO {
 
     @Override
     public Cliente read(Integer id) throws SQLException {
-        Cliente cliente = new Cliente();
-        try (PreparedStatement statement = connection.prepareStatement(READ_QUERY)) {
-            statement.setInt(1, id);
-            try (ResultSet rs = statement.executeQuery()) {
-                if (rs.next()) {
-                    cliente.setIdCliente(id);
-                    cliente.setNome(rs.getString("nome"));
-                    cliente.setSobrenome(rs.getString("sobrenome"));
-                    cliente.setSexo(rs.getString("sexo"));
-                    // Tive que dar um cast pra LocalDate, nao sei se esta correto
-                    cliente.setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
-                    cliente.setCpf(rs.getString("cpf"));
-                    cliente.setEmail(rs.getString("email"));
-                    cliente.setSenha(rs.getString("senha"));
-                } else {
-                    throw new SQLException("Erro ao visualizar: cliente não encontrado.");
-                }
-            }
-        } catch (SQLException ex) {
-            LOGGER.log(Level.SEVERE, "Erro ao ler cliente.", ex);
-            if (ex.getMessage().equals("Erro ao visualizar: cliente não encontrado.")) {
-                throw ex;
-            } else {
-                throw new SQLException("Erro ao ler cliente.");
-            }
-        }
-        return cliente;
+        // read feito por CPF
+        throw new UnsupportedOperationException("Unimplemented method 'read'");
     }
+
 
     @Override
     public void update(Cliente cliente) throws SQLException {
@@ -147,7 +123,6 @@ public class PgClienteDAO implements ClienteDAO {
              ResultSet rs = statement.executeQuery()) {
             while (rs.next()) {
                 Cliente cliente = new Cliente();
-                cliente.setIdCliente(rs.getInt("id_cliente"));
                 cliente.setNome(rs.getString("nome"));
                 cliente.setSobrenome(rs.getString("sobrenome"));
                 cliente.setSexo(rs.getString("sexo"));
@@ -173,7 +148,6 @@ public class PgClienteDAO implements ClienteDAO {
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 Cliente cliente = new Cliente();
-                cliente.setIdCliente(rs.getInt("id_cliente"));
                 cliente.setNome(rs.getString("nome"));
                 cliente.setSobrenome(rs.getString("sobrenome"));
                 cliente.setSexo(rs.getString("sexo"));
@@ -195,7 +169,6 @@ public class PgClienteDAO implements ClienteDAO {
              ResultSet rs = statement.executeQuery()) {
             while (rs.next()) {
                 Cliente cliente = new Cliente();
-                cliente.setIdCliente(rs.getInt("id_cliente"));
                 cliente.setNome(rs.getString("nome"));
                 cliente.setSobrenome(rs.getString("sobrenome"));
                 cliente.setSexo(rs.getString("sexo"));
@@ -211,6 +184,5 @@ public class PgClienteDAO implements ClienteDAO {
         }
         return clientes;
     }
-
 
 }

@@ -6,7 +6,7 @@ public class ProdutoDTO {
 
     private String nomeProduto;
     private Integer quantidade;
-    private Integer numPedido;
+    private String nfPedido;
     private LocalDate dataPedido;
 
     // Getters e Setters
@@ -26,12 +26,12 @@ public class ProdutoDTO {
         this.quantidade = quantidade;
     }
 
-    public Integer getNumPedido() {
-        return numPedido;
+    public String getNfPedido() {
+        return nfPedido;
     }
 
-    public void setNumPedido(Integer numPedido) {
-        this.numPedido = numPedido;
+    public void setNfPedido(String nfPedido) {
+        this.nfPedido = nfPedido;
     }
 
     public LocalDate getDataPedido() {

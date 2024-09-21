@@ -6,7 +6,7 @@ public class PedidoProduto {
 
     private Integer id;
 
-    private Integer numPedido;
+    private String nfPedido;
 
     private Integer numProduto;
 
@@ -24,12 +24,12 @@ public class PedidoProduto {
         this.id = id;
     }
 
-    public Integer getNumPedido() {
-        return numPedido;
+    public String getNfPedido() {
+        return nfPedido;
     }
 
-    public void setNumPedido(Integer numPedido) {
-        this.numPedido = numPedido;
+    public void setNfPedido(String nfPedido) {
+        this.nfPedido = nfPedido;
     }
 
     public Integer getQntProduto() {

@@ -42,16 +42,16 @@ public class PgProdutoDAO implements ProdutoDAO {
             "FROM petstation.produto p " +
             "JOIN petstation.subcategoria s ON p.id_subcategoria = s.id_subcategoria " +
             "JOIN petstation.categoria c ON s.id_categoria = c.id_categoria " +
-            "WHERE c.id_categoria = ? ORDER BY p.num";
+            "WHERE c.id_categoria = ?";
 
     private static final String FIND_BY_CLIENTE_QUERY =
-            "SELECT p.nome AS Produto, c.qnt_produto AS Quantidade, ped.num AS Nº_Pedido, " +
+            "SELECT p.nome AS Produto, c.qnt_produto AS Quantidade, ped.nota_fiscal AS NF_Pedido, " +
             "ped.data_pedido AS Data_Pedido " +
             "FROM petstation.produto p " +
             "JOIN petstation.pedido_produto c ON p.num = c.num_produto " +
-            "JOIN petstation.pedido ped ON c.num_pedido = ped.num " +
-            "JOIN petstation.cliente cli ON ped.id_cliente = cli.id_cliente " +
-            "WHERE cli.id_cliente = ?";
+            "JOIN petstation.pedido ped ON c.nf_pedido = ped.nota_fiscal " +
+            "JOIN petstation.cliente cli ON ped.cpf_cliente = cli.cpf " +
+            "WHERE cli.cpf = ?";
 
     private static final String UPDATE_ESTOQUE_QUERY =
             "UPDATE petstation.produto SET estoque = ? WHERE num = ?;";
@@ -214,17 +214,17 @@ public class PgProdutoDAO implements ProdutoDAO {
     }
 
     @Override
-    public List<ProdutoDTO> findByCliente(Integer idCliente)throws SQLException {
+    public List<ProdutoDTO> findByCliente(String cpfCliente)throws SQLException {
         List<ProdutoDTO> produtosPedidos = new ArrayList<>();
 
         try (PreparedStatement statement = connection.prepareStatement(FIND_BY_CLIENTE_QUERY)) {
-            statement.setInt(1, idCliente);
+            statement.setString(1, cpfCliente);
             try (ResultSet rs = statement.executeQuery()) {
                 while (rs.next()) {
                     ProdutoDTO produtoPedido = new ProdutoDTO();
                     produtoPedido.setNomeProduto(rs.getString("Produto"));
                     produtoPedido.setQuantidade(rs.getInt("Quantidade"));
-                    produtoPedido.setNumPedido(rs.getInt("Nº_Pedido"));
+                    produtoPedido.setNfPedido(rs.getString("NF_Pedido"));
                     produtoPedido.setDataPedido(rs.getDate("Data_Pedido").toLocalDate());
 
                     produtosPedidos.add(produtoPedido);

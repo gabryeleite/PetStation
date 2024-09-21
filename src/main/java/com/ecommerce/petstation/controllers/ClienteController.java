@@ -28,16 +28,6 @@ public class ClienteController {
         }
     }
 
-    @GetMapping(value = "/cliente-id/{id}")
-    public Cliente clienteById(@PathVariable(value="id") Integer id) {
-        try {
-            return pgClienteDAO.read(id);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
     @GetMapping(value = "/cliente-cpf/{cpf}")
     public Cliente clienteByCpf(@PathVariable(value="cpf") String cpf) {
         try {

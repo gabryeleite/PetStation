@@ -88,10 +88,10 @@ public class ProdutoController {
         }
     }
 
-    @GetMapping(value="/produtos-cliente/{id}")
-    public List<ProdutoDTO> produtosCliente(@PathVariable("id") Integer idCliente) {
+    @GetMapping(value="/produtos-cliente/{cpf}")
+    public List<ProdutoDTO> produtosCliente(@PathVariable("cpf") String cpfCliente) {
         try {
-            return pgProdutoDAO.findByCliente(idCliente);
+            return pgProdutoDAO.findByCliente(cpfCliente);
         } catch (SQLException e) {
             e.printStackTrace();
             return null;

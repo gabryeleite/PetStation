@@ -25,31 +25,14 @@ public class PgPedidoDAO implements PedidoDAO {
         this.connection = connection;
     }
 
-    // query filtrar produtos
-    /*
-     * SELECT 
-            c.num_pedido AS "Nº do Pedido",
-            c.num_produto AS "Nº do Produto",
-            p.nome AS "Produto",
-            c.preco_produto AS "Preço",
-            c.qnt_produto AS "Quantidade",
-            (c.qnt_produto * c.preco_produto) AS "Total"
-        FROM 
-            petstation.pedido_produto c
-        JOIN 
-            petstation.produto p ON c.num_produto = p.num
-        ORDER BY 
-            c.num_pedido;
-     */
-
     @Override
     public void create(Pedido pedido) throws SQLException {
-        String sql = "INSERT INTO petstation.pedido(data_pedido, hora_pedido, id_cliente) VALUES(?, ?, ?, ?)";
+        String sql = "INSERT INTO petstation.pedido(data_pedido, hora_pedido, cpf_cliente) VALUES(?, ?, ?)";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             //stmt.setInt(1, pedido.getNum());
             stmt.setObject(1, pedido.getDataPedido());
             stmt.setObject(2, pedido.getHoraPedido());
-            stmt.setInt(3, pedido.getIdCliente());
+            stmt.setString(3, pedido.getCliente());
             stmt.executeUpdate();
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, "Erro ao criar pedido.", ex);
@@ -63,16 +46,77 @@ public class PgPedidoDAO implements PedidoDAO {
 
     @Override
     public Pedido read(Integer id) throws SQLException {
-        Pedido pedido = new Pedido();
-        String sql = "SELECT num, data_pedido, hora_pedido, id_cliente FROM petstation.pedido WHERE num = ?;";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    pedido.setNum(rs.getInt("num"));
+        // read feito pela NF
+        throw new UnsupportedOperationException("Unimplemented method 'read'");
+    }
+    
+    @Override
+    public void update(Pedido pedido) throws SQLException {
+        // nao faz sentido atualizar pedido (campos data_pedido, hora_pedido, cpf_cliente)
+        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+    }
+
+    @Override
+    public void delete(Integer id) throws SQLException {
+        // nao faz sentido deletar pedido
+        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+    }
+
+    @Override
+    public List<Pedido> all() throws SQLException {
+        List<Pedido> pedidos = new ArrayList<>();
+        String sql = "SELECT nota_fiscal, data_pedido, hora_pedido, cpf_cliente FROM petstation.pedido;";
+        try (PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet rs = statement.executeQuery()) {
+            while (rs.next()) {
+                Pedido pedido = new Pedido();
+                pedido.setNotaFiscal(rs.getString("nota_fiscal"));
+                pedido.setDataPedido(rs.getDate("data_pedido").toLocalDate());
+                pedido.setHoraPedido(rs.getTime("hora_pedido").toLocalTime());
+                pedido.setCliente(rs.getString("cpf_cliente"));
+                pedidos.add(pedido);
+            }
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, "Erro ao listar pedidos.", ex);
+            throw new SQLException("Erro ao listar pedidos.");
+        }
+        return pedidos;
+    }
+
+    @Override
+    public List<Pedido> findByCliente(String cpfCliente) throws SQLException {
+        List<Pedido> pedidos = new ArrayList<>();
+        String sql = "SELECT nota_fiscal, data_pedido, hora_pedido FROM petstation.pedido WHERE cpf_cliente = ?;";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, cpfCliente);
+            try(ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    Pedido pedido = new Pedido();
+                    pedido.setNotaFiscal(rs.getString("nota_fiscal"));
                     pedido.setDataPedido(rs.getDate("data_pedido").toLocalDate());
                     pedido.setHoraPedido(rs.getTime("hora_pedido").toLocalTime());
-                    pedido.setIdCliente(rs.getInt("id_cliente"));
+                    pedidos.add(pedido);
+                }
+            }
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, "Erro ao listar pedidos.", ex);
+            throw new SQLException("Erro ao listar pedidos.");
+        }
+        return pedidos;
+    }
+
+    @Override
+    public Pedido findByNF(String nf) throws SQLException {
+        Pedido pedido = new Pedido();
+        String sql = "SELECT nota_fiscal, data_pedido, hora_pedido, cpf_cliente FROM petstation.pedido WHERE nota_fiscal = ?;";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, nf);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    pedido.setNotaFiscal(rs.getString("nota_fiscal"));
+                    pedido.setDataPedido(rs.getDate("data_pedido").toLocalDate());
+                    pedido.setHoraPedido(rs.getTime("hora_pedido").toLocalTime());
+                    pedido.setCliente(rs.getString("cpf_cliente"));
                 } else {
                     throw new SQLException("Erro ao visualizar: pedido não encontrado.");
                 }
@@ -87,78 +131,5 @@ public class PgPedidoDAO implements PedidoDAO {
         }
         return pedido;
     }
-
-    @Override
-    public void update(Pedido pedido) throws SQLException {
-        // nao faz sentido atualizar pedido (campos data_pedido, hora_pedido, id_cliente)
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
-    }
-
-    @Override
-    public void delete(Integer id) throws SQLException {
-        // nao faz sentido deletar pedido
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
-    }
-
-    @Override
-    public List<Pedido> all() throws SQLException {
-        List<Pedido> pedidos = new ArrayList<>();
-        String sql = "SELECT num, data_pedido, hora_pedido, id_cliente FROM petstation.pedido;";
-        try (PreparedStatement statement = connection.prepareStatement(sql);
-             ResultSet rs = statement.executeQuery()) {
-            while (rs.next()) {
-                Pedido pedido = new Pedido();
-                pedido.setNum(rs.getInt("num"));
-                pedido.setDataPedido(rs.getDate("data_pedido").toLocalDate());
-                pedido.setHoraPedido(rs.getTime("hora_pedido").toLocalTime());
-                pedido.setIdCliente(rs.getInt("id_cliente"));
-                pedidos.add(pedido);
-            }
-        } catch (SQLException ex) {
-            LOGGER.log(Level.SEVERE, "Erro ao listar pedidos.", ex);
-            throw new SQLException("Erro ao listar pedidos.");
-        }
-        return pedidos;
-    }
-
-    @Override
-    public List<Pedido> findByIdCliente(Integer idCLiente) throws SQLException {
-        List<Pedido> pedidos = new ArrayList<>();
-        String sql = "SELECT num, data_pedido, hora_pedido FROM petstation.pedido WHERE id_cliente = ?;";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, idCLiente);
-            try(ResultSet rs = statement.executeQuery()) {
-                while (rs.next()) {
-                    Pedido pedido = new Pedido();
-                    pedido.setNum(rs.getInt("num"));
-                    pedido.setDataPedido(rs.getDate("data_pedido").toLocalDate());
-                    pedido.setHoraPedido(rs.getTime("hora_pedido").toLocalTime());
-                    pedidos.add(pedido);
-                }
-            }
-        } catch (SQLException ex) {
-            LOGGER.log(Level.SEVERE, "Erro ao listar pedidos.", ex);
-            throw new SQLException("Erro ao listar pedidos.");
-        }
-        return pedidos;
-    }
-
-    /* @Override
-    public List<Pedido> filtrarPedidos() throws SQLException {
-        List<Pedido> pedidos = new ArrayList<>();
-        try (PreparedStatement statement = connection.prepareStatement(PEDIDOS_QUERY);
-             ResultSet rs = statement.executeQuery()) {
-            while (rs.next()) {
-                Pedido pedido = new Pedido();
-                // adicionar Campos
-
-                pedidos.add(pedido);
-            }
-        } catch (SQLException ex) {
-            LOGGER.log(Level.SEVERE, "Erro ao filtrar pedidos.", ex);
-            throw new SQLException("Erro ao filtrar pedidos.");
-        }
-        return pedidos;
-    } */
 
 }

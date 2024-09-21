@@ -9,9 +9,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Pedido {
     
-    private Integer num;
+    private String notaFiscal;
 
-    private Integer idCliente;
+    private String cpfCliente;
 
     private LocalDate dataPedido;
 
@@ -22,20 +22,20 @@ public class Pedido {
 
     // Getters and Setters
 
-    public Integer getNum() {
-        return num;
+    public String getNotaFiscal() {
+        return notaFiscal;
     }
 
-    public void setNum(Integer num) {
-        this.num = num;
+    public void setNotaFiscal(String notaFiscal) {
+        this.notaFiscal = notaFiscal;
     }
 
-    public Integer getIdCliente() {
-        return idCliente;
+    public String getCliente() {
+        return cpfCliente;
     }
 
-    public void setIdCliente(Integer idCliente) {
-        this.idCliente = idCliente;
+    public void setCliente(String cpfCliente) {
+        this.cpfCliente = cpfCliente;
     }
 
     public LocalDate getDataPedido() {

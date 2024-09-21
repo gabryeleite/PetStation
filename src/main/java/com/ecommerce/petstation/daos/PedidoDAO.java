@@ -7,5 +7,6 @@ import com.ecommerce.petstation.models.Pedido;
 
 public interface PedidoDAO extends DAO<Pedido>{
     //List<Pedido> filtrarPedidos() throws SQLException;
-    List<Pedido> findByIdCliente(Integer idCliente) throws SQLException;
+    List<Pedido> findByCliente(String cpfCliente) throws SQLException;
+    Pedido findByNF(String nf) throws SQLException;
 }
