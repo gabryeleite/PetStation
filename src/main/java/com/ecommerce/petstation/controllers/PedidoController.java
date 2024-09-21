@@ -57,4 +57,14 @@ public class PedidoController {
         }
     }
 
+    @GetMapping(value = "/pedidos-cliente/{id}")
+    public List<Pedido> pedidosCliente(@PathVariable(value="id") Integer id) {
+        try {
+            return pgPedidoDAO.findByIdCliente(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }

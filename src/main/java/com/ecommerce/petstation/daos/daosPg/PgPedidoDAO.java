@@ -121,6 +121,28 @@ public class PgPedidoDAO implements PedidoDAO {
         return pedidos;
     }
 
+    @Override
+    public List<Pedido> findByIdCliente(Integer idCLiente) throws SQLException {
+        List<Pedido> pedidos = new ArrayList<>();
+        String sql = "SELECT num, data_pedido, hora_pedido FROM petstation.pedido WHERE id_cliente = ?;";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, idCLiente);
+            try(ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    Pedido pedido = new Pedido();
+                    pedido.setNum(rs.getInt("num"));
+                    pedido.setDataPedido(rs.getDate("data_pedido").toLocalDate());
+                    pedido.setHoraPedido(rs.getTime("hora_pedido").toLocalTime());
+                    pedidos.add(pedido);
+                }
+            }
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, "Erro ao listar pedidos.", ex);
+            throw new SQLException("Erro ao listar pedidos.");
+        }
+        return pedidos;
+    }
+
     /* @Override
     public List<Pedido> filtrarPedidos() throws SQLException {
         List<Pedido> pedidos = new ArrayList<>();
