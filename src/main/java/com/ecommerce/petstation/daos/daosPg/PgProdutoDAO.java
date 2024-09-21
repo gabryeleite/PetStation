@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 import org.springframework.stereotype.Repository;
 
 import com.ecommerce.petstation.daos.ProdutoDAO;
-import com.ecommerce.petstation.dtos.ProdutoPedidoDTO;
+import com.ecommerce.petstation.dtos.ProdutoDTO;
 import com.ecommerce.petstation.models.Produto;
 
 @Repository
@@ -214,14 +214,14 @@ public class PgProdutoDAO implements ProdutoDAO {
     }
 
     @Override
-    public List<ProdutoPedidoDTO> findByCliente(Integer idCliente)throws SQLException {
-        List<ProdutoPedidoDTO> produtosPedidos = new ArrayList<>();
+    public List<ProdutoDTO> findByCliente(Integer idCliente)throws SQLException {
+        List<ProdutoDTO> produtosPedidos = new ArrayList<>();
 
         try (PreparedStatement statement = connection.prepareStatement(FIND_BY_CLIENTE_QUERY)) {
             statement.setInt(1, idCliente);
             try (ResultSet rs = statement.executeQuery()) {
                 while (rs.next()) {
-                    ProdutoPedidoDTO produtoPedido = new ProdutoPedidoDTO();
+                    ProdutoDTO produtoPedido = new ProdutoDTO();
                     produtoPedido.setNomeProduto(rs.getString("Produto"));
                     produtoPedido.setQuantidade(rs.getInt("Quantidade"));
                     produtoPedido.setNumPedido(rs.getInt("Nº_Pedido"));

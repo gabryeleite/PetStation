@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import org.springframework.stereotype.Repository;
 
 import com.ecommerce.petstation.daos.PedidoProdutoDAO;
+import com.ecommerce.petstation.dtos.PedidoProdutoDTO;
 import com.ecommerce.petstation.models.PedidoProduto;
 
 @Repository
@@ -99,6 +100,29 @@ public class PgPedidoProdutoDAO implements PedidoProdutoDAO{
             throw new SQLException("Erro ao listar vendas.");
         }
         return vendas;
+    }
+
+    @Override
+    public List<PedidoProdutoDTO> filtrarVendas() throws SQLException {
+        String sql = "SELECT \"Nº do Pedido\", \"Nº do Produto\", \"Produto\", \"Preço\", \"Quantidade\", \"Total\" " +
+                    "FROM petstation.vw_pedido_produto";
+        List<PedidoProdutoDTO> pedidoProdutoList = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement(sql);
+            ResultSet rs = statement.executeQuery()) {
+
+            while (rs.next()) {
+                PedidoProdutoDTO pedidoProduto = new PedidoProdutoDTO();
+                pedidoProduto.setNumPedido(rs.getInt("Nº do Pedido"));
+                pedidoProduto.setNumProduto(rs.getInt("Nº do Produto"));
+                pedidoProduto.setNomeProduto(rs.getString("Produto"));
+                pedidoProduto.setPreco(rs.getBigDecimal("Preço"));
+                pedidoProduto.setQuantidade(rs.getInt("Quantidade"));
+                pedidoProduto.setTotal(rs.getBigDecimal("Total"));
+
+                pedidoProdutoList.add(pedidoProduto);
+            }
+        }
+        return pedidoProdutoList;
     }
 
 }

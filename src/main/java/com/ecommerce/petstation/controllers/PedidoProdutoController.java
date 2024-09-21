@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ecommerce.petstation.daos.daosPg.PgPedidoProdutoDAO;
+import com.ecommerce.petstation.dtos.PedidoProdutoDTO;
 import com.ecommerce.petstation.models.PedidoProduto;
 
 @RestController
@@ -24,7 +25,7 @@ public class PedidoProdutoController {
     private PgPedidoProdutoDAO PgPedidoProdutoDAO;
 
     @GetMapping(value = "/vendas")
-    public List<PedidoProduto> allPedidos() {
+    public List<PedidoProduto> allVendas() {
         try {
             return PgPedidoProdutoDAO.all();
         } catch (SQLException e) {
@@ -44,6 +45,16 @@ public class PedidoProdutoController {
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao criar venda.");
             }
+        }
+    }
+
+    @GetMapping(value = "/vendas-total")
+    public List<PedidoProdutoDTO> allVendasTotal() {
+        try {
+            return PgPedidoProdutoDAO.filtrarVendas();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 

@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.ecommerce.petstation.daos.daosPg.PgProdutoDAO;
-import com.ecommerce.petstation.dtos.ProdutoPedidoDTO;
+import com.ecommerce.petstation.dtos.ProdutoDTO;
 import com.ecommerce.petstation.models.Produto;
 
 @RestController
@@ -89,7 +89,7 @@ public class ProdutoController {
     }
 
     @GetMapping(value="/produtos-cliente/{id}")
-    public List<ProdutoPedidoDTO> produtosCliente(@PathVariable("id") Integer idCliente) {
+    public List<ProdutoDTO> produtosCliente(@PathVariable("id") Integer idCliente) {
         try {
             return pgProdutoDAO.findByCliente(idCliente);
         } catch (SQLException e) {

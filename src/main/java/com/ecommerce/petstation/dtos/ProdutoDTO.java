@@ -2,7 +2,7 @@ package com.ecommerce.petstation.dtos;
 
 import java.time.LocalDate;
 
-public class ProdutoPedidoDTO {
+public class ProdutoDTO {
 
     private String nomeProduto;
     private Integer quantidade;
