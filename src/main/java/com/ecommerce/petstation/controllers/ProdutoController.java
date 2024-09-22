@@ -117,9 +117,9 @@ public class ProdutoController {
     }
 
     @GetMapping("/mais-vendidos")
-    public ResponseEntity<List<Produto>> getMaisVendidos() {
+    public ResponseEntity<List<ProdutoVendidoDTO>> getMaisVendidos() {
         try {
-            List<Produto> produtos = pgProdutoDAO.findMaisVendidos();
+            List<ProdutoVendidoDTO> produtos = pgProdutoDAO.findMaisVendidos();
             return ResponseEntity.ok(produtos);
         } catch (SQLException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

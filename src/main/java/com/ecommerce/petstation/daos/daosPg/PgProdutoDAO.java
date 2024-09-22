@@ -42,14 +42,6 @@ public class PgProdutoDAO implements ProdutoDAO {
     private static final String UPDATE_ESTOQUE_QUERY =
             "UPDATE petstation.produto SET estoque = ? WHERE num = ?;";
 
-    private static final String FIND_MAIS_VENDIDOS_QUERY =
-            "SELECT p.num, p.nome, p.preco, p.descricao, p.estoque, p.id_subcategoria, SUM(pp.qnt_produto) AS total_vendido " +
-            "FROM petstation.produto p " +
-            "JOIN petstation.pedido_produto pp ON p.num = pp.num_produto " +
-            "GROUP BY p.num, p.nome, p.preco, p.descricao, p.estoque, p.id_subcategoria " +
-            "ORDER BY total_vendido DESC " +
-            "LIMIT 5;";
-
     private static final String FIND_BY_TERMO_QUERY =
             "SELECT num, nome, preco, descricao, estoque, id_subcategoria " +
             "FROM petstation.produto " +
@@ -62,6 +54,26 @@ public class PgProdutoDAO implements ProdutoDAO {
             "JOIN petstation.pedido_produto pp ON p.num = pp.num_produto " +
             "JOIN petstation.pedido pd ON pp.nf_pedido = pd.nota_fiscal " +
             "WHERE pd.nota_fiscal = ?";
+
+    private static final String FIND_MAIS_VENDIDOS_QUERY =
+            "SELECT " +
+            "cat.nome AS categoria_nome, " +
+            "prod.nome AS produto_nome, " +
+            "SUM(pp.qnt_produto) AS total_vendido, " +
+            "ROW_NUMBER() OVER (PARTITION BY cat.id_categoria ORDER BY SUM(pp.qnt_produto) DESC) AS ranking " +
+            "FROM " +
+            "    petstation.pedido_produto pp " +
+            "JOIN " +
+            "    petstation.produto prod ON pp.num_produto = prod.num " +
+            "JOIN " +
+            "    petstation.subcategoria subcat ON prod.id_subcategoria = subcat.id_subcategoria " +
+            "JOIN " +
+            "    petstation.categoria cat ON subcat.id_categoria = cat.id_categoria " +
+            "GROUP BY " +
+            "cat.id_categoria, cat.nome, prod.nome " +
+            "ORDER BY " +
+            "total_vendido DESC " +
+            "LIMIT 5;";
 
     private static final String FIND_MAIS_VENDIDOS_CATEGORIA_QUERY =
             "WITH RankedSales AS ( " +
@@ -77,7 +89,7 @@ public class PgProdutoDAO implements ProdutoDAO {
             ") " +
             "SELECT categoria_nome, produto_nome, total_vendido " +
             "FROM RankedSales " +
-            "WHERE ranking <= 3 " +
+            "WHERE ranking <= 2 " +
             "ORDER BY categoria_nome, ranking;";
 
 
@@ -274,21 +286,19 @@ public class PgProdutoDAO implements ProdutoDAO {
     }
 
     @Override
-    public List<Produto> findMaisVendidos() throws SQLException {
-        List<Produto> produtos = new ArrayList<>();
+    public List<ProdutoVendidoDTO> findMaisVendidos() throws SQLException {
+        List<ProdutoVendidoDTO> produtos = new ArrayList<>();
 
         try (PreparedStatement statement = connection.prepareStatement(FIND_MAIS_VENDIDOS_QUERY);
              ResultSet result = statement.executeQuery()) {
 
             while (result.next()) {
-                Produto produto = new Produto();
-                produto.setNum(result.getInt("num"));
-                produto.setNome(result.getString("nome"));
-                produto.setPreco(result.getBigDecimal("preco"));
-                produto.setDescricao(result.getString("descricao"));
-                produto.setEstoque(result.getInt("estoque"));
-                produto.setIdSubcategoria(result.getInt("id_subcategoria"));
-                produtos.add(produto);
+                String categoriaNome = result.getString("categoria_nome");
+                String produtoNome = result.getString("produto_nome");
+                int totalVendido = result.getInt("total_vendido");
+
+                ProdutoVendidoDTO dto = new ProdutoVendidoDTO(categoriaNome, produtoNome, totalVendido);
+                produtos.add(dto);
             }
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, "Erro ao buscar produtos mais vendidos.", ex);
