@@ -12,8 +12,6 @@ public class ProdutoRequestDTO {
     @JsonProperty
     private Integer qntComprada;
 
-    private BigDecimal precoTotal;
-
     // Getters and Setters
 
     public Integer getNumProduto() {
@@ -31,14 +29,5 @@ public class ProdutoRequestDTO {
     public void setQntComprada(Integer qntComprada) {
         this.qntComprada = qntComprada;
     }
-
-    public BigDecimal getPrecoTotal() {
-        return precoTotal;
-    }
-
-    public void setPrecoTotal(BigDecimal precoTotal) {
-        this.precoTotal = precoTotal;
-    }
-
 
 }

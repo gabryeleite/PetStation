@@ -58,20 +58,6 @@ public class PedidoController {
         }
     }
 
-    @PostMapping(value="/criar-pedido")
-    public ResponseEntity<String> criarPedido(@RequestBody Pedido pedido) {
-        try {
-            pgPedidoDAO.create(pedido);
-            return ResponseEntity.ok("Pedido criado com sucesso.");
-        } catch (SQLException e) {
-            if (e.getMessage().contains("campos obrigatórios não podem ser nulos")) {
-                return ResponseEntity.badRequest().body("Erro: Campos obrigatórios não podem ser nulos.");
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao criar pedido.");
-            }
-        }
-    }
-
     @GetMapping(value = "/pedidos-cliente/{cpf}")
     public List<Pedido> pedidosCliente(@PathVariable(value="cpf") String cpf) {
         try {
@@ -99,11 +85,8 @@ public class PedidoController {
             pedido.setNotaFiscal(notaFiscal);
             pedido.setDataPedido(localDate);
             pedido.setHoraPedido(localTime);
-            //pedido.setPrecoTotal(BigDecimal.ZERO);
 
             pgPedidoDAO.create(pedido);
-
-            //Double totalPrecoCompra = 0.0;
 
             for (ProdutoRequestDTO produtoDTO : requestDTO.getProdutos() ) {
 
@@ -124,12 +107,9 @@ public class PedidoController {
 
                 pedido.getItensPedido().add(pedidoProduto);
 
-                //totalPrecoCompra += produto.getPreco().doubleValue() * produtoDTO.getQntComprada();
-
                 Integer novoEstoque = produto.getEstoque() - produtoDTO.getQntComprada();
                 pgProdutoDAO.updateEstoque(novoEstoque, produto.getNum());
             }
-            //pedido.setPrecoTotal(new BigDecimal(totalPrecoCompra));
             return ResponseEntity.ok().body(pedido);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
