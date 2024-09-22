@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import org.springframework.stereotype.Repository;
 
 import com.ecommerce.petstation.daos.ProdutoDAO;
+import com.ecommerce.petstation.dtos.Produto2DTO;
 import com.ecommerce.petstation.dtos.ProdutoDTO;
 import com.ecommerce.petstation.models.Produto;
 
@@ -52,6 +53,14 @@ public class PgProdutoDAO implements ProdutoDAO {
             "SELECT num, nome, preco, descricao, estoque, id_subcategoria " +
             "FROM petstation.produto " +
             "WHERE nome ILIKE ? OR descricao ILIKE ?;";
+
+            private static final String FIND_BY_NF_QUERY = 
+            "SELECT p.num, p.nome, p.preco, pp.qnt_produto, " +
+            "(pp.qnt_produto * p.preco) AS total " +
+            "FROM petstation.produto p " +
+            "JOIN petstation.pedido_produto pp ON p.num = pp.num_produto " +
+            "JOIN petstation.pedido pd ON pp.nf_pedido = pd.nota_fiscal " +
+            "WHERE pd.nota_fiscal = ?";
 
     public PgProdutoDAO(Connection connection) {
         this.connection = connection;
@@ -293,6 +302,31 @@ public class PgProdutoDAO implements ProdutoDAO {
         } catch (SQLException ex) {
             LOGGER.log(Level.SEVERE, "Erro ao buscar produtos por termo.", ex);
             throw new SQLException("Erro ao buscar produtos por termo.");
+        }
+        return produtos;
+    }
+
+    @Override
+    public List<Produto2DTO> findByNotaFiscal(String notaFiscal) throws SQLException {
+        List<Produto2DTO> produtos = new ArrayList<>();
+    
+        try (PreparedStatement statement = connection.prepareStatement(FIND_BY_NF_QUERY)) {
+            statement.setString(1, notaFiscal);
+            try (ResultSet result = statement.executeQuery()) {
+                while (result.next()) {
+                    Produto2DTO produto = new Produto2DTO();
+                    produto.setNum(result.getInt("num"));
+                    produto.setNome(result.getString("nome"));
+                    produto.setPreco(result.getBigDecimal("preco"));
+                    produto.setQuantidade(result.getInt("qnt_produto"));
+                    produto.setTotal(result.getBigDecimal("total"));
+    
+                    produtos.add(produto);
+                }
+            }
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, "Erro ao buscar produtos pela nota fiscal.", ex);
+            throw new SQLException("Erro ao buscar produtos pela nota fiscal.");
         }
         return produtos;
     }

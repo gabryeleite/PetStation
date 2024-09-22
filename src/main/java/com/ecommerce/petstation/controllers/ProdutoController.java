@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.ecommerce.petstation.daos.daosPg.PgProdutoDAO;
+import com.ecommerce.petstation.dtos.Produto2DTO;
 import com.ecommerce.petstation.dtos.ProdutoDTO;
 import com.ecommerce.petstation.models.Produto;
 
@@ -129,6 +130,16 @@ public class ProdutoController {
     public List<Produto> produtosTermo(@PathVariable("termo") String termo) {
         try {
             return pgProdutoDAO.findByTermo(termo);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @GetMapping(value="/produtos-nota-fiscal/{notaFiscal}")
+    public List<Produto2DTO> produtosNotaFiscal(@PathVariable("notaFiscal") String notaFiscal) {
+        try {
+            return pgProdutoDAO.findByNotaFiscal(notaFiscal);
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
