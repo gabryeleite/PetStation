@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import com.ecommerce.petstation.daos.ProdutoDAO;
 import com.ecommerce.petstation.dtos.Produto2DTO;
 import com.ecommerce.petstation.dtos.ProdutoDTO;
+import com.ecommerce.petstation.dtos.ProdutoVendidoDTO;
 import com.ecommerce.petstation.models.Produto;
 
 @Repository
@@ -54,13 +55,31 @@ public class PgProdutoDAO implements ProdutoDAO {
             "FROM petstation.produto " +
             "WHERE nome ILIKE ? OR descricao ILIKE ?;";
 
-            private static final String FIND_BY_NF_QUERY = 
+    private static final String FIND_BY_NF_QUERY =
             "SELECT p.num, p.nome, p.preco, pp.qnt_produto, " +
             "(pp.qnt_produto * p.preco) AS total " +
             "FROM petstation.produto p " +
             "JOIN petstation.pedido_produto pp ON p.num = pp.num_produto " +
             "JOIN petstation.pedido pd ON pp.nf_pedido = pd.nota_fiscal " +
             "WHERE pd.nota_fiscal = ?";
+
+    private static final String FIND_MAIS_VENDIDOS_CATEGORIA_QUERY =
+            "WITH RankedSales AS ( " +
+            "    SELECT cat.nome AS categoria_nome, " +
+            "           prod.nome AS produto_nome, " +
+            "           SUM(pp.qnt_produto) AS total_vendido, " +
+            "           ROW_NUMBER() OVER (PARTITION BY cat.id_categoria ORDER BY SUM(pp.qnt_produto) DESC) AS ranking " +
+            "    FROM petstation.pedido_produto pp " +
+            "    JOIN petstation.produto prod ON pp.num_produto = prod.num " +
+            "    JOIN petstation.subcategoria subcat ON prod.id_subcategoria = subcat.id_subcategoria " +
+            "    JOIN petstation.categoria cat ON subcat.id_categoria = cat.id_categoria " +
+            "    GROUP BY cat.id_categoria, cat.nome, prod.nome " +
+            ") " +
+            "SELECT categoria_nome, produto_nome, total_vendido " +
+            "FROM RankedSales " +
+            "WHERE ranking <= 3 " +
+            "ORDER BY categoria_nome, ranking;";
+
 
     public PgProdutoDAO(Connection connection) {
         this.connection = connection;
@@ -277,6 +296,29 @@ public class PgProdutoDAO implements ProdutoDAO {
         }
 
         return produtos;
+    }
+
+    @Override
+    public List<ProdutoVendidoDTO> findMaisVendidosPorCategoria() throws SQLException {
+        List<ProdutoVendidoDTO> produtosVendidos = new ArrayList<>();
+
+        try (PreparedStatement statement = connection.prepareStatement(FIND_MAIS_VENDIDOS_CATEGORIA_QUERY);
+             ResultSet result = statement.executeQuery()) {
+
+            while (result.next()) {
+                String categoriaNome = result.getString("categoria_nome");
+                String produtoNome = result.getString("produto_nome");
+                int totalVendido = result.getInt("total_vendido");
+
+                ProdutoVendidoDTO dto = new ProdutoVendidoDTO(categoriaNome, produtoNome, totalVendido);
+                produtosVendidos.add(dto);
+            }
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, "Erro ao buscar produtos mais vendidos.", ex);
+            throw new SQLException("Erro ao buscar produtos mais vendidos.");
+        }
+
+        return produtosVendidos;
     }
 
     @Override
