@@ -1,26 +1,33 @@
-package com.ecommerce.petstation.models;
+package com.ecommerce.petstation.dtos;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
 import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ecommerce.petstation.models.PedidoProduto;
 
-public class Pedido {
+import java.time.LocalDate;
+
+public class PedidoDTO {
     
-    private String notaFiscal;
-
     private String cpfCliente;
-
+    private String notaFiscal;
     private LocalDate dataPedido;
-
     private LocalTime horaPedido;
+    private BigDecimal precoTotal;
 
-    @JsonIgnore
     private Set<PedidoProduto> itensPedido = new HashSet<>();
 
     // Getters and Setters
+
+    public String getCpfCliente() {
+        return cpfCliente;
+    }
+    
+    public void setCpfCliente(String cpfCliente) {
+        this.cpfCliente = cpfCliente;
+    }
 
     public String getNotaFiscal() {
         return notaFiscal;
@@ -28,14 +35,6 @@ public class Pedido {
 
     public void setNotaFiscal(String notaFiscal) {
         this.notaFiscal = notaFiscal;
-    }
-
-    public String getCpfCliente() {
-        return cpfCliente;
-    }
-
-    public void setCpfCliente(String cpfCliente) {
-        this.cpfCliente = cpfCliente;
     }
 
     public LocalDate getDataPedido() {
@@ -54,6 +53,14 @@ public class Pedido {
         this.horaPedido = horaPedido;
     }
 
+    public BigDecimal getPrecoTotal() {
+        return precoTotal;
+    }
+
+    public void setPrecoTotal(BigDecimal precoTotal) {
+        this.precoTotal = precoTotal;
+    }
+
     public Set<PedidoProduto> getItensPedido() {
         return itensPedido;
     }
@@ -61,19 +68,5 @@ public class Pedido {
     public void setItensPedido(Set<PedidoProduto> itensPedido) {
         this.itensPedido = itensPedido;
     }
+
 }
-
-/*             Script SQL
-CREATE SEQUENCE petstation.pedido_num_seq
-	START 1 INCREMENT 1;
-
-CREATE TABLE petstation.pedido(
-    num INT DEFAULT nextval('petstation.pedido_num_seq'),
-    id_cliente INT NOT NULL,
-    data_pedido DATE NOT NULL,
-    hora_pedido TIME NOT NULL,
-    CONSTRAINT pk_pedido PRIMARY KEY(num),
-    CONSTRAINT fk_cliente_id FOREIGN KEY(id_cliente)
-        REFERENCES petstation.cliente(id_cliente) ON DELETE CASCADE,
-);
-*/

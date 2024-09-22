@@ -21,11 +21,11 @@ public class PgClienteDAO implements ClienteDAO {
 
     private static final String CLIENTES_COM_MAIS_PEDIDOS_QUERY =
             "SELECT c.nome, c.sobrenome, c.sexo, c.data_nascimento, c.cpf, c.email, c.senha, COUNT(p.nota_fiscal) AS total_pedidos " +
-                    "FROM petstation.cliente c " +
-                    "JOIN petstation.pedido p ON c.cpf = p.cpf_cliente " +
-                    "GROUP BY c.cpf, c.nome, c.sobrenome, c.sexo, c.data_nascimento, c.cpf, c.email, c.senha " +
-                    "ORDER BY total_pedidos DESC " +
-                    "LIMIT 3;";
+            "FROM petstation.cliente c " +
+            "JOIN petstation.pedido p ON c.cpf = p.cpf_cliente " +
+            "GROUP BY c.cpf, c.nome, c.sobrenome, c.sexo, c.data_nascimento, c.cpf, c.email, c.senha " +
+            "ORDER BY total_pedidos DESC " +
+            "LIMIT 3;";
 
     public PgClienteDAO(Connection connection) {
         this.connection = connection;
@@ -57,7 +57,7 @@ public class PgClienteDAO implements ClienteDAO {
     @Override
     public Cliente read(Integer id) throws SQLException {
         // read feito por CPF
-        //     //        "SELECT nome, sobrenome, sexo, data_nascimento, cpf, email, senha FROM petstation.cliente WHERE cpf = ?;";
+        // "SELECT nome, sobrenome, sexo, data_nascimento, cpf, email, senha FROM petstation.cliente WHERE cpf = ?;";
         throw new UnsupportedOperationException("Unimplemented method 'read'");
     }
 
