@@ -121,23 +121,22 @@ public class PgCategoriaDAO implements CategoriaDAO {
         }
         return categorias;
     }
-/*
     @Override
-    public Categoria getCategoriaByNome(String nome) throws SQLException {
-        String sql = "SELECT * FROM petstation.categoria WHERE nome = ?";
+    public Categoria getCategoriaById(Integer id_categoria) throws SQLException {
+        String sql = "SELECT * FROM petstation.categoria WHERE id_categoria = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, nome);
+            stmt.setInt(1, id_categoria);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
                 Categoria categoria = new Categoria();
-                categoria.setIdCategoria(rs.getInt("id"));
+                categoria.setIdCategoria(rs.getInt("id_categoria"));
                 categoria.setNome(rs.getString("nome"));
                 return categoria;
             } else {
                 return null;
             }
         }
-    } */
+    }
 
 }

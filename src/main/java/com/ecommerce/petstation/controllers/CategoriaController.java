@@ -3,6 +3,7 @@ package com.ecommerce.petstation.controllers;
 import java.sql.SQLException;
 import java.util.List;
 
+import com.ecommerce.petstation.models.Subcategoria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,16 @@ public class CategoriaController {
     public List<Categoria> readCategorias() {
         try {
             return pgCategoriaDAO.all();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @GetMapping(value = "/categoria/{id}")
+    public Categoria CategoriaById(@PathVariable(value="id") Integer id) {
+        try {
+            return pgCategoriaDAO.getCategoriaById(id);
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
