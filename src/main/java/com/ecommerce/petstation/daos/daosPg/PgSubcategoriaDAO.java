@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.ecommerce.petstation.dtos.SubcategoriaDTO;
 import org.springframework.stereotype.Repository;
 
 import com.ecommerce.petstation.daos.SubcategoriaDAO;
@@ -133,6 +134,31 @@ public class PgSubcategoriaDAO implements SubcategoriaDAO {
             throw new SQLException("Erro ao listar subcategorias.");
         }
         return subcategorias;
+    }
+
+    @Override
+    public List<SubcategoriaDTO> Listar() throws SQLException {
+        String sql = "SELECT s.*, c.nome AS nomeCategoria " +
+                "FROM petstation.subcategoria AS s " +
+                "LEFT JOIN petstation.categoria AS c ON s.id_categoria = c.id_categoria; ";
+        List<SubcategoriaDTO> subcategoriasDTO = new ArrayList<>();
+        try (PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                SubcategoriaDTO subcategoriaDTO = new SubcategoriaDTO();
+                subcategoriaDTO.setIdSubcategoria(rs.getInt("id_subcategoria"));
+                subcategoriaDTO.setNome(rs.getString("nome"));
+                subcategoriaDTO.setIdCategoria(rs.getInt("id_categoria"));
+                subcategoriaDTO.setNomeCategoria(rs.getString("nomeCategoria"));
+                subcategoriasDTO.add(subcategoriaDTO);
+            }
+
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, "Erro ao listar subcategorias.", ex);
+            throw new SQLException("Erro ao listar subcategorias.");
+        }
+        return subcategoriasDTO;
     }
 
     public List<Subcategoria> findByCategoria(Integer idCategoria) throws SQLException {
