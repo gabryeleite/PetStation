@@ -10,6 +10,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.ecommerce.petstation.dtos.SubcategoriaDTO;
+import com.ecommerce.petstation.dtos.SubcategoriaFaturamentoDTO;
+
 import org.springframework.stereotype.Repository;
 
 import com.ecommerce.petstation.daos.SubcategoriaDAO;
@@ -181,4 +183,36 @@ public class PgSubcategoriaDAO implements SubcategoriaDAO {
         }
         return subcategorias;
     }
+
+    public List<SubcategoriaFaturamentoDTO> findByMaiorFaturamento() throws SQLException {
+        String sql = "SELECT sc.nome AS Subcategoria, ctg.nome AS Categoria, SUM(c.qnt_produto * c.preco_produto) AS FaturamentoTotal " +
+                     "FROM petstation.pedido_produto c " +
+                     "JOIN petstation.produto p ON c.num_produto = p.num " +
+                     "JOIN petstation.subcategoria sc ON p.id_subcategoria = sc.id_subcategoria " +
+                     "JOIN petstation.categoria ctg ON sc.id_categoria = ctg.id_categoria " +
+                     "GROUP BY sc.nome, ctg.nome " +
+                     "ORDER BY FaturamentoTotal DESC " +
+                     "LIMIT 5";
+    
+        List<SubcategoriaFaturamentoDTO> subcategorias = new ArrayList<>();
+    
+        try (PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+    
+            while (rs.next()) {
+                SubcategoriaFaturamentoDTO subcategoria = new SubcategoriaFaturamentoDTO();
+                subcategoria.setNome(rs.getString("Subcategoria"));
+                subcategoria.setNomeCategoria(rs.getString("Categoria"));
+                subcategoria.setFaturamentoTotal(rs.getBigDecimal("FaturamentoTotal"));
+    
+                subcategorias.add(subcategoria);
+            }
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, "Erro ao buscar subcategorias com maior faturamento.", ex);
+            throw new SQLException("Erro ao buscar subcategorias com maior faturamento.");
+        }
+    
+        return subcategorias;
+    }    
+
 }

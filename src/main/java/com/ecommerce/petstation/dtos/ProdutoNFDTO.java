@@ -2,7 +2,7 @@ package com.ecommerce.petstation.dtos;
 
 import java.math.BigDecimal;
 
-public class Produto2DTO {
+public class ProdutoNFDTO {
     private int num;
     private String nome;
     private BigDecimal preco;

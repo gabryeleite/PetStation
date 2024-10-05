@@ -3,7 +3,7 @@ package com.ecommerce.petstation.controllers;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.ecommerce.petstation.dtos.PedidoProduto2DTO;
+import com.ecommerce.petstation.dtos.PedidoProdutoResumoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -60,7 +60,7 @@ public class PedidoProdutoController {
     }
 
     @GetMapping(value = "/resumo-vendas")
-    public List<PedidoProduto2DTO> resumirVendas() {
+    public List<PedidoProdutoResumoDTO> resumirVendas() {
         try {
             return PgPedidoProdutoDAO.resumoVendas();
         } catch (SQLException e) {

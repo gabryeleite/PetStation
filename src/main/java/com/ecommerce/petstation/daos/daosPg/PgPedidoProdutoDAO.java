@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.ecommerce.petstation.dtos.PedidoProduto2DTO;
+import com.ecommerce.petstation.dtos.PedidoProdutoResumoDTO;
 import org.springframework.stereotype.Repository;
 
 import com.ecommerce.petstation.daos.PedidoProdutoDAO;
@@ -126,15 +126,15 @@ public class PgPedidoProdutoDAO implements PedidoProdutoDAO{
     }
 
     @Override
-    public List<PedidoProduto2DTO> resumoVendas() throws SQLException {
+    public List<PedidoProdutoResumoDTO> resumoVendas() throws SQLException {
         String sql = "SELECT \"NF Pedido\", \"Cliente\", \"Quantidade\", \"Preço Total\", \"Data\" " +
                 "FROM petstation.vw_resumo_pedido";
-        List<PedidoProduto2DTO> pedidoProdutoList = new ArrayList<>();
+        List<PedidoProdutoResumoDTO> pedidoProdutoList = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet rs = statement.executeQuery()) {
 
             while (rs.next()) {
-                PedidoProduto2DTO pedidoProduto = new PedidoProduto2DTO();
+                PedidoProdutoResumoDTO pedidoProduto = new PedidoProdutoResumoDTO();
                 pedidoProduto.setNfPedido(rs.getString("NF Pedido"));
                 pedidoProduto.setCliente(rs.getString("Cliente"));
                 pedidoProduto.setQuantidade(rs.getInt("Quantidade"));

@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 import org.springframework.stereotype.Repository;
 
 import com.ecommerce.petstation.daos.ProdutoDAO;
-import com.ecommerce.petstation.dtos.Produto2DTO;
+import com.ecommerce.petstation.dtos.ProdutoNFDTO;
 import com.ecommerce.petstation.dtos.ProdutoDTO;
 import com.ecommerce.petstation.dtos.ProdutoVendidoDTO;
 import com.ecommerce.petstation.models.Produto;
@@ -83,7 +83,7 @@ public class PgProdutoDAO implements ProdutoDAO {
             ") " +
             "SELECT categoria_nome, produto_nome, total_vendido " +
             "FROM RankedSales " +
-            "WHERE ranking <= 2 " +
+            "WHERE ranking <= 3 " +
             "ORDER BY categoria_nome, ranking;";
 
 
@@ -353,14 +353,14 @@ public class PgProdutoDAO implements ProdutoDAO {
     }
 
     @Override
-    public List<Produto2DTO> findByNotaFiscal(String notaFiscal) throws SQLException {
-        List<Produto2DTO> produtos = new ArrayList<>();
+    public List<ProdutoNFDTO> findByNotaFiscal(String notaFiscal) throws SQLException {
+        List<ProdutoNFDTO> produtos = new ArrayList<>();
     
         try (PreparedStatement statement = connection.prepareStatement(FIND_BY_NF_QUERY)) {
             statement.setString(1, notaFiscal);
             try (ResultSet result = statement.executeQuery()) {
                 while (result.next()) {
-                    Produto2DTO produto = new Produto2DTO();
+                    ProdutoNFDTO produto = new ProdutoNFDTO();
                     produto.setNum(result.getInt("num"));
                     produto.setNome(result.getString("nome"));
                     produto.setPreco(result.getBigDecimal("preco"));

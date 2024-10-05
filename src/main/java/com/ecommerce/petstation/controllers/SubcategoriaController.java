@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 import com.ecommerce.petstation.dtos.SubcategoriaDTO;
+import com.ecommerce.petstation.dtos.SubcategoriaFaturamentoDTO;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -86,6 +88,16 @@ public class SubcategoriaController {
     public List<Subcategoria> subcategoriaByCategoria(@PathVariable(value="id") Integer id) {
         try {
             return pgSubcategoriaDAO.findByCategoria(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @GetMapping(value = "/subcategorias-faturamento")
+    public List<SubcategoriaFaturamentoDTO> subcategoriaByFatoramento() {
+        try {
+            return pgSubcategoriaDAO.findByMaiorFaturamento();
         } catch (SQLException e) {
             e.printStackTrace();
             return null;

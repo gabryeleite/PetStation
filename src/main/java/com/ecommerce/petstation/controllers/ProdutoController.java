@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.ecommerce.petstation.models.Produto;
 import com.ecommerce.petstation.daos.daosPg.PgProdutoDAO;
-import com.ecommerce.petstation.dtos.Produto2DTO;
+import com.ecommerce.petstation.dtos.ProdutoNFDTO;
 import com.ecommerce.petstation.dtos.ProdutoDTO;
 
 @RestController
@@ -149,7 +149,7 @@ public class ProdutoController {
     }
 
     @GetMapping(value="/produtos-nota-fiscal/{notaFiscal}")
-    public List<Produto2DTO> produtosNotaFiscal(@PathVariable("notaFiscal") String notaFiscal) {
+    public List<ProdutoNFDTO> produtosNotaFiscal(@PathVariable("notaFiscal") String notaFiscal) {
         try {
             return pgProdutoDAO.findByNotaFiscal(notaFiscal);
         } catch (SQLException e) {

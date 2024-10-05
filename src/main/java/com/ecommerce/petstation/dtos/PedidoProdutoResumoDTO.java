@@ -3,7 +3,7 @@ package com.ecommerce.petstation.dtos;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class PedidoProduto2DTO {
+public class PedidoProdutoResumoDTO {
 
     private String nfPedido;
     private String cliente;
