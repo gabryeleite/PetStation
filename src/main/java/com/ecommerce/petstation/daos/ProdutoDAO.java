@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import com.ecommerce.petstation.dtos.ProdutoNFDTO;
+import com.ecommerce.petstation.dtos.ProdutoTicketDTO;
 import com.ecommerce.petstation.dtos.ProdutoDTO;
 import com.ecommerce.petstation.dtos.ProdutoVendidoDTO;
 import com.ecommerce.petstation.models.Produto;
@@ -17,5 +18,6 @@ public interface ProdutoDAO extends DAO<Produto> {
     List<ProdutoVendidoDTO> findMaisVendidosPorCategoria() throws SQLException;
     List<Produto> findByTermo(String termo) throws SQLException;
     List<ProdutoNFDTO> findByNotaFiscal(String notaFiscal) throws SQLException;
+    List<ProdutoTicketDTO> findTicketMedioPorProduto() throws SQLException;
 
 }

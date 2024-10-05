@@ -1,5 +1,7 @@
 package com.ecommerce.petstation.daos.daosPg;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import com.ecommerce.petstation.daos.ProdutoDAO;
 import com.ecommerce.petstation.dtos.ProdutoNFDTO;
+import com.ecommerce.petstation.dtos.ProdutoTicketDTO;
 import com.ecommerce.petstation.dtos.ProdutoDTO;
 import com.ecommerce.petstation.dtos.ProdutoVendidoDTO;
 import com.ecommerce.petstation.models.Produto;
@@ -86,6 +89,14 @@ public class PgProdutoDAO implements ProdutoDAO {
             "WHERE ranking <= 3 " +
             "ORDER BY categoria_nome, ranking;";
 
+    private static final String FIND_TICKET_MEDIO_QUERY =
+            "SELECT p.nome AS Produto, AVG(pp.qnt_produto * p.preco) AS TicketMedio " +
+            "FROM petstation.pedido_produto pp " +
+            "JOIN petstation.produto p ON pp.num_produto = p.num " +
+            "JOIN petstation.pedido pd ON pp.nf_pedido = pd.nota_fiscal " +
+            "GROUP BY p.nome " +
+            "HAVING SUM(pp.qnt_produto) > 0 " +
+            "ORDER BY TicketMedio DESC";
 
     public PgProdutoDAO(Connection connection) {
         this.connection = connection;
@@ -375,6 +386,31 @@ public class PgProdutoDAO implements ProdutoDAO {
             throw new SQLException("Erro ao buscar produtos pela nota fiscal.");
         }
         return produtos;
+    }
+
+    public List<ProdutoTicketDTO> findTicketMedioPorProduto() throws SQLException {
+
+        List<ProdutoTicketDTO> produtosTicketMedio = new ArrayList<>();
+
+        try (PreparedStatement stmt = connection.prepareStatement(FIND_TICKET_MEDIO_QUERY)) {
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String nomeProduto = rs.getString("Produto");
+                    
+                    // Arredondar o ticket médio para 2 casas decimais
+                    BigDecimal ticketMedio = BigDecimal.valueOf(rs.getDouble("TicketMedio"))
+                                                    .setScale(2, RoundingMode.HALF_UP);
+
+                    ProdutoTicketDTO produtoTicketMedio = new ProdutoTicketDTO(nomeProduto, ticketMedio);
+                    produtosTicketMedio.add(produtoTicketMedio);
+                }
+            }
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, "Erro ao buscar o ticket médio por produto.", ex);
+            throw new SQLException("Erro ao buscar o ticket médio por produto.");
+        }
+
+        return produtosTicketMedio;
     }
 
 }
