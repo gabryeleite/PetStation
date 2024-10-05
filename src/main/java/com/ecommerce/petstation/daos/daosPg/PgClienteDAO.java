@@ -2,9 +2,12 @@ package com.ecommerce.petstation.daos.daosPg;
 
 import com.ecommerce.petstation.daos.ClienteDAO;
 import com.ecommerce.petstation.dtos.ClientePedidoDTO;
+import com.ecommerce.petstation.dtos.ClienteTicketDTO;
 import com.ecommerce.petstation.models.Cliente;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -182,6 +185,37 @@ public class PgClienteDAO implements ClienteDAO {
     
         return clientesAtivos;
     }
-    
+ 
+    public List<ClienteTicketDTO> findTicketMedioClientes() throws SQLException {
+        String sql = "SELECT c.nome || ' ' || c.sobrenome AS Cliente, " +
+                        "AVG(pp.qnt_produto * p.preco) AS TicketMedio " +
+                        "FROM petstation.cliente c " +
+                        "JOIN petstation.pedido pd ON c.cpf = pd.cpf_cliente " +
+                        "JOIN petstation.pedido_produto pp ON pd.nota_fiscal = pp.nf_pedido " +
+                        "JOIN petstation.produto p ON pp.num_produto = p.num " +
+                        "GROUP BY c.nome, c.sobrenome " +
+                        "ORDER BY TicketMedio DESC " +
+                        "LIMIT 5";
+
+        List<ClienteTicketDTO> clientesTicketMedio = new ArrayList<>();
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String nome = rs.getString("Cliente");
+                    BigDecimal ticketMedio = BigDecimal.valueOf(rs.getDouble("TicketMedio"))
+                                                   .setScale(2, RoundingMode.HALF_UP);
+
+                    ClienteTicketDTO clienteTicketMedio = new ClienteTicketDTO(nome, ticketMedio);
+                    clientesTicketMedio.add(clienteTicketMedio);
+                }
+            }
+        } catch (SQLException ex) {
+            LOGGER.log(Level.SEVERE, "Erro ao buscar o ticket médio dos clientes.", ex);
+            throw new SQLException("Erro ao buscar o ticket médio dos clientes.");
+        }
+
+        return clientesTicketMedio;
+    }
 
 }

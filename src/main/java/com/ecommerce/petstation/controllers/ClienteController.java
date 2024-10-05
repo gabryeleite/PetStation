@@ -1,6 +1,7 @@
 package com.ecommerce.petstation.controllers;
 
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.ecommerce.petstation.daos.daosPg.PgClienteDAO;
 import com.ecommerce.petstation.dtos.ClientePedidoDTO;
+import com.ecommerce.petstation.dtos.ClienteTicketDTO;
 import com.ecommerce.petstation.models.Cliente;
 
 @RestController
@@ -92,4 +94,15 @@ public class ClienteController {
         }
 
     }
+
+    @GetMapping(value = "/clientes-ticket-medio")
+    public List<ClienteTicketDTO> getTicketMedioClientes() {
+        try {
+            return pgClienteDAO.findTicketMedioClientes();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Collections.emptyList();  
+        }
+    }
+
 }
