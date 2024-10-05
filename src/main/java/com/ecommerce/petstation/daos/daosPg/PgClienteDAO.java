@@ -1,6 +1,7 @@
 package com.ecommerce.petstation.daos.daosPg;
 
 import com.ecommerce.petstation.daos.ClienteDAO;
+import com.ecommerce.petstation.dtos.ClientePedidoDTO;
 import com.ecommerce.petstation.models.Cliente;
 import org.springframework.stereotype.Repository;
 
@@ -18,14 +19,6 @@ public class PgClienteDAO implements ClienteDAO {
     private final Connection connection;
 
     private static final Logger LOGGER = Logger.getLogger(PgClienteDAO.class.getName());
-
-    private static final String CLIENTES_COM_MAIS_PEDIDOS_QUERY =
-            "SELECT c.nome, c.sobrenome, c.sexo, c.data_nascimento, c.cpf, c.email, c.senha, COUNT(p.nota_fiscal) AS total_pedidos " +
-            "FROM petstation.cliente c " +
-            "JOIN petstation.pedido p ON c.cpf = p.cpf_cliente " +
-            "GROUP BY c.cpf, c.nome, c.sobrenome, c.sexo, c.data_nascimento, c.cpf, c.email, c.senha " +
-            "ORDER BY total_pedidos DESC " +
-            "LIMIT 3;";
 
     public PgClienteDAO(Connection connection) {
         this.connection = connection;
@@ -160,27 +153,35 @@ public class PgClienteDAO implements ClienteDAO {
         }
     }
 
-    @Override
-    public List<Cliente> findClientesComMaisPedidos() throws SQLException {
-        List<Cliente> clientes = new ArrayList<>();
-        try (PreparedStatement statement = connection.prepareStatement(CLIENTES_COM_MAIS_PEDIDOS_QUERY);
-             ResultSet rs = statement.executeQuery()) {
-            while (rs.next()) {
-                Cliente cliente = new Cliente();
-                cliente.setNome(rs.getString("nome"));
-                cliente.setSobrenome(rs.getString("sobrenome"));
-                cliente.setSexo(rs.getString("sexo"));
-                cliente.setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
-                cliente.setCpf(rs.getString("cpf"));
-                cliente.setEmail(rs.getString("email"));
-                cliente.setSenha(rs.getString("senha"));
-                clientes.add(cliente);
+    public List<ClientePedidoDTO> findClientesMaisAtivos() throws SQLException {
+        String sql = "SELECT c.cpf, c.nome, c.sobrenome, COUNT(p.nota_fiscal) AS numero_pedidos " +
+                     "FROM petstation.cliente c " +
+                     "JOIN petstation.pedido p ON c.cpf = p.cpf_cliente " +
+                     "GROUP BY c.cpf, c.nome, c.sobrenome " +
+                     "ORDER BY numero_pedidos DESC " +
+                     "LIMIT 3";
+        
+        List<ClientePedidoDTO> clientesAtivos = new ArrayList<>();
+        
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    ClientePedidoDTO cliente = new ClientePedidoDTO();
+                    cliente.setCpf(rs.getString("cpf"));
+                    cliente.setNome(rs.getString("nome"));
+                    cliente.setSobrenome(rs.getString("sobrenome"));
+                    cliente.setNumeroPedidos(rs.getInt("numero_pedidos"));
+    
+                    clientesAtivos.add(cliente);
+                }
             }
         } catch (SQLException ex) {
-            LOGGER.log(Level.SEVERE, "Erro ao buscar clientes com mais pedidos.", ex);
-            throw new SQLException("Erro ao buscar clientes com mais pedidos.");
+            LOGGER.log(Level.SEVERE, "Erro ao buscar clientes mais ativos.", ex);
+            throw new SQLException("Erro ao buscar clientes mais ativos.");
         }
-        return clientes;
+    
+        return clientesAtivos;
     }
+    
 
 }

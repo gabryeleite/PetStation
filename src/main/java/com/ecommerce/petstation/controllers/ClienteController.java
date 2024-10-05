@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.ecommerce.petstation.daos.daosPg.PgClienteDAO;
+import com.ecommerce.petstation.dtos.ClientePedidoDTO;
 import com.ecommerce.petstation.models.Cliente;
 
 @RestController
@@ -82,9 +83,9 @@ public class ClienteController {
     }
 
     @GetMapping("/mais-pedidos")
-    public List<Cliente> getClientesComMaisPedidos() throws SQLException {
+    public List<ClientePedidoDTO> getClientesComMaisPedidos() throws SQLException {
         try {
-            return pgClienteDAO.findClientesComMaisPedidos();
+            return pgClienteDAO.findClientesMaisAtivos();
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
