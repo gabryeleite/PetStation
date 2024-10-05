@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -12,6 +13,7 @@ import java.util.logging.Logger;
 import org.springframework.stereotype.Repository;
 
 import com.ecommerce.petstation.daos.PedidoDAO;
+import com.ecommerce.petstation.dtos.VendasDiaDTO;
 import com.ecommerce.petstation.models.Pedido;
 
 @Repository
@@ -132,5 +134,37 @@ public class PgPedidoDAO implements PedidoDAO {
         }
         return pedido;
     }
+
+    public List<VendasDiaDTO> findByVendasPorDia(LocalDate inicio, LocalDate fim) throws SQLException {
+    String sql = "SELECT p.data_pedido AS Data, SUM(c.qnt_produto) AS QuantidadeTotal " +
+                 "FROM petstation.pedido p " +
+                 "JOIN petstation.pedido_produto c ON p.nota_fiscal = c.nf_pedido " +
+                 "WHERE p.data_pedido BETWEEN ? AND ? " +
+                 "GROUP BY p.data_pedido " +
+                 "ORDER BY p.data_pedido";
+
+    List<VendasDiaDTO> vendasPorDia = new ArrayList<>();
+
+    try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        stmt.setDate(1, java.sql.Date.valueOf(inicio));
+        stmt.setDate(2, java.sql.Date.valueOf(fim));
+
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                VendasDiaDTO venda = new VendasDiaDTO();
+                venda.setData(rs.getDate("Data").toLocalDate());
+                venda.setQuantidadeTotal(rs.getInt("QuantidadeTotal"));
+
+                vendasPorDia.add(venda);
+            }
+        }
+    } catch (SQLException ex) {
+        LOGGER.log(Level.SEVERE, "Erro ao buscar vendas por dia.", ex);
+        throw new SQLException("Erro ao buscar vendas por dia.");
+    }
+
+    return vendasPorDia;
+}
+
 
 }

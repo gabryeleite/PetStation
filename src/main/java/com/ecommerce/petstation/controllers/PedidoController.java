@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ecommerce.petstation.daos.daosPg.PgPedidoDAO;
@@ -20,6 +21,7 @@ import com.ecommerce.petstation.daos.daosPg.PgPedidoProdutoDAO;
 import com.ecommerce.petstation.daos.daosPg.PgProdutoDAO;
 import com.ecommerce.petstation.dtos.PedidoRequestDTO;
 import com.ecommerce.petstation.dtos.ProdutoRequestDTO;
+import com.ecommerce.petstation.dtos.VendasDiaDTO;
 import com.ecommerce.petstation.models.Pedido;
 import com.ecommerce.petstation.models.Produto;
 import com.ecommerce.petstation.models.PedidoProduto;
@@ -112,6 +114,21 @@ public class PedidoController {
             return ResponseEntity.ok().body(pedido);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping(value = "/vendas-dia")
+    public List<VendasDiaDTO> produtosVendidosPorDia(
+            @RequestParam(value = "inicio") String inicio,
+            @RequestParam(value = "fim") String fim) {
+        try {
+            LocalDate dataInicio = LocalDate.parse(inicio);
+            LocalDate dataFim = LocalDate.parse(fim);
+            
+            return pgPedidoDAO.findByVendasPorDia(dataInicio, dataFim);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
