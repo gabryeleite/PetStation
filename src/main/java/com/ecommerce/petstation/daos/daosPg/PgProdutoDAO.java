@@ -61,18 +61,12 @@ public class PgProdutoDAO implements ProdutoDAO {
             "prod.nome AS produto_nome, " +
             "SUM(pp.qnt_produto) AS total_vendido, " +
             "ROW_NUMBER() OVER (PARTITION BY cat.id_categoria ORDER BY SUM(pp.qnt_produto) DESC) AS ranking " +
-            "FROM " +
-            "    petstation.pedido_produto pp " +
-            "JOIN " +
-            "    petstation.produto prod ON pp.num_produto = prod.num " +
-            "JOIN " +
-            "    petstation.subcategoria subcat ON prod.id_subcategoria = subcat.id_subcategoria " +
-            "JOIN " +
-            "    petstation.categoria cat ON subcat.id_categoria = cat.id_categoria " +
-            "GROUP BY " +
-            "cat.id_categoria, cat.nome, prod.nome " +
-            "ORDER BY " +
-            "total_vendido DESC " +
+            "FROM petstation.pedido_produto pp " +
+            "JOIN petstation.produto prod ON pp.num_produto = prod.num " +
+            "JOIN petstation.subcategoria subcat ON prod.id_subcategoria = subcat.id_subcategoria " +
+            "JOIN petstation.categoria cat ON subcat.id_categoria = cat.id_categoria " +
+            "GROUP BY cat.id_categoria, cat.nome, prod.nome " +
+            "ORDER BY total_vendido DESC " +
             "LIMIT 5;";
 
     private static final String FIND_MAIS_VENDIDOS_CATEGORIA_QUERY =
